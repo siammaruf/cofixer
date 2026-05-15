@@ -1,0 +1,3 @@
+[submodule ".kimi"]
+	path = .kimi
+	url = https://github.com/CoFixer/kimi-workflow
