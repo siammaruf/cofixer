@@ -1,4 +1,7 @@
-import { get, post, put, del } from '../httpMethods'
+import { get } from '../httpMethods/get'
+import { post } from '../httpMethods/post'
+import { put } from '../httpMethods/put'
+import { del } from '../httpMethods/delete'
 import type { User } from '~/types/user'
 
 export const userService = {

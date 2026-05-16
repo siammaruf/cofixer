@@ -21,7 +21,20 @@ import { AuthModule } from './modules/auth';
 import { PassportModule } from '@nestjs/passport';
 import { JwtAuthGuard, JwtStrategy } from './core/guards';
 import { OtpModule } from '@modules/otp/otp.module';
-import { FeaturesModule } from './modules/features/features.module';
+import { ServicesModule } from './modules/services';
+import { ProjectsModule } from './modules/projects';
+import { BlogModule } from './modules/blog';
+import { TeamModule } from './modules/team';
+import { TestimonialsModule } from './modules/testimonials';
+import { FaqsModule } from './modules/faqs';
+import { ContactsModule } from './modules/contacts';
+import { MediaModule } from './modules/media';
+import { SeoModule } from './modules/seo';
+import { NavigationModule } from './modules/navigation';
+import { SettingsModule } from './modules/settings';
+import { StatsModule } from './modules/stats';
+import { SitemapModule } from './modules/sitemap';
+import { RobotsModule } from './modules/robots';
 import { LanguageEnum } from '@shared/enums';
 
 @Module({
@@ -80,7 +93,20 @@ import { LanguageEnum } from '@shared/enums';
         UserModule,
         AuthModule,
         OtpModule,
-        FeaturesModule,
+        ServicesModule,
+        ProjectsModule,
+        BlogModule,
+        TeamModule,
+        TestimonialsModule,
+        FaqsModule,
+        ContactsModule,
+        MediaModule,
+        SeoModule,
+        NavigationModule,
+        SettingsModule,
+        StatsModule,
+        SitemapModule,
+        RobotsModule,
     ],
     controllers: [AppController],
     providers: [

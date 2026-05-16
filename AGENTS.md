@@ -19,10 +19,10 @@
 
 ```
 cofixer/
+├── .project/         # Docs & status
+├── .kimi/            # Kimi CLI config
 ├── backend/          # NestJS API
 ├── frontend/         # React 19 (public + dashboard unified)
-├── .kimi/            # Kimi CLI config
-├── .project/         # Docs & status
 └── docker-compose.yml
 ```
 
@@ -46,7 +46,7 @@ cd frontend && npm run dev
 ## Patterns
 
 - **Backend**: Modular architecture, DTO validation, JWT auth guards, Swagger docs, Repository pattern
-- **Frontend**: React Router 7 loaders (SSR), TanStack Query (client cache), Zustand (state), Tailwind + shadcn/ui
+- **Frontend**: React Router 7 loaders (SSR), TanStack Query (public pages), Redux Toolkit (dashboard/auth state), Tailwind + shadcn/ui
 - **Auth**: AES-256-GCM encrypted JWT in httpOnly cookies + CSRF Double-Submit Cookie
 
 ---
@@ -56,3 +56,12 @@ cd frontend && npm run dev
 - Commits: `feat:`, `fix:`, `docs:`, `refactor:`
 - Branches: `main`, `dev`, `feature/*`, `fix/*`
 - API responses: `{ success, data, message }` or `{ success, error }`
+
+## Agent System
+
+- Agent registry: `.kimi/agents/agent-registry.json`
+- Agent definitions: `.kimi/agents/{category}/{name}.md`
+- Skill definitions: `.kimi/skills/{name}/SKILL.md`
+- **Project facts (verified structure): `.kimi/PROJECT_FACTS.md`**
+
+All agents must read `.kimi/PROJECT_FACTS.md` before making assumptions about paths, patterns, or conventions.

@@ -1,4 +1,5 @@
-import { get, post } from '../httpMethods'
+import { get } from '../httpMethods/get'
+import { post } from '../httpMethods/post'
 import type {
   LoginCredentials,
   LoginResponse,

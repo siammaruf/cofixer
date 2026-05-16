@@ -6,14 +6,17 @@ import type { ApiError } from '~/types/api'
  */
 export const createErrorResponse = (error: AxiosError<ApiError>): ApiError => {
   const errorResponse: ApiError = {
+    success: false,
     message: 'An unexpected error occurred',
-    status: 500,
+    statusCode: 500,
+    timestamp: new Date().toISOString(),
+    path: error.config?.url || '',
   }
 
   if (error.response) {
-    errorResponse.status = error.response.status
+    errorResponse.statusCode = error.response.status
     errorResponse.message = error.response.data?.message || error.message
-    errorResponse.errors = error.response.data?.errors
+    errorResponse.error = error.response.data?.error
 
     // Handle 401 Unauthorized
     if (error.response.status === 401) {
@@ -21,7 +24,7 @@ export const createErrorResponse = (error: AxiosError<ApiError>): ApiError => {
     }
   } else if (error.request) {
     errorResponse.message = 'No response from server'
-    errorResponse.status = 503
+    errorResponse.statusCode = 503
   }
 
   return errorResponse
@@ -43,7 +46,7 @@ export const isApiError = (error: unknown): error is ApiError => {
     typeof error === 'object' &&
     error !== null &&
     'message' in error &&
-    'status' in error
+    'statusCode' in error
   )
 }
 
@@ -65,7 +68,7 @@ export const getErrorMessage = (error: unknown): string => {
  */
 export const getErrorStatus = (error: unknown): number => {
   if (isApiError(error)) {
-    return error.status
+    return error.statusCode
   }
   return 500
 }
@@ -74,13 +77,15 @@ export const getErrorStatus = (error: unknown): number => {
  * Format validation errors for display
  */
 export const formatValidationErrors = (
-  errors: Record<string, string[]> | undefined
+  errors: { field?: string; reason?: string; code?: string }[] | undefined
 ): Record<string, string> => {
   if (!errors) return {}
 
   const formatted: Record<string, string> = {}
-  for (const [key, messages] of Object.entries(errors)) {
-    formatted[key] = messages[0] || 'Invalid value'
+  for (const err of errors) {
+    if (err.field) {
+      formatted[err.field] = err.reason || 'Invalid value'
+    }
   }
   return formatted
 }

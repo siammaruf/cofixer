@@ -37,9 +37,13 @@ async function bootstrap() {
         }),
     );
 
+    // Global API prefix
+    app.setGlobalPrefix('api');
+
     // Version Control
     app.enableVersioning({
         type: VersioningType.URI,
+        defaultVersion: '1',
     });
 
     app.enableCors({

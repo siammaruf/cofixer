@@ -26,18 +26,14 @@ const resetPasswordSchema = z.object({
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
-// Mock server action for resetting password
-async function resetPasswordAction(prevState: any, formData: FormData) {
-  'use server';
+// Mock action for resetting password
+async function resetPasswordAction(_prevState: unknown, formData: FormData) {
   try {
     // In a real app, you would update the user's password in the database
-    const password = formData.get('password');
-    const mobileNumber = formData.get('mobileNumber');
-    
     // Mock success response
-    return { 
-      success: true, 
-      message: "Password reset successfully" 
+    return {
+      success: true,
+      message: "Password reset successfully"
     };
   } catch (error) {
     return { 

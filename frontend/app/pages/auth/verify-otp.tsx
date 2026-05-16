@@ -26,22 +26,20 @@ const verifyOTPSchema = z.object({
 
 type VerifyOTPFormData = z.infer<typeof verifyOTPSchema>;
 
-// Mock server action for verifying OTP
-async function verifyOTPAction(prevState: any, formData: FormData) {
-  'use server';
+// Mock action for verifying OTP
+async function verifyOTPAction(_prevState: unknown, formData: FormData) {
   try {
     // In a real app, you would validate the OTP against what was sent
-    const otp = formData.get('otp');
-    const mobileNumber = formData.get('mobileNumber');
-    
+    const mobileNumber = formData.get('mobileNumber') as string;
+
     // For demo purposes, any OTP is valid
     // In a real app, you would verify the OTP against what was sent
-    
+
     // Mock success response
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: "OTP verified successfully",
-      mobileNumber 
+      mobileNumber
     };
   } catch (error) {
     return { 

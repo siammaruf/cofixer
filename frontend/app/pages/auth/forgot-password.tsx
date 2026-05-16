@@ -25,18 +25,17 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
-// Mock server action for sending OTP
-async function sendOTPAction(prevState: any, formData: FormData) {
-  'use server';
+// Mock action for sending OTP
+async function sendOTPAction(_prevState: unknown, formData: FormData) {
   try {
     // In a real app, you would validate the mobile number and send an OTP
-    const mobileNumber = formData.get('mobileNumber');
-    
+    const mobileNumber = formData.get('mobileNumber') as string;
+
     // Mock success response
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: `OTP sent to ${mobileNumber}`,
-      mobileNumber 
+      mobileNumber
     };
   } catch (error) {
     return { 

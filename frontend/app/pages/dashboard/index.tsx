@@ -1,100 +1,69 @@
-import { Link } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Users, Activity, CheckCircle, ArrowRight } from "lucide-react";
+import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '~/redux/store/hooks'
+import { fetchStats } from '~/redux/features/cmsSlice'
 
-export default function Dashboard() {
+export default function DashboardOverview() {
+  const dispatch = useAppDispatch()
+  const { stats, loading, error } = useAppSelector((state) => state.cms)
+
+  useEffect(() => {
+    dispatch(fetchStats())
+  }, [dispatch])
+
+  if (loading) {
+    return <div className="text-center py-8">Loading stats...</div>
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-600">{error}</div>
+  }
+
+  const statCards = stats
+    ? [
+        {
+          label: 'Services',
+          value: stats.services,
+          color: 'bg-blue-50 text-blue-700',
+        },
+        {
+          label: 'Projects',
+          value: stats.projects,
+          color: 'bg-green-50 text-green-700',
+        },
+        {
+          label: 'Blog Posts',
+          value: stats.blogPosts,
+          color: 'bg-purple-50 text-purple-700',
+        },
+        {
+          label: 'Team Members',
+          value: stats.teamMembers,
+          color: 'bg-orange-50 text-orange-700',
+        },
+        {
+          label: 'Testimonials',
+          value: stats.testimonials,
+          color: 'bg-pink-50 text-pink-700',
+        },
+        {
+          label: 'Contacts',
+          value: stats.contacts,
+          color: 'bg-gray-50 text-gray-700',
+        },
+      ]
+    : []
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Welcome back!</h2>
-        <p className="text-muted-foreground">
-          Here's an overview of your application
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">Registered users</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Sessions</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">Currently active</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">System Status</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">Healthy</div>
-            <p className="text-xs text-muted-foreground">All systems operational</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Link to="/admin/users">
-              <Button variant="outline" className="w-full justify-between">
-                Manage Users
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/admin/users/create">
-              <Button variant="outline" className="w-full justify-between">
-                Add New User
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/admin/profile">
-              <Button variant="outline" className="w-full justify-between">
-                Edit Profile
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+    <div>
+      <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {statCards.map((card) => (
+          <div key={card.label} className={`rounded-lg p-6 ${card.color}`}>
+            <div className="text-3xl font-bold">{card.value}</div>
+            <div className="text-sm opacity-80">{card.label}</div>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Getting Started</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              This is a generic React starter kit. Customize this dashboard to fit your application needs.
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-              <li>Authentication system with Redux state management</li>
-              <li>User management with CRUD operations</li>
-              <li>Form validation with React Hook Form and Zod</li>
-              <li>Responsive UI with Tailwind CSS and shadcn/ui</li>
-              <li>Type-safe API layer with TypeScript</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
     </div>
-  );
+  )
 }

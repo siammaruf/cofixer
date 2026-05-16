@@ -186,7 +186,7 @@ export default function CreateUser() {
                       <FormControl>
                         <Checkbox
                           checked={field.value}
-                          onChange={(e) => field.onChange(e.target.checked)}
+                          onCheckedChange={field.onChange}
                         />
                       </FormControl>
                       <FormLabel className="font-normal">Active User</FormLabel>

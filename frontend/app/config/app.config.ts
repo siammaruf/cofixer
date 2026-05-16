@@ -1,5 +1,5 @@
 export const appConfig = {
-  name: 'React Starter Kit',
-  description: 'A modern React starter kit with authentication, Redux, and UI components',
+  name: 'Cofixer',
+  description: 'AI-powered solutions for your business',
   version: '1.0.0',
 }

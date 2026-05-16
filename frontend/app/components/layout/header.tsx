@@ -11,12 +11,19 @@ export default function Header() {
         <Link to="/" className="text-xl font-bold">
           {appConfig.name}
         </Link>
-        <nav className="flex gap-4">
+        <nav className="flex gap-4 items-center">
           <Link to="/" className="hover:text-primary">Home</Link>
           <Link to="/about" className="hover:text-primary">About</Link>
+          <Link to="/services" className="hover:text-primary">Services</Link>
+          <Link to="/projects" className="hover:text-primary">Projects</Link>
+          <Link to="/blog" className="hover:text-primary">Blog</Link>
+          <Link to="/team" className="hover:text-primary">Team</Link>
+          <Link to="/testimonials" className="hover:text-primary">Testimonials</Link>
+          <Link to="/faqs" className="hover:text-primary">FAQs</Link>
+          <Link to="/contact" className="hover:text-primary">Contact</Link>
           {isAuthenticated ? (
             <>
-              <Link to="/admin" className="hover:text-primary">Dashboard</Link>
+              <Link to="/admin" className="hover:text-primary font-medium">Dashboard</Link>
               <Link to="/login" className="hover:text-primary">Logout</Link>
             </>
           ) : (

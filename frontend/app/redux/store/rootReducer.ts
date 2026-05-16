@@ -1,12 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import authReducer from '~/redux/features/authSlice'
 import userReducer from '~/redux/features/userSlice'
-import counterReducer from '~/redux/features/counterSlice'
+import cmsReducer from '~/redux/features/cmsSlice'
 
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
-  counter: counterReducer,
+  cms: cmsReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

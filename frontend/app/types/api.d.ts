@@ -1,19 +1,30 @@
 export interface ApiResponse<T> {
+  success: boolean
+  statusCode: number
+  message: string
   data: T
-  message?: string
+  timestamp: string
+  path: string
+}
+
+export interface PaginatedApiResponse<T> extends ApiResponse<T[]> {
+  meta: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
 }
 
 export interface ApiError {
+  success: false
+  statusCode: number
   message: string
-  status: number
-  errors?: Record<string, string[]>
-}
-
-export interface PaginatedResponse<T> {
-  data: T[]
-  total: number
-  page: number
-  limit: number
+  error?: { field?: string; reason?: string; code?: string }[]
+  timestamp: string
+  path: string
 }
 
 export interface LoginCredentials {

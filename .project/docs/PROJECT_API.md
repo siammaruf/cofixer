@@ -18,13 +18,13 @@
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| POST | `/api/v1/auth/register` | Register new user | No |
-| POST | `/api/v1/auth/login` | Login | No |
-| POST | `/api/v1/auth/refresh` | Refresh access token | No |
-| POST | `/api/v1/auth/logout` | Logout | Yes |
-| POST | `/api/v1/auth/forgot-password` | Request password reset | No |
-| POST | `/api/v1/auth/reset-password` | Reset password | No |
-| GET | `/api/v1/auth/me` | Get current user | Yes |
+| POST | `/api/auth/register` | Register new user | No |
+| POST | `/api/auth/login` | Login | No |
+| POST | `/api/auth/refresh` | Refresh access token | No |
+| POST | `/api/auth/logout` | Logout | Yes |
+| POST | `/api/auth/forgot-password` | Request password reset | No |
+| POST | `/api/auth/reset-password` | Reset password | No |
+| GET | `/api/auth/me` | Get current user | Yes |
 
 ---
 
@@ -32,16 +32,16 @@
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/api/v1/services` | List services | No |
-| GET | `/api/v1/services/:slug` | Get service by slug | No |
-| GET | `/api/v1/projects` | List projects | No |
-| GET | `/api/v1/projects/:slug` | Get project by slug | No |
-| GET | `/api/v1/blog` | List blog posts | No |
-| GET | `/api/v1/blog/:slug` | Get blog post by slug | No |
-| GET | `/api/v1/team` | List team members | No |
-| GET | `/api/v1/testimonials` | List testimonials | No |
-| GET | `/api/v1/faqs` | List FAQs | No |
-| GET | `/api/v1/gallery` | List gallery images | No |
+| GET | `/api/services` | List services | No |
+| GET | `/api/services/:slug` | Get service by slug | No |
+| GET | `/api/projects` | List projects | No |
+| GET | `/api/projects/:slug` | Get project by slug | No |
+| GET | `/api/blog` | List blog posts | No |
+| GET | `/api/blog/:slug` | Get blog post by slug | No |
+| GET | `/api/team` | List team members | No |
+| GET | `/api/testimonials` | List testimonials | No |
+| GET | `/api/faqs` | List FAQs | No |
+| GET | `/api/gallery` | List gallery images | No |
 
 ---
 
@@ -49,9 +49,9 @@
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/api/v1/seo/settings` | Get SEO settings | No |
-| GET | `/api/v1/sitemap` | Get sitemap data | No |
-| GET | `/api/v1/robots-txt` | Get robots.txt content | No |
+| GET | `/api/seo/settings` | Get SEO settings | No |
+| GET | `/api/sitemap` | Get sitemap data | No |
+| GET | `/api/robots-txt` | Get robots.txt content | No |
 
 ---
 
