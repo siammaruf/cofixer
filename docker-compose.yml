@@ -34,34 +34,6 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: cofixer-backend
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-      PORT: 3000
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DATABASE: cofixer
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    command: npm run start:dev
-
 volumes:
   postgres_data:
   redis_data:
