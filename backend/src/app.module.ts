@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -15,7 +15,6 @@ import jwtConfig from './config/jwt.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { join } from 'path';
-import { CorsMiddleware } from './core/middleware';
 import { UserModule } from './modules/users';
 import { AuthModule } from './modules/auth';
 import { PassportModule } from '@nestjs/passport';
@@ -120,8 +119,4 @@ import { CacheModule } from '@infrastructure/cache';
         },
     ],
 })
-export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(CorsMiddleware).forRoutes('*');
-    }
-}
+export class AppModule {}

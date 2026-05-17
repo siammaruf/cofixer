@@ -284,13 +284,24 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 ? exception.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        // Get user-friendly error message
+        // Get user-friendly error message — never leak raw exception messages to users
         let message: string;
-        if (exception.message) {
+        if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
+            message = 'An unexpected error occurred. Please try again later.';
+        } else if (status === HttpStatus.NOT_FOUND) {
             message =
-                status === HttpStatus.INTERNAL_SERVER_ERROR
-                    ? 'An unexpected error occurred. Please try again later.'
-                    : exception.message;
+                'The service you requested is temporarily unavailable. Please try again later.';
+        } else if (status === HttpStatus.BAD_REQUEST) {
+            message =
+                'Something was wrong with that request. Please check your input and try again.';
+        } else if (status === HttpStatus.UNAUTHORIZED) {
+            message =
+                'Your session has expired or you are not logged in. Please sign in again.';
+        } else if (status === HttpStatus.FORBIDDEN) {
+            message =
+                "You don't have permission to do that. If you think this is a mistake, please contact support.";
+        } else if (exception.message) {
+            message = exception.message;
         } else {
             message = 'An unexpected error occurred';
         }

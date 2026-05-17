@@ -17,7 +17,7 @@ const getUserFriendlyMessage = (status: number, rawMessage?: string): string => 
     case 403:
       return "You don't have permission to do that. If you think this is a mistake, please contact support."
     case 404:
-      return 'The service you requested is temporarily unavailable. Please try again later.'
+      return isHtml ? 'The service you requested is temporarily unavailable. Please try again later.' : (rawMessage || 'The service you requested is temporarily unavailable. Please try again later.')
     case 409:
       return isHtml ? 'That action could not be completed because of a conflict. Please try again.' : (rawMessage || 'That action could not be completed because of a conflict. Please try again.')
     case 422:

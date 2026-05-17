@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
-import { login, clearError } from "~/redux/features/authSlice";
+import { login, clearError, getCurrentUser } from "~/redux/features/authSlice";
 import { loginSchema } from "~/utils/validations/auth";
 import { LoadingOverlay } from "~/components/ui/loading-overlay";
 import type { LoginCredentials } from "~/types/api";
@@ -14,6 +14,7 @@ export default function Login() {
   const { loading, error, isAuthenticated } = useAppSelector(
     (state) => state.auth
   );
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -24,7 +25,7 @@ export default function Login() {
   } = useForm<LoginCredentials>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
       rememberMe: false,
     },
@@ -45,7 +46,11 @@ export default function Login() {
   }, [dispatch]);
 
   const onSubmit = async (data: LoginCredentials) => {
-    await dispatch(login(data));
+    const result = await dispatch(login(data));
+    if (login.fulfilled.match(result)) {
+      // Verify the httpOnly cookie was actually set before redirecting
+      await dispatch(getCurrentUser());
+    }
   };
 
   const rememberMe = watch("rememberMe");
@@ -76,7 +81,10 @@ export default function Login() {
                 <LoadingOverlay isLoading={loading} message="Signing in...">
                   <div className="contact-form" style={{ width: '100%' }}>
                     <form
-                      onSubmit={handleSubmit(onSubmit)}
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        return handleSubmit(onSubmit)(e);
+                      }}
                       className="wow fadeInUp"
                       data-wow-delay="0.2s"
                     >
@@ -97,17 +105,17 @@ export default function Login() {
                           </div>
                         )}
 
-                        {/* Username */}
+                        {/* Email */}
                         <div className="form-group col-md-12 mb-4">
                           <input
-                            type="text"
+                            type="email"
                             className={`form-control ${
-                              errors.username ? "is-invalid" : ""
+                              errors.email ? "is-invalid" : ""
                             }`}
-                            placeholder="Email or phone number"
-                            {...register("username")}
+                            placeholder="Enter your email"
+                            {...register("email")}
                           />
-                          {errors.username && (
+                          {errors.email && (
                             <div
                               className="invalid-feedback"
                               style={{
@@ -117,21 +125,76 @@ export default function Login() {
                                 marginTop: "6px",
                               }}
                             >
-                              {errors.username.message}
+                              {errors.email.message}
                             </div>
                           )}
                         </div>
 
                         {/* Password */}
                         <div className="form-group col-md-12 mb-4">
-                          <input
-                            type="password"
-                            className={`form-control ${
-                              errors.password ? "is-invalid" : ""
-                            }`}
-                            placeholder="Enter your password"
-                            {...register("password")}
-                          />
+                          <div style={{ position: "relative" }}>
+                            <input
+                              type={showPassword ? "text" : "password"}
+                              className={`form-control ${
+                                errors.password ? "is-invalid" : ""
+                              }`}
+                              placeholder="Enter your password"
+                              {...register("password")}
+                              style={{ paddingRight: "44px" }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="btn btn-link"
+                              style={{
+                                position: "absolute",
+                                right: "12px",
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                background: "none",
+                                border: "none",
+                                padding: 0,
+                                cursor: "pointer",
+                                color: "#A7AABB",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                              tabIndex={-1}
+                            >
+                              {showPassword ? (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                  <circle cx="12" cy="12" r="3" />
+                                  <path d="M4 4l16 16" />
+                                </svg>
+                              ) : (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                  <circle cx="12" cy="12" r="3" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
                           {errors.password && (
                             <div
                               className="invalid-feedback"

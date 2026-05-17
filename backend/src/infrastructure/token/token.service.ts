@@ -19,28 +19,20 @@ export class TokenService {
               )
             : this.configService.get<string>('AUTH_TOKEN_EXPIRED_TIME');
 
-        const expiresInNumber = Number(expiresIn);
-
         // Log only in development mode
         if (process.env.MODE === 'DEV') {
             console.log(
                 '[TokenService] getAccessToken - expiresIn:',
                 expiresIn,
-                'parsed:',
-                expiresInNumber,
-                'isNaN:',
-                isNaN(expiresInNumber),
             );
         }
 
-        if (isNaN(expiresInNumber)) {
-            throw new Error(
-                `Invalid JWT expiry time: ${expiresIn}. Check your .env file.`,
-            );
+        if (!expiresIn) {
+            throw new Error(`Missing JWT expiry time. Check your .env file.`);
         }
 
         return this.jwtService.sign(payload, {
-            expiresIn: expiresInNumber,
+            expiresIn: expiresIn as any,
         });
     }
 
@@ -48,28 +40,23 @@ export class TokenService {
         const refreshExpiresIn = this.configService.get<string>(
             'AUTH_REFRESH_TOKEN_EXPIRED_TIME',
         );
-        const refreshExpiresInNumber = Number(refreshExpiresIn);
 
         // Log only in development mode
         if (process.env.MODE === 'DEV') {
             console.log(
                 '[TokenService] getRefreshToken - refreshExpiresIn:',
                 refreshExpiresIn,
-                'parsed:',
-                refreshExpiresInNumber,
-                'isNaN:',
-                isNaN(refreshExpiresInNumber),
             );
         }
 
-        if (isNaN(refreshExpiresInNumber)) {
+        if (!refreshExpiresIn) {
             throw new Error(
-                `Invalid JWT refresh expiry time: ${refreshExpiresIn}. Check your .env file.`,
+                `Missing JWT refresh expiry time. Check your .env file.`,
             );
         }
 
         return this.jwtService.sign(payload, {
-            expiresIn: refreshExpiresInNumber,
+            expiresIn: refreshExpiresIn as any,
         });
     }
 

@@ -1,47 +1,48 @@
 import {
     CallHandler,
     ExecutionContext,
-    Inject,
     Injectable,
     NestInterceptor,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { envConfigService } from '../../config/env-config.service';
 
 @Injectable()
 export class SetToken implements NestInterceptor {
-    constructor(
-        @Inject(ConfigService) private readonly configService: ConfigService,
-    ) {}
-
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const res = context.switchToHttp().getResponse();
+        const isProduction = process.env.MODE !== 'DEV';
+        const cookieOptions = {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? ('none' as const) : ('lax' as const),
+            path: '/',
+        };
+        const authConfig = envConfigService.getAuthJWTConfig();
+        const accessTokenName =
+            authConfig.AUTH_TOKEN_COOKIE_NAME || 'accessToken';
+        const refreshTokenName =
+            authConfig.AUTH_REFRESH_TOKEN_COOKIE_NAME || 'refreshToken';
+
         return next.handle().pipe(
             map((value) => {
                 if (value.success && value.data?.token) {
+                    console.log(
+                        `[SetToken] MODE=${process.env.MODE}, isProduction=${isProduction}, cookieOptions=`,
+                        cookieOptions,
+                        `cookieName=${accessTokenName}`,
+                    );
                     res.cookie(
-                        this.configService.get<string>(
-                            'AUTH_TOKEN_COOKIE_NAME',
-                        ),
+                        accessTokenName,
                         value.data.token,
-                        {
-                            httpOnly: true,
-                            secure: true,
-                            sameSite: 'none',
-                        },
+                        cookieOptions,
                     );
 
                     if (value.data?.refreshToken) {
                         res.cookie(
-                            this.configService.get<string>(
-                                'AUTH_REFRESH_TOKEN_COOKIE_NAME',
-                            ),
+                            refreshTokenName,
                             value.data.refreshToken,
-                            {
-                                httpOnly: true,
-                                secure: true,
-                                sameSite: 'none',
-                            },
+                            cookieOptions,
                         );
                     }
 
