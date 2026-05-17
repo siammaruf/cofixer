@@ -41,7 +41,7 @@ import { RemoveToken, SetToken } from '@core/interceptors';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    @Version(VERSION_NEUTRAL)
+    @Version(['1', VERSION_NEUTRAL])
     @Post('login')
     @Public()
     @UseInterceptors(SetToken)
@@ -67,7 +67,7 @@ export class AuthController {
         return await this.authService.login(dto);
     }
 
-    @Version(VERSION_NEUTRAL)
+    @Version(['1', VERSION_NEUTRAL])
     @Post('admin-login')
     @Public()
     @UsePipes(ValidationPipe)
@@ -95,7 +95,7 @@ export class AuthController {
         return await this.authService.adminLogin(dto);
     }
 
-    @Version(VERSION_NEUTRAL)
+    @Version(['1', VERSION_NEUTRAL])
     @Post('social-login')
     @Public()
     @UsePipes(ValidationPipe)
@@ -336,6 +336,7 @@ export class AuthController {
         return await this.authService.refreshAccessToken(refreshToken);
     }
 
+    @Version(['1', VERSION_NEUTRAL])
     @Get('me')
     @Public()
     @UsePipes(ValidationPipe)
@@ -360,6 +361,7 @@ export class AuthController {
         return null;
     }
 
+    @Version(['1', VERSION_NEUTRAL])
     @Get('csrf-token')
     @Public()
     @ApiSwagger({
@@ -379,6 +381,7 @@ export class AuthController {
         });
     }
 
+    @Version(['1', VERSION_NEUTRAL])
     @Get('check-login')
     @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)
@@ -402,6 +405,7 @@ export class AuthController {
         return null;
     }
 
+    @Version(['1', VERSION_NEUTRAL])
     @Get('refresh-access-token')
     @Public()
     @UsePipes(ValidationPipe)
@@ -428,6 +432,7 @@ export class AuthController {
         return await this.authService.refreshAccessToken(refreshToken);
     }
 
+    @Version(['1', VERSION_NEUTRAL])
     @Get('logout')
     @UsePipes(ValidationPipe)
     @UseInterceptors(RemoveToken)
@@ -446,7 +451,7 @@ export class AuthController {
         return await this.authService.logout(user);
     }
 
-    @Version(VERSION_NEUTRAL)
+    @Version(['1', VERSION_NEUTRAL])
     @Post('register-fcm-token')
     @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)

@@ -3,6 +3,8 @@ import { post } from '../httpMethods/post'
 import type {
   LoginCredentials,
   LoginResponse,
+  ApiResponse,
+  AuthUser,
   ForgotPasswordRequest,
   ResetPasswordRequest,
   VerifyOtpRequest,
@@ -11,29 +13,29 @@ import type {
 
 export const authService = {
   login: (credentials: LoginCredentials) =>
-    post<LoginResponse>('/auth/login', credentials),
+    post<ApiResponse<LoginResponse>>('/auth/login', credentials),
 
   logout: () =>
-    post<void>('/auth/logout'),
+    post<ApiResponse<void>>('/auth/logout'),
 
   refreshToken: (refreshToken: string) =>
-    post<{ accessToken: string }>('/auth/refresh', { refreshToken }),
+    post<ApiResponse<{ token: string }>>('/auth/refresh', { refreshToken }),
 
   register: (data: RegisterRequest) =>
-    post<{ email: string; expiresAt: string }>('/auth/register', data),
+    post<ApiResponse<{ email: string; expiresAt: string }>>('/auth/register', data),
 
   verifyEmail: (data: VerifyOtpRequest) =>
-    post<LoginResponse>('/auth/verify-email', data),
+    post<ApiResponse<LoginResponse>>('/auth/verify-email', data),
 
   forgotPassword: (data: ForgotPasswordRequest) =>
-    post<{ message: string }>('/auth/forgot-password', data),
+    post<ApiResponse<{ message: string }>>('/auth/forgot-password', data),
 
   resetPassword: (data: ResetPasswordRequest) =>
-    post<{ message: string }>('/auth/reset-password', data),
+    post<ApiResponse<{ message: string }>>('/auth/reset-password', data),
 
   verifyOtp: (data: VerifyOtpRequest) =>
-    post<{ verified: boolean }>('/auth/verify-otp', data),
+    post<ApiResponse<{ verified: boolean }>>('/auth/verify-otp', data),
 
   getCurrentUser: () =>
-    get<LoginResponse['user']>('/auth/me'),
+    get<ApiResponse<AuthUser>>('/auth/me'),
 }

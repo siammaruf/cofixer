@@ -28,25 +28,24 @@ export interface ApiError {
 }
 
 export interface LoginCredentials {
-  username: string
+  email: string
   password: string
   rememberMe?: boolean
 }
 
-export interface AuthTokens {
-  accessToken: string
-  refreshToken?: string
-}
-
 export interface AuthUser {
-  id: number
+  id: string
   email: string
-  name: string
+  fullName: string
+  role?: string
+  image?: string | null
+  isActive?: boolean
 }
 
 export interface LoginResponse {
+  token: string
+  refreshToken: string
   user: AuthUser
-  tokens: AuthTokens
 }
 
 export interface ForgotPasswordRequest {
@@ -80,7 +79,7 @@ export interface FormActionResponse<T = unknown> {
 }
 
 export type LoginFormResponse = FormActionResponse<{
-  username: string
+  email: string
   password: string
   rememberMe?: boolean
 }>

@@ -22,7 +22,7 @@ export const login = createAsyncThunk(
     try {
       const response = await authService.login(credentials)
       // Token is stored in httpOnly cookie by the server
-      return response.user
+      return response.data.user
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -47,7 +47,8 @@ export const getCurrentUser = createAsyncThunk(
   'auth/getCurrentUser',
   async (_, { rejectWithValue }) => {
     try {
-      return await authService.getCurrentUser()
+      const response = await authService.getCurrentUser()
+      return response.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -65,6 +66,12 @@ const authSlice = createSlice({
     setAuthenticated: (state, action) => {
       state.isAuthenticated = action.payload
     },
+    clearAuth: (state) => {
+      state.user = null
+      state.isAuthenticated = false
+      state.loading = false
+      state.error = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,7 +83,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false
         state.user = action.payload
-        state.isAuthenticated = true
+        // Don't set isAuthenticated here — wait for getCurrentUser() to verify the cookie
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false
@@ -104,17 +111,23 @@ const authSlice = createSlice({
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.loading = false
-        state.user = action.payload
-        state.isAuthenticated = true
+        state.error = null
+        if (action.payload) {
+          state.user = action.payload
+          state.isAuthenticated = true
+        } else {
+          state.user = null
+          state.isAuthenticated = false
+        }
       })
-      .addCase(getCurrentUser.rejected, (state) => {
+      .addCase(getCurrentUser.rejected, (state, action) => {
         state.loading = false
         state.user = null
         state.isAuthenticated = false
-        // Don't set state.error — background auth checks shouldn't show UI messages
+        state.error = action.payload as string
       })
   },
 })
 
-export const { clearError, setAuthenticated } = authSlice.actions
+export const { clearError, setAuthenticated, clearAuth } = authSlice.actions
 export default authSlice.reducer

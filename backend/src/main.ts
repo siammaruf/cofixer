@@ -14,7 +14,6 @@ import { TransformInterceptor } from './core/interceptors/transform.interceptor'
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
-        cors: true,
         logger: WinstonModule.createLogger({
             instance: instance,
         }),
@@ -47,7 +46,12 @@ async function bootstrap() {
     });
 
     app.enableCors({
-        origin: envConfigService.getOrigins(),
+        origin: envConfigService.isProduction()
+            ? envConfigService.getOrigins()
+            : (
+                  _origin: string | undefined,
+                  callback: (err: Error | null, allow?: boolean) => void,
+              ) => callback(null, true),
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
         allowedHeaders: [
@@ -56,6 +60,8 @@ async function bootstrap() {
             'token',
             'x-requested-with',
             'x-forwarded-for',
+            'X-CSRF-Token',
+            'X-Retry-CSRF',
         ],
         exposedHeaders: ['Authorization'],
     });

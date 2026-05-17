@@ -158,15 +158,6 @@ export default function Home() {
     const gsap = (window as any).gsap
     const ScrollTrigger = (window as any).ScrollTrigger
     const SplitText = (window as any).SplitText
-    const WOW = (window as any).WOW
-
-    // Re-initialize WOW animations
-    try {
-      if (WOW) new WOW().init()
-    } catch (e) {
-      console.warn('WOW init failed:', e)
-    }
-
     // Re-initialize text effects (skip already-split elements)
     try {
       if ($ && $('.text-effect').length && gsap && SplitText) {

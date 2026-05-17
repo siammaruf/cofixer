@@ -38,9 +38,6 @@ export const fetchStats = createAsyncThunk(
   'cms/fetchStats',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await cmsAdminService.getSiteSettings()
-      // getStats is on cmsService, not cmsAdminService
-      // We need to import cmsService for public stats
       const { cmsService } = await import('~/services/httpServices/cmsService')
       const statsRes = await cmsService.getStats()
       return statsRes.data

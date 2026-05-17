@@ -9,6 +9,7 @@ import {
 import { useState, useEffect } from "react";
 import { Providers } from './hooks/providers/providers';
 import MagicCursor from "./components/MagicCursor";
+import WowInit from "./components/WowInit";
 import type { Route } from "./+types/root";
 import "./styles/app.css";
 
@@ -69,6 +70,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Providers>
           {children}
         </Providers>
+        <WowInit />
         <MagicCursor />
         <ScrollRestoration />
         <Scripts />
@@ -88,8 +90,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <script src="/js/ScrollTrigger.min.js"></script>
         <script src="/js/SmoothScroll.js"></script>
         <script src="/js/jquery.mb.YTPlayer.min.js"></script>
-        <script src="/js/wow.min.js"></script>
         <script src="/js/function.js"></script>
+        <script src="/js/wow.min.js"></script>
       </body>
     </html>
   );
