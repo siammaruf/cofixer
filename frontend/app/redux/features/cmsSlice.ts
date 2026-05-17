@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { cmsAdminService } from '~/services'
+import { cmsAdminService, cmsService } from '~/services'
 import type {
   Service,
   Project,
@@ -38,7 +38,6 @@ export const fetchStats = createAsyncThunk(
   'cms/fetchStats',
   async (_, { rejectWithValue }) => {
     try {
-      const { cmsService } = await import('~/services/httpServices/cmsService')
       const statsRes = await cmsService.getStats()
       return statsRes.data
     } catch (error) {
