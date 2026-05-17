@@ -1,5 +1,4 @@
 import { Link, useParams, useLoaderData } from 'react-router'
-import { SuspenseLoader } from '~/components/ui/suspense-loader'
 import { EmptyState } from '~/components/ui/empty-state'
 import { cmsService } from '~/services/httpServices/cmsService'
 import { useProject } from '~/services/httpServices/queries'
@@ -29,13 +28,9 @@ export function meta({ data }: { data: { project?: Project; seo?: SeoSettings } 
 export default function ProjectDetailPage() {
   const { slug } = useParams()
   const { project: initialProject } = useLoaderData<typeof loader>()
-  const { data: project, isLoading, error } = useProject(slug || '', {
+  const { data: project, error } = useProject(slug || '', {
     initialData: initialProject ?? undefined,
   })
-
-  if (isLoading) {
-    return <SuspenseLoader message="Loading project..." />
-  }
 
   if (error || !project) {
     return (

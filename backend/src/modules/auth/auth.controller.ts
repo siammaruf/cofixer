@@ -225,6 +225,29 @@ export class AuthController {
         return await this.authService.resetPassword(dto);
     }
 
+    @Get('me')
+    @UsePipes(ValidationPipe)
+    @UseGuards(JwtAuthGuard)
+    @ApiSwagger({
+        resourceName: 'Get Current User',
+        operation: 'custom',
+        summary: 'Get current authenticated user',
+        responseDto: LoginResponsePayloadDto,
+        requiresAuth: true,
+        errors: [
+            { status: 401, description: 'Unauthorized - invalid token' },
+            { status: 404, description: 'User not found' },
+        ],
+    })
+    async getCurrentUser(
+        @CurrentUser() user: interfaces.IJwtPayload | null,
+    ): Promise<ResponsePayloadDto<interfaces.IJwtPayload> | null> {
+        if (user) {
+            return await this.authService.getUserInformation(user);
+        }
+        return null;
+    }
+
     @Get('check-login')
     @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)

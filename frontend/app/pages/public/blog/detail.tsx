@@ -1,5 +1,4 @@
 import { Link, useParams, useLoaderData } from 'react-router'
-import { SuspenseLoader } from '~/components/ui/suspense-loader'
 import { EmptyState } from '~/components/ui/empty-state'
 import { cmsService } from '~/services/httpServices/cmsService'
 import { useBlogPost } from '~/services/httpServices/queries'
@@ -29,77 +28,136 @@ export function meta({ data }: { data: { post?: BlogPost; seo?: SeoSettings } })
 export default function BlogPostDetailPage() {
   const { slug } = useParams()
   const { post: initialPost } = useLoaderData<typeof loader>()
-  const { data: post, isLoading, error } = useBlogPost(slug || '', {
+  const { data: post, error } = useBlogPost(slug || '', {
     initialData: initialPost ?? undefined,
   })
 
-  if (isLoading) {
-    return <SuspenseLoader message="Loading blog post..." />
-  }
-
   if (error || !post) {
     return (
-      <div className="container mx-auto p-4">
-        <EmptyState
-          title="Post Not Found"
-          description="The blog post you are looking for does not exist."
-          action={
-            <Link to="/blog" className="text-primary hover:underline">
-              ← Back to Blog
-            </Link>
-          }
-        />
+      <div className="page-single-post">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <EmptyState
+                title="Post Not Found"
+                description="The blog post you are looking for does not exist."
+                action={
+                  <Link to="/blog" className="btn-default">
+                    ← Back to Blog
+                  </Link>
+                }
+              />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
 
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })
+  }
+
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <Link
-        to="/blog"
-        className="text-primary hover:underline mb-4 inline-block"
-      >
-        ← Back to Blog
-      </Link>
-      {post.coverImage && (
-        <img
-          src={post.coverImage}
-          alt={post.title}
-          className="w-full h-64 object-cover rounded-lg mb-8"
-        />
-      )}
-      <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-      <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
-        {post.authorName && <span>By {post.authorName}</span>}
-        {post.publishedAt && (
-          <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-        )}
-        {post.category && (
-          <span className="bg-gray-100 px-3 py-1 rounded-full">
-            {post.category}
-          </span>
-        )}
+    <>
+      {/* Page Header Start */}
+      <div className="page-header">
+        <div className="container-fluid">
+          <div className="row align-items-center">
+            <div className="col-lg-12">
+              <div className="page-header-box">
+                <h1 className="wow fadeInUp" data-cursor="-opaque">{post.title}</h1>
+                <div className="post-single-meta wow fadeInUp" data-wow-delay="0.2s">
+                  <ol className="breadcrumb">
+                    {post.authorName && (
+                      <li><i className="fa-regular fa-user"></i> {post.authorName}</li>
+                    )}
+                    {post.publishedAt && (
+                      <li><i className="fa-regular fa-clock"></i> {formatDate(post.publishedAt)}</li>
+                    )}
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      {post.excerpt && (
-        <p className="text-lg text-gray-600 mb-6 italic">{post.excerpt}</p>
-      )}
-      {post.content && (
-        <div className="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-          {post.content}
+      {/* Page Header End */}
+
+      {/* Page Single Post Start */}
+      <div className="page-single-post">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              {/* Post Featured Image Start */}
+              {post.coverImage && (
+                <div className="post-image">
+                  <figure className="image-anime reveal">
+                    <img src={post.coverImage} alt={post.title} />
+                  </figure>
+                </div>
+              )}
+              {/* Post Featured Image End */}
+
+              {/* Post Single Content Start */}
+              <div className="post-content">
+                {/* Post Entry Start */}
+                <div className="post-entry">
+                  {post.excerpt && (
+                    <p className="wow fadeInUp">{post.excerpt}</p>
+                  )}
+                  {post.content && (
+                    <div
+                      className="wow fadeInUp"
+                      data-wow-delay="0.2s"
+                      dangerouslySetInnerHTML={{ __html: post.content }}
+                    />
+                  )}
+                </div>
+                {/* Post Entry End */}
+
+                {/* Post Tag Links Start */}
+                {(post.tags && post.tags.length > 0) && (
+                  <div className="post-tag-links">
+                    <div className="row align-items-center">
+                      <div className="col-lg-8">
+                        {/* Post Tags Start */}
+                        <div className="post-tags wow fadeInUp" data-wow-delay="0.5s">
+                          <span className="tag-links">
+                            Tags:
+                            {post.tags.map((tag) => (
+                              <span key={tag}>{tag}</span>
+                            ))}
+                          </span>
+                        </div>
+                        {/* Post Tags End */}
+                      </div>
+
+                      <div className="col-lg-4">
+                        {/* Post Social Links Start */}
+                        <div className="post-social-sharing wow fadeInUp" data-wow-delay="0.5s">
+                          <ul>
+                            <li><a href="#"><i className="fa-brands fa-facebook-f"></i></a></li>
+                            <li><a href="#"><i className="fa-brands fa-linkedin-in"></i></a></li>
+                            <li><a href="#"><i className="fa-brands fa-instagram"></i></a></li>
+                            <li><a href="#"><i className="fa-brands fa-x-twitter"></i></a></li>
+                          </ul>
+                        </div>
+                        {/* Post Social Links End */}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Post Tag Links End */}
+              </div>
+              {/* Post Single Content End */}
+            </div>
+          </div>
         </div>
-      )}
-      {post.tags && post.tags.length > 0 && (
-        <div className="mt-8 flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
+      </div>
+      {/* Page Single Post End */}
+    </>
   )
 }

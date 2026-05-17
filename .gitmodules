@@ -1,3 +1,6 @@
 [submodule ".kimi"]
 	path = .kimi
 	url = https://github.com/CoFixer/kimi-workflow
+[submodule ".opencode"]
+	path = .opencode
+	url = https://github.com/CoFixer/opencode-workflow

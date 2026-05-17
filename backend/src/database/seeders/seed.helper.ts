@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { AppModule } from '../../app.module';
 import { UtilsService } from '@infrastructure/utils/utils.service';
 import { seedUsers } from './user.seed';
+import { seedCms } from './cms.seed';
 
 async function runSeeder() {
     const app = await NestFactory.create(AppModule);
@@ -12,10 +13,11 @@ async function runSeeder() {
     // Seed Users
     await seedUsers(dataSource, utilsService);
 
+    // Seed CMS Data
+    await seedCms(dataSource);
+
     console.log('User seeding completed!');
-    console.log(
-        'Note: Use npm run seed:facility-demo to seed parking facilities',
-    );
+    console.log('CMS seeding completed!');
 
     await app.close();
     console.log('All seeding completed successfully!');

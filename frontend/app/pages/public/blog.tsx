@@ -1,9 +1,7 @@
 import { Link, useLoaderData } from 'react-router'
-import { SuspenseLoader } from '~/components/ui/suspense-loader'
-import { EmptyState } from '~/components/ui/empty-state'
 import { cmsService } from '~/services/httpServices/cmsService'
 import { useBlogPosts } from '~/services/httpServices/queries'
-import type { BlogPost, SeoSettings } from '~/types/cms'
+import type { SeoSettings } from '~/types/cms'
 
 export async function loader() {
   try {
@@ -28,66 +26,102 @@ export function meta({ data }: { data: { seo?: SeoSettings } }) {
 
 export default function BlogPage() {
   const { posts: initialPosts } = useLoaderData<typeof loader>()
-  const { data: posts, isLoading, error } = useBlogPosts({
+  const { data: posts } = useBlogPosts({
     initialData: initialPosts,
   })
 
-  if (isLoading) {
-    return <SuspenseLoader message="Loading blog posts..." />
-  }
+  // Default blog posts if none from CMS
+  const defaultBlogPosts = [
+    { id: '1', title: 'Ethical AI Balancing Innovation and Responsibility', excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate ', publishedAt: '2025-05-28', slug: 'ethical-ai' },
+    { id: '2', title: 'Machine Learning Demytified A Beginner\'s Guide', excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate ', publishedAt: '2025-04-22', slug: 'ml-guide' },
+    { id: '3', title: 'How AI is Transforming Modern Businesses', excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate ', publishedAt: '2025-04-17', slug: 'ai-transforming' },
+    { id: '4', title: 'Responsible AI Shaping a Better Future Innovation', excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate ', publishedAt: '2025-05-13', slug: 'responsible-ai' },
+    { id: '5', title: 'Ethical Intelligence Driving Trust and Progress', excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate ', publishedAt: '2025-04-08', slug: 'ethical-intelligence' },
+    { id: '6', title: 'AI with Integrity Innovation You Can Trust', excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate ', publishedAt: '2025-04-02', slug: 'ai-integrity' },
+  ]
 
-  if (error) {
-    return (
-      <div className="container mx-auto p-4">
-        <EmptyState
-          title="Error"
-          description="Failed to load blog posts. Please try again later."
-        />
-      </div>
-    )
-  }
+  const displayPosts = posts && posts.length > 0 ? posts : defaultBlogPosts
 
-  if (!posts || posts.length === 0) {
-    return (
-      <div className="container mx-auto p-4">
-        <EmptyState
-          title="No Blog Posts"
-          description="No blog posts available at the moment."
-        />
-      </div>
-    )
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8">Blog</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post: BlogPost) => (
-          <article
-            key={post.id}
-            className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-          >
-            {post.coverImage && (
-              <img
-                src={post.coverImage}
-                alt={post.title}
-                className="w-full h-48 object-cover"
-              />
-            )}
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-              <p className="text-gray-600 text-sm line-clamp-3">
-                {post.excerpt}
-              </p>
-              {post.authorName && (
-                <p className="text-sm text-gray-500 mt-2">
-                  By {post.authorName}
-                </p>
-              )}
+    <>
+      {/* Page Header Start */}
+      <div className="page-header">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-12">
+              {/* Page Header Box Start */}
+              <div className="page-header-box">
+                <h1 className="wow fadeInUp" data-cursor="-opaque">Our <span>blog</span></h1>
+                <nav className="wow fadeInUp" data-wow-delay="0.2s">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><Link to="/">home</Link></li>
+                    <li className="breadcrumb-item active" aria-current="page">blog</li>
+                  </ol>
+                </nav>
+              </div>
+              {/* Page Header Box End */}
             </div>
-          </article>
-        ))}
+          </div>
+        </div>
       </div>
-    </div>
+      {/* Page Header End */}
+
+      {/* Page Blog Section Start */}
+      <div className="page-blog">
+        <div className="container">
+          <div className="row">
+            {displayPosts.map((post, index) => (
+              <div className="col-lg-4 col-md-6" key={post.id}>
+                {/* Post Item Start */}
+                <div className="post-item wow fadeInUp" data-wow-delay={index > 0 ? `${(index * 0.2).toFixed(1)}s` : undefined}>
+                  {/* Post Meta Start */}
+                  <div className="post-meta">
+                    <ul>
+                      <li><span><i className="fa-solid fa-calendar-days"></i> {formatDate(post.publishedAt)}</span></li>
+                    </ul>
+                  </div>
+                  {/* Post Meta End */}
+
+                  {/* Post Item Content Start */}
+                  <div className="post-item-content">
+                    <h2><Link to={`/blog/${post.slug}`}>{post.title}</Link></h2>
+                    <p>{post.excerpt || 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate '}</p>
+                  </div>
+                  {/* Post Item Content End */}
+
+                  {/* Post Item Readmore Button Start*/}
+                  <div className="post-item-btn">
+                    <Link to={`/blog/${post.slug}`} className="readmore-btn">read more</Link>
+                  </div>
+                  {/* Post Item Readmore Button End*/}
+                </div>
+                {/* Post Item End */}
+              </div>
+            ))}
+
+            <div className="col-lg-12">
+              {/* Page Pagination Start */}
+              <div className="page-pagination wow fadeInUp" data-wow-delay="1.2s">
+                <ul className="pagination">
+                  <li><a href="#"><i className="fa-solid fa-angle-left"></i></a></li>
+                  <li className="active"><a href="#">1</a></li>
+                  <li><a href="#">2</a></li>
+                  <li><a href="#">3</a></li>
+                  <li><a href="#"><i className="fa-solid fa-angle-right"></i></a></li>
+                </ul>
+              </div>
+              {/* Page Pagination End */}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Page Blog Section End */}
+    </>
   )
 }

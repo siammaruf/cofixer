@@ -1,5 +1,4 @@
 import { Link, useParams, useLoaderData } from 'react-router'
-import { SuspenseLoader } from '~/components/ui/suspense-loader'
 import { EmptyState } from '~/components/ui/empty-state'
 import { cmsService } from '~/services/httpServices/cmsService'
 import { useService } from '~/services/httpServices/queries'
@@ -29,13 +28,9 @@ export function meta({ data }: { data: { service?: Service; seo?: SeoSettings } 
 export default function ServiceDetailPage() {
   const { slug } = useParams()
   const { service: initialService } = useLoaderData<typeof loader>()
-  const { data: service, isLoading, error } = useService(slug || '', {
+  const { data: service, error } = useService(slug || '', {
     initialData: initialService ?? undefined,
   })
-
-  if (isLoading) {
-    return <SuspenseLoader message="Loading service..." />
-  }
 
   if (error || !service) {
     return (

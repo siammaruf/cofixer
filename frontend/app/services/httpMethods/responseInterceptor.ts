@@ -20,6 +20,12 @@ export function setupResponseInterceptor(instance: AxiosInstance): void {
         }
       }
       
+      // Skip hard redirect for background auth checks — 401 on /auth/me is normal when not logged in
+      const isAuthCheck = originalRequest?.url?.includes('/auth/me')
+      if (error.response?.status === 401 && isAuthCheck) {
+        return Promise.reject(error)
+      }
+
       const errorResponse = createErrorResponse(error)
       return Promise.reject(errorResponse)
     }

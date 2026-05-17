@@ -5,19 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
 import { login, clearError } from "~/redux/features/authSlice";
 import { loginSchema } from "~/utils/validations/auth";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { LoadingOverlay } from "~/components/ui/loading-overlay";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
 import type { LoginCredentials } from "~/types/api";
 
 export default function Login() {
@@ -27,7 +15,13 @@ export default function Login() {
     (state) => state.auth
   );
 
-  const form = useForm<LoginCredentials>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<LoginCredentials>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       username: "",
@@ -54,93 +48,182 @@ export default function Login() {
     await dispatch(login(data));
   };
 
+  const rememberMe = watch("rememberMe");
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <h2 className="text-3xl font-bold">Sign in to your account</h2>
-        </CardHeader>
-        <CardContent>
-          <LoadingOverlay isLoading={loading} message="Signing in...">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                {error && (
-                  <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                    {error}
-                  </div>
-                )}
+    <>
+      {/* Login Section Start */}
+      <div className="page-contact-us" style={{ paddingTop: '200px', paddingBottom: '120px' }}>
+        <div className="container">
+          <div className="row section-row">
+            <div className="col-lg-12">
+              <div className="section-title section-title-center">
+                <h3 className="wow fadeInUp">welcome back</h3>
+                <h2
+                  className="wow fadeInUp"
+                  data-wow-delay="0.2s"
+                  data-cursor="-opaque"
+                >
+                  Sign in to your <span>account</span>
+                </h2>
+              </div>
+            </div>
+          </div>
 
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Email or phone number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Enter your password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex items-center justify-between">
-                  <FormField
-                    control={form.control}
-                    name="rememberMe"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-sm font-medium">
-                          Remember me
-                        </FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                  <div className="text-sm">
-                    <Link
-                      to="/auth/forgot-password"
-                      className="font-medium text-primary hover:text-primary/80"
+          <div className="row justify-content-center">
+            <div className="col-lg-5 col-md-7">
+              <div className="conatct-us-form" style={{ display: 'block', borderRadius: '20px' }}>
+                <LoadingOverlay isLoading={loading} message="Signing in...">
+                  <div className="contact-form" style={{ width: '100%' }}>
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="wow fadeInUp"
+                      data-wow-delay="0.2s"
                     >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                </div>
+                      <div className="row">
+                        {/* Error Message */}
+                        {error && (
+                          <div className="col-md-12 mb-4">
+                            <div
+                              className="rounded-md p-3 text-sm"
+                              style={{
+                                background: "rgba(230, 87, 87, 0.1)",
+                                border: "1px solid rgba(230, 87, 87, 0.3)",
+                                color: "#e65757",
+                              }}
+                            >
+                              {error}
+                            </div>
+                          </div>
+                        )}
 
-                <Button type="submit" className="w-full" disabled={loading}>
-                  Sign in
-                </Button>
-              </form>
-            </Form>
-          </LoadingOverlay>
-        </CardContent>
-      </Card>
-    </div>
+                        {/* Username */}
+                        <div className="form-group col-md-12 mb-4">
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              errors.username ? "is-invalid" : ""
+                            }`}
+                            placeholder="Email or phone number"
+                            {...register("username")}
+                          />
+                          {errors.username && (
+                            <div
+                              className="invalid-feedback"
+                              style={{
+                                display: "block",
+                                color: "#e65757",
+                                fontSize: "14px",
+                                marginTop: "6px",
+                              }}
+                            >
+                              {errors.username.message}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Password */}
+                        <div className="form-group col-md-12 mb-4">
+                          <input
+                            type="password"
+                            className={`form-control ${
+                              errors.password ? "is-invalid" : ""
+                            }`}
+                            placeholder="Enter your password"
+                            {...register("password")}
+                          />
+                          {errors.password && (
+                            <div
+                              className="invalid-feedback"
+                              style={{
+                                display: "block",
+                                color: "#e65757",
+                                fontSize: "14px",
+                                marginTop: "6px",
+                              }}
+                            >
+                              {errors.password.message}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Remember Me & Forgot Password */}
+                        <div className="col-md-12 mb-4">
+                          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div
+                              className="form-check"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                marginBottom: 0,
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id="rememberMe"
+                                checked={rememberMe}
+                                onChange={(e) =>
+                                  setValue("rememberMe", e.target.checked)
+                                }
+                                style={{
+                                  width: "18px",
+                                  height: "18px",
+                                  cursor: "pointer",
+                                  marginTop: 0,
+                                }}
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor="rememberMe"
+                                style={{
+                                  cursor: "pointer",
+                                  color: "#A7AABB",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Remember me
+                              </label>
+                            </div>
+                            <Link
+                              to="/auth/forgot-password"
+                              style={{
+                                color: "#A93E17",
+                                fontSize: "14px",
+                                textDecoration: "none",
+                              }}
+                              className="hover-underline"
+                            >
+                              Forgot your password?
+                            </Link>
+                          </div>
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className="col-lg-12">
+                          <div className="contact-form-btn">
+                            <button
+                              type="submit"
+                              className="btn-default w-100"
+                              disabled={loading}
+                            >
+                              <span>
+                                {loading ? "Signing in..." : "Sign in"}
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </LoadingOverlay>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Login Section End */}
+    </>
   );
 }
