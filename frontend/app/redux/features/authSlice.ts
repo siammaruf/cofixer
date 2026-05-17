@@ -98,7 +98,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false
         state.error = action.payload as string
       })
-      // Get Current User
+      // Get Current User (silent background check — no visible error)
       .addCase(getCurrentUser.pending, (state) => {
         state.loading = true
       })
@@ -107,10 +107,11 @@ const authSlice = createSlice({
         state.user = action.payload
         state.isAuthenticated = true
       })
-      .addCase(getCurrentUser.rejected, (state, action) => {
+      .addCase(getCurrentUser.rejected, (state) => {
         state.loading = false
-        state.error = action.payload as string
+        state.user = null
         state.isAuthenticated = false
+        // Don't set state.error — background auth checks shouldn't show UI messages
       })
   },
 })

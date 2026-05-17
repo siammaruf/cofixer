@@ -4,9 +4,9 @@ import Footer from "~/components/layout/footer";
 
 export default function BaseLayout() {
   return (
-    <div className="relative min-h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col" style={{ background: '#060606' }}>
       <Header />
-      <main className="container mx-auto flex-1 flex">
+      <main className="flex-1">
         <Outlet />
       </main>
       <Footer />

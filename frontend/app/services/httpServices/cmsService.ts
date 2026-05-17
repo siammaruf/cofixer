@@ -19,7 +19,7 @@ import type {
   ContactFormData,
 } from '~/types/cms'
 
-const API_PREFIX = '/api/v1'
+const API_PREFIX = ''
 
 // Public CMS APIs
 export const cmsService = {

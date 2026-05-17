@@ -5,6 +5,8 @@ export const publicRoutes = [
   route("about", "pages/public/about.tsx"),
   route("services", "pages/public/services.tsx"),
   route("services/:slug", "pages/public/services/detail.tsx"),
+  route("products", "pages/public/products.tsx"),
+  route("products/:slug", "pages/public/products/detail.tsx"),
   route("projects", "pages/public/projects.tsx"),
   route("projects/:slug", "pages/public/projects/detail.tsx"),
   route("blog", "pages/public/blog.tsx"),
