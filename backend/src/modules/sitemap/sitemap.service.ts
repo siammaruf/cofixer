@@ -28,7 +28,7 @@ export class SitemapService {
     ) {}
 
     async generateSitemap(): Promise<string> {
-        const [services, projects, blogPosts, teamMembers, testimonials, faqs] = await Promise.all([
+        const [services, projects, blogPosts] = await Promise.all([
             this.serviceRepo.find({ where: { isActive: true } }),
             this.projectRepo.find({ where: { isActive: true } }),
             this.blogRepo.find({ where: { isPublished: true } }),
@@ -47,17 +47,33 @@ export class SitemapService {
             { loc: '/testimonials', priority: '0.7', changefreq: 'weekly' },
             { loc: '/faqs', priority: '0.7', changefreq: 'weekly' },
             { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
-            ...services.map(s => ({ loc: `/services/${s.slug}`, priority: '0.7', changefreq: 'weekly' })),
-            ...projects.map(p => ({ loc: `/projects/${p.slug}`, priority: '0.7', changefreq: 'weekly' })),
-            ...blogPosts.map(b => ({ loc: `/blog/${b.slug}`, priority: '0.6', changefreq: 'monthly' })),
+            ...services.map((s) => ({
+                loc: `/services/${s.slug}`,
+                priority: '0.7',
+                changefreq: 'weekly',
+            })),
+            ...projects.map((p) => ({
+                loc: `/projects/${p.slug}`,
+                priority: '0.7',
+                changefreq: 'weekly',
+            })),
+            ...blogPosts.map((b) => ({
+                loc: `/blog/${b.slug}`,
+                priority: '0.6',
+                changefreq: 'monthly',
+            })),
         ];
 
-        const urlEntries = urls.map(u => `
+        const urlEntries = urls
+            .map(
+                (u) => `
     <url>
         <loc>${this.baseUrl}${u.loc}</loc>
         <changefreq>${u.changefreq}</changefreq>
         <priority>${u.priority}</priority>
-    </url>`).join('');
+    </url>`,
+            )
+            .join('');
 
         return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urlEntries}

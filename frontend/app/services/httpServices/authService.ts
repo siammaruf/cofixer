@@ -6,6 +6,7 @@ import type {
   ForgotPasswordRequest,
   ResetPasswordRequest,
   VerifyOtpRequest,
+  RegisterRequest,
 } from '~/types/api'
 
 export const authService = {
@@ -15,8 +16,14 @@ export const authService = {
   logout: () =>
     post<void>('/auth/logout'),
 
-  refreshToken: () =>
-    post<{ accessToken: string }>('/auth/refresh'),
+  refreshToken: (refreshToken: string) =>
+    post<{ accessToken: string }>('/auth/refresh', { refreshToken }),
+
+  register: (data: RegisterRequest) =>
+    post<{ email: string; expiresAt: string }>('/auth/register', data),
+
+  verifyEmail: (data: VerifyOtpRequest) =>
+    post<LoginResponse>('/auth/verify-email', data),
 
   forgotPassword: (data: ForgotPasswordRequest) =>
     post<{ message: string }>('/auth/forgot-password', data),

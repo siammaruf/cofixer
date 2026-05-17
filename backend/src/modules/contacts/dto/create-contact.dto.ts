@@ -49,7 +49,8 @@ export class CreateContactDto {
     subject: string;
 
     @ApiProperty({
-        example: 'I would like to discuss a potential AI integration project...',
+        example:
+            'I would like to discuss a potential AI integration project...',
         description: 'Message content',
         minLength: 1,
     })

@@ -5,9 +5,12 @@ import {
     Query,
     HttpCode,
     HttpStatus,
+    UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../../core/decorators/public.decorator';
+import { CacheTag } from '../../core/decorators/cache-tag.decorator';
+import { RedisCacheInterceptor } from '../../core/interceptors/redis-cache.interceptor';
 import { ApiSwagger } from '../../core/decorators/api-swagger.decorator';
 import { PaginationDto } from '../../shared/dtos/pagination.dto';
 import {
@@ -19,6 +22,8 @@ import { Service } from './service.entity';
 
 @ApiTags('Services')
 @Controller('services')
+@CacheTag('services')
+@UseInterceptors(RedisCacheInterceptor)
 export class ServiceController {
     constructor(private readonly serviceService: ServiceService) {}
 
@@ -60,7 +65,10 @@ export class ServiceController {
     })
     async findFeatured(): Promise<SuccessResponseDto<Service[]>> {
         const services = await this.serviceService.findFeatured();
-        return new SuccessResponseDto(services, 'Featured services retrieved successfully');
+        return new SuccessResponseDto(
+            services,
+            'Featured services retrieved successfully',
+        );
     }
 
     @Get(':slug')
@@ -71,8 +79,13 @@ export class ServiceController {
         operation: 'getOne',
         requiresAuth: false,
     })
-    async findOne(@Param('slug') slug: string): Promise<SuccessResponseDto<Service>> {
+    async findOne(
+        @Param('slug') slug: string,
+    ): Promise<SuccessResponseDto<Service>> {
         const service = await this.serviceService.findBySlugOrFail(slug);
-        return new SuccessResponseDto(service, 'Service retrieved successfully');
+        return new SuccessResponseDto(
+            service,
+            'Service retrieved successfully',
+        );
     }
 }

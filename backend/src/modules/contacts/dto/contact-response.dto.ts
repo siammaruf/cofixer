@@ -32,7 +32,8 @@ export class ContactResponseDto {
     subject: string;
 
     @ApiProperty({
-        example: 'I would like to discuss a potential AI integration project...',
+        example:
+            'I would like to discuss a potential AI integration project...',
         description: 'Message content',
     })
     message: string;

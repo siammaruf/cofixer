@@ -26,7 +26,14 @@ export class StatsService {
     ) {}
 
     async getStats(): Promise<Record<string, number>> {
-        const [services, projects, blogPosts, teamMembers, testimonials, contacts] = await Promise.all([
+        const [
+            services,
+            projects,
+            blogPosts,
+            teamMembers,
+            testimonials,
+            contacts,
+        ] = await Promise.all([
             this.serviceRepo.count({ where: { isActive: true } }),
             this.projectRepo.count({ where: { isActive: true } }),
             this.blogRepo.count({ where: { isPublished: true } }),
@@ -34,6 +41,13 @@ export class StatsService {
             this.testimonialRepo.count({ where: { isActive: true } }),
             this.contactRepo.count(),
         ]);
-        return { services, projects, blogPosts, teamMembers, testimonials, contacts };
+        return {
+            services,
+            projects,
+            blogPosts,
+            teamMembers,
+            testimonials,
+            contacts,
+        };
     }
 }

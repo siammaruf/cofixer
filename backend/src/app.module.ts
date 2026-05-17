@@ -36,6 +36,7 @@ import { StatsModule } from './modules/stats';
 import { SitemapModule } from './modules/sitemap';
 import { RobotsModule } from './modules/robots';
 import { LanguageEnum } from '@shared/enums';
+import { CacheModule } from '@infrastructure/cache';
 
 @Module({
     imports: [
@@ -59,7 +60,7 @@ import { LanguageEnum } from '@shared/enums';
             },
         ]),
         I18nModule.forRoot({
-            fallbackLanguage: LanguageEnum.KOREAN,
+            fallbackLanguage: LanguageEnum.ENGLISH,
             loaderOptions: {
                 path: join(process.cwd(), 'src/i18n'),
                 watch: true,
@@ -90,6 +91,7 @@ import { LanguageEnum } from '@shared/enums';
             },
         }),
         PassportModule.register({ defaultStrategy: 'jwt' }),
+        CacheModule,
         UserModule,
         AuthModule,
         OtpModule,

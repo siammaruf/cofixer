@@ -6,7 +6,7 @@ export const appDataSource = new DataSource({
     type: 'postgres',
     ...envConfigService.getTypeOrmConfig(),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    migrationsRun: false,
+    migrationsRun: true,
     migrationsTableName: 'migrations',
     migrations: [__dirname + '/../**/migrations/*{.ts,.js}'],
     namingStrategy: new SnakeNamingStrategy(),

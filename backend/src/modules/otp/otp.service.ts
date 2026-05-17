@@ -10,7 +10,9 @@ import { SendOtpDto, VerityOtpDto } from './dtos';
 import { Otp } from './otp.entity';
 import { User } from '@modules/users';
 import { UtilsService } from '@infrastructure/utils/utils.service';
+import { MailService } from '@infrastructure/mail/mail.service';
 import { I18nHelper } from '@core/utils';
+import { ActiveStatusEnum } from '@shared/enums';
 
 @Injectable()
 export class OtpService {
@@ -19,6 +21,7 @@ export class OtpService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly utilsService: UtilsService,
+        private readonly mailService: MailService,
         private readonly i18nHelper: I18nHelper,
     ) {}
 
@@ -50,7 +53,8 @@ export class OtpService {
             if (process.env.MODE === 'DEV') {
                 console.log(`OTP for ${data.email}: ${otp}`);
             }
-            // await this.mailService.sendRegistrationOtpEmail(data.email, otp);
+
+            await this.mailService.sendRegistrationOtpEmail(data.email, otp);
 
             return {
                 success: true,
@@ -135,7 +139,11 @@ export class OtpService {
             if (user && !user.isVerified) {
                 await this.userRepository.update(
                     { email: data.email },
-                    { isVerified: true },
+                    {
+                        isVerified: true,
+                        emailVerified: true,
+                        isActive: ActiveStatusEnum.ACTIVE,
+                    },
                 );
             }
 

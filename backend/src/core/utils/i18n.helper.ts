@@ -7,7 +7,7 @@ export class I18nHelper {
     constructor(private readonly i18n: I18nService) {}
 
     t(key: string, args?: Record<string, any>): string {
-        const lang = I18nContext.current()?.lang || LanguageEnum.KOREAN;
+        const lang = I18nContext.current()?.lang || LanguageEnum.ENGLISH;
 
         if (process.env.MODE === 'DEV') {
             console.log('[i18nHelper] Translation request:', {
@@ -38,7 +38,7 @@ export class I18nHelper {
     }
 
     getCurrentLanguage(): string {
-        return I18nContext.current()?.lang || LanguageEnum.KOREAN;
+        return I18nContext.current()?.lang || LanguageEnum.ENGLISH;
     }
 
     /**
@@ -46,7 +46,7 @@ export class I18nHelper {
      * Use this for background jobs, scheduled tasks, or when no request context exists.
      *
      * @param key - Translation key
-     * @param lang - Language code ('en', 'ko', etc.)
+     * @param lang - Language code ('en', etc.)
      * @param args - Optional variables to interpolate
      * @returns Translated string
      *

@@ -4,3 +4,5 @@ export * from './roles.decorator';
 export * from './api-swagger.decorator';
 export * from './api-response-data.decorator';
 export * from './language.decorator';
+export * from './cache-tag.decorator';
+export * from './cache-clear.decorator';

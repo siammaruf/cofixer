@@ -76,14 +76,14 @@ export default function CreateUser() {
 
       <Card>
         <CardHeader>
-          <CardTitle>User Information</CardTitle>
+          <CardTitle className="text-white">User Information</CardTitle>
         </CardHeader>
         <CardContent>
           <LoadingOverlay isLoading={loading} message="Creating user...">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {error && (
-                  <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                  <div className="rounded-[20px] bg-[rgb(230,87,87)]/10 p-3 text-sm text-[rgb(230,87,87)]">
                     {error}
                   </div>
                 )}
@@ -94,9 +94,9 @@ export default function CreateUser() {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>First Name</FormLabel>
+                        <FormLabel className="text-white">First Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter first name" {...field} />
+                          <Input placeholder="Enter first name" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -108,9 +108,9 @@ export default function CreateUser() {
                     name="lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Last Name</FormLabel>
+                        <FormLabel className="text-white">Last Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter last name" {...field} />
+                          <Input placeholder="Enter last name" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -123,11 +123,12 @@ export default function CreateUser() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel className="text-white">Email Address</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
                           placeholder="user@example.com"
+                          className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
                           {...field}
                         />
                       </FormControl>
@@ -141,9 +142,9 @@ export default function CreateUser() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel className="text-white">Phone Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="(555) 123-4567" {...field} />
+                        <Input placeholder="(555) 123-4567" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -155,9 +156,9 @@ export default function CreateUser() {
                   name="position"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Position</FormLabel>
+                      <FormLabel className="text-white">Position</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Admin, Editor, Viewer" {...field} />
+                        <Input placeholder="e.g. Admin, Editor, Viewer" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -169,9 +170,9 @@ export default function CreateUser() {
                   name="startDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Start Date</FormLabel>
+                      <FormLabel className="text-white">Start Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input type="date" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,20 +188,21 @@ export default function CreateUser() {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          className="border-[#FFFFFF0F] data-[state=checked]:bg-[#A93E17] data-[state=checked]:text-white"
                         />
                       </FormControl>
-                      <FormLabel className="font-normal">Active User</FormLabel>
+                      <FormLabel className="font-normal text-white">Active User</FormLabel>
                     </FormItem>
                   )}
                 />
 
                 <div className="flex justify-end space-x-4">
                   <Link to="/admin/users">
-                    <Button type="button" variant="outline">
+                    <Button type="button" variant="outline" className="rounded-full border-[#FFFFFF0F] text-white hover:bg-[#FFFFFF0F]">
                       Cancel
                     </Button>
                   </Link>
-                  <Button type="submit" disabled={loading}>
+                  <Button type="submit" disabled={loading} variant="gradient">
                     Create User
                   </Button>
                 </div>

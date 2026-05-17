@@ -22,7 +22,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'AI Strategy & Consulting',
                 slug: 'ai-strategy-consulting',
-                shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
+                shortDescription:
+                    'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
                 image: '/images/service-item-1.png',
                 order: 0,
                 featured: true,
@@ -31,7 +32,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'AI Integration & Deployment',
                 slug: 'ai-integration-deployment',
-                shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
+                shortDescription:
+                    'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
                 image: '/images/service-item-2.png',
                 order: 1,
                 featured: true,
@@ -40,7 +42,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'Custom AI Solutions',
                 slug: 'custom-ai-solutions',
-                shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
+                shortDescription:
+                    'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
                 image: '/images/service-item-3.png',
                 order: 2,
                 featured: true,
@@ -49,7 +52,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'Data-Driven Insights',
                 slug: 'data-driven-insights',
-                shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
+                shortDescription:
+                    'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
                 image: '/images/service-item-4.png',
                 order: 3,
                 featured: false,
@@ -58,7 +62,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'Analytics-Powered Decisions',
                 slug: 'analytics-powered-decisions',
-                shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
+                shortDescription:
+                    'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
                 image: '/images/service-item-5.png',
                 order: 4,
                 featured: false,
@@ -67,7 +72,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'Intelligent Data Solutions',
                 slug: 'intelligent-data-solutions',
-                shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
+                shortDescription:
+                    'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.',
                 image: '/images/service-item-6.png',
                 order: 5,
                 featured: false,
@@ -172,7 +178,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'Ethical AI Balancing Innovation and Responsibility',
                 slug: 'ethical-ai',
-                excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate',
+                excerpt:
+                    'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate',
                 coverImage: '/images/post-single-img.jpg',
                 publishedAt: new Date('2025-05-28'),
                 isPublished: true,
@@ -180,7 +187,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: "Machine Learning Demytified A Beginner's Guide",
                 slug: 'ml-guide',
-                excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate',
+                excerpt:
+                    'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate',
                 coverImage: '/images/post-single-img.jpg',
                 publishedAt: new Date('2025-04-22'),
                 isPublished: true,
@@ -188,7 +196,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 title: 'How AI is Transforming Modern Businesses',
                 slug: 'ai-transforming',
-                excerpt: 'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate',
+                excerpt:
+                    'As AI continue to evolve, ensuring use more important than ever this article explores how businesses can innovate',
                 coverImage: '/images/post-single-img.jpg',
                 publishedAt: new Date('2025-04-17'),
                 isPublished: true,
@@ -276,7 +285,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 clientName: 'Jenny W',
                 clientRole: 'fintech startup',
-                content: 'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.',
+                content:
+                    'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.',
                 image: '/images/author-1.jpg',
                 rating: 5,
                 featured: true,
@@ -285,7 +295,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 clientName: 'jason m',
                 clientRole: 'hardware Technician',
-                content: 'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.',
+                content:
+                    'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.',
                 image: '/images/author-2.jpg',
                 rating: 5,
                 featured: true,
@@ -294,7 +305,8 @@ export async function seedCms(dataSource: DataSource): Promise<void> {
             {
                 clientName: 'Lauren M',
                 clientRole: 'hardware Technician',
-                content: 'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.',
+                content:
+                    'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.',
                 image: '/images/author-3.jpg',
                 rating: 5,
                 featured: true,

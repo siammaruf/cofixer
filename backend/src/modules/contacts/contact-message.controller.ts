@@ -10,14 +10,25 @@ import { CreateContactDto } from './dto';
 @ApiTags('Contacts')
 @Controller('contact')
 export class ContactMessageController {
-    constructor(private readonly contactMessageService: ContactMessageService) {}
+    constructor(
+        private readonly contactMessageService: ContactMessageService,
+    ) {}
 
     @Post()
     @Public()
     @HttpCode(HttpStatus.CREATED)
-    @ApiSwagger({ resourceName: 'Contact', operation: 'create', requiresAuth: false })
-    async create(@Body() createDto: CreateContactDto): Promise<CreatedResponseDto<ContactMessage>> {
+    @ApiSwagger({
+        resourceName: 'Contact',
+        operation: 'create',
+        requiresAuth: false,
+    })
+    async create(
+        @Body() createDto: CreateContactDto,
+    ): Promise<CreatedResponseDto<ContactMessage>> {
         const message = await this.contactMessageService.create(createDto);
-        return new CreatedResponseDto(message, 'Contact message submitted successfully');
+        return new CreatedResponseDto(
+            message,
+            'Contact message submitted successfully',
+        );
     }
 }

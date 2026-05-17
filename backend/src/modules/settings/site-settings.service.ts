@@ -5,7 +5,9 @@ import { SiteSettingsRepository } from './site-settings.repository';
 
 @Injectable()
 export class SiteSettingsService extends BaseService<SiteSettings> {
-    constructor(private readonly siteSettingsRepository: SiteSettingsRepository) {
+    constructor(
+        private readonly siteSettingsRepository: SiteSettingsRepository,
+    ) {
         super(siteSettingsRepository, 'SiteSettings');
     }
 

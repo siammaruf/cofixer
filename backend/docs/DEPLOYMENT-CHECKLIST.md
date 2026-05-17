@@ -35,7 +35,6 @@ chmod +x production-check.sh
 - [ ] No test/demo credentials remain (no `test_`, `demo-`, `example.com`)
 - [ ] JWT secret is strong (32+ characters, random)
 - [ ] Database credentials are correct for production
-- [ ] AWS credentials are production keys (not test keys)
 - [ ] CORS origins are set to production domains (no `localhost`)
 - [ ] Frontend URL is set to production domain
 
@@ -57,23 +56,9 @@ AUTH_TOKEN_EXPIRED_TIME=
 AUTH_TOKEN_EXPIRED_TIME_REMEMBER_ME=
 AUTH_REFRESH_TOKEN_COOKIE_NAME=
 AUTH_REFRESH_TOKEN_EXPIRED_TIME=
-AWS_REGION=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_S3_BUCKET=
-APPLE_TEAM_ID=
-APPLE_CLIENT_ID=
-APPLE_KEY_ID=
-APPLE_PRIVATE_KEY=
-PROJECT_ID=
-PRIVATE_KEY_ID=
-PRIVATE_KEY=
-CLIENT_EMAIL=
 MAIL_HOST=
 MAIL_PORT=
 MAIL_FROM=
-TOSS_CLIENT_ID=
-TOSS_SECRET_KEY=
 ```
 
 ---
@@ -156,7 +141,6 @@ psql -h <host> -p <port> -U <user> -d <database> -c "SELECT 1"
 
 - [ ] All API endpoints tested in staging environment
 - [ ] Authentication flows work (login, register, logout)
-- [ ] File uploads work (S3 integration)
 - [ ] Email sending works
 - [ ] Payment integration works (if applicable)
 - [ ] Error handling works correctly

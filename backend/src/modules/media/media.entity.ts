@@ -19,6 +19,15 @@ export class Media extends BaseEntity {
     @Column({ length: 500 })
     url: string;
 
+    @Column({ length: 500, nullable: true })
+    thumbUrl?: string;
+
+    @Column({ length: 500, nullable: true })
+    largeUrl?: string;
+
+    @Column({ length: 500, nullable: true })
+    fullUrl?: string;
+
     @Column({ length: 255, nullable: true })
     altText?: string;
 

@@ -3,7 +3,6 @@ import {
     IsOptional,
     IsBoolean,
     IsArray,
-    IsObject,
     MinLength,
     MaxLength,
     ValidateNested,

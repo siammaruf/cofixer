@@ -1,7 +1,6 @@
 import {
     IsString,
     IsOptional,
-    IsBoolean,
     IsInt,
     Min,
     MaxLength,
@@ -58,6 +57,30 @@ export class CreateMediaDto {
     })
     @IsString()
     url: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/uploads/ai-business-2024-thumb.webp',
+        description: 'Thumbnail URL',
+    })
+    @IsOptional()
+    @IsString()
+    thumbUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/uploads/ai-business-2024-large.webp',
+        description: 'Large version URL',
+    })
+    @IsOptional()
+    @IsString()
+    largeUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/uploads/ai-business-2024-full.webp',
+        description: 'Full optimized version URL',
+    })
+    @IsOptional()
+    @IsString()
+    fullUrl?: string;
 
     @ApiPropertyOptional({
         example: 'AI business transformation illustration',

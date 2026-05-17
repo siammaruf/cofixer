@@ -55,7 +55,10 @@ export const cmsService = {
   getStats: () => get<ApiResponse<Stats>>(`${API_PREFIX}/stats`),
 
   // SEO
-  getSeoSettings: (route: string) => get<ApiResponse<SeoSettings>>(`${API_PREFIX}/seo/page/${route}`),
+  getSeoSettings: (route: string) => {
+    const cleanRoute = route.startsWith('/') ? route.slice(1) : route
+    return get<ApiResponse<SeoSettings>>(`${API_PREFIX}/seo/page${cleanRoute ? `/${cleanRoute}` : ''}`)
+  },
 
   // Navigation
   getNavigation: () => get<ApiResponse<NavigationMenu>>(`${API_PREFIX}/navigation`),

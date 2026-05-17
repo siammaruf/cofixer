@@ -10,11 +10,14 @@ import {
     HttpCode,
     HttpStatus,
     ParseUUIDPipe,
+    UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from 'src/core/base';
-import { ApiSwagger, Public } from 'src/core/decorators';
+import { ApiSwagger, Roles } from 'src/core/decorators';
+import { JwtAuthGuard, RolesGuard, AdminCreationGuard } from 'src/core/guards';
 import { ResponsePayloadDto } from '@shared/dtos';
+import { RolesEnum } from 'src/shared/enums';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, UserResponseDto } from './dtos';
 import { User } from './user.entity';
@@ -32,9 +35,11 @@ export class UserController extends BaseController<
 
     /**
      * Override create to use custom createUser method
+     * Restricted to admin users only
      */
-    @Public()
     @Post()
+    @UseGuards(JwtAuthGuard, RolesGuard, AdminCreationGuard)
+    @Roles(RolesEnum.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     @ApiSwagger({
         resourceName: 'User',
@@ -42,8 +47,11 @@ export class UserController extends BaseController<
         requestDto: CreateUserDto,
         responseDto: UserResponseDto,
         successStatus: 201,
+        requiresAuth: true,
         errors: [
             { status: 400, description: 'Invalid input data' },
+            { status: 401, description: 'Unauthorized' },
+            { status: 403, description: 'Forbidden - admin only' },
             { status: 409, description: 'User with this email already exists' },
         ],
     })

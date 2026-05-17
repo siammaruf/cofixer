@@ -44,24 +44,24 @@ export default function SettingsDashboard() {
     }
   }
 
-  if (loading) return <div className="text-center py-8">Loading...</div>
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>
+  if (loading) return <div className="text-center py-8 text-[#A7AABB]"><div className="relative mx-auto mb-4" style={{ width: 60, height: 60 }}><div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: "#A93E17", borderBottomColor: "#15399A" }} /><div className="absolute inset-0 flex items-center justify-center"><img src="/images/loader.svg" alt="" className="w-8 h-8" /></div></div>Loading...</div>
+  if (error) return <div className="text-center py-8 text-[rgb(230,87,87)]">{error}</div>
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Site Settings</h1>
+      <h1 className="dashboard-section-title mb-6">Site Settings</h1>
       <form onSubmit={handleUpdate} className="max-w-xl space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Site Name</label>
+          <label className="block text-sm font-medium mb-1 text-white">Site Name</label>
           <input
             type="text"
             value={form.siteName}
             onChange={(e) => setForm({ ...form, siteName: e.target.value })}
-            className="w-full border rounded-lg px-4 py-2"
+            className="dashboard-input"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium mb-1 text-white">
             Copyright Text
           </label>
           <input
@@ -70,11 +70,11 @@ export default function SettingsDashboard() {
             onChange={(e) =>
               setForm({ ...form, copyrightText: e.target.value })
             }
-            className="w-full border rounded-lg px-4 py-2"
+            className="dashboard-input"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium mb-1 text-white">
             Google Analytics ID
           </label>
           <input
@@ -83,11 +83,11 @@ export default function SettingsDashboard() {
             onChange={(e) =>
               setForm({ ...form, googleAnalyticsId: e.target.value })
             }
-            className="w-full border rounded-lg px-4 py-2"
+            className="dashboard-input"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium mb-1 text-white">
             Google Tag Manager ID
           </label>
           <input
@@ -96,13 +96,13 @@ export default function SettingsDashboard() {
             onChange={(e) =>
               setForm({ ...form, googleTagManagerId: e.target.value })
             }
-            className="w-full border rounded-lg px-4 py-2"
+            className="dashboard-input"
           />
         </div>
         <button
           type="submit"
           disabled={saving}
-          className="bg-primary text-white px-6 py-2 rounded-lg disabled:opacity-50"
+          className="dashboard-btn disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save Settings'}
         </button>

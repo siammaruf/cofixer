@@ -1,17 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../../app.module';
-import { UtilsService } from '@infrastructure/utils/utils.service';
 import { seedUsers } from './user.seed';
 import { seedCms } from './cms.seed';
 
 async function runSeeder() {
     const app = await NestFactory.create(AppModule);
     const dataSource = app.get(DataSource);
-    const utilsService = app.get(UtilsService);
 
     // Seed Users
-    await seedUsers(dataSource, utilsService);
+    await seedUsers(dataSource);
 
     // Seed CMS Data
     await seedCms(dataSource);

@@ -1,15 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../../app.module';
-import { UtilsService } from '@infrastructure/utils/utils.service';
 import { User } from 'src/modules/users/user.entity';
 import { RolesEnum } from 'src/shared/enums/role.enum';
 import { ActiveStatusEnum } from 'src/shared/enums/active-status.enum';
+import { PasswordUtil } from 'src/core/utils/password.util';
 
 async function resetUsers() {
     const app = await NestFactory.create(AppModule);
     const dataSource = app.get(DataSource);
-    const utilsService = app.get(UtilsService);
 
     const userRepository = dataSource.getRepository(User);
 
@@ -26,40 +25,49 @@ async function resetUsers() {
 
     console.log('\n👥 Creating fresh users with proper password hashing...');
 
-    // Create Admin User
-    const hashedAdminPassword = await utilsService.getHash('admin123');
-    console.log(
-        `Admin password hash: ${hashedAdminPassword.substring(0, 20)}...`,
-    );
+    // Create Admin User from environment variables
+    const adminEmail = process.env.ADMIN_SEED_EMAIL;
+    const adminPassword = process.env.ADMIN_SEED_PASSWORD;
 
-    const adminUser = userRepository.create({
-        fullName: 'Admin User',
-        email: 'admin@example.com',
-        password: hashedAdminPassword,
-        role: RolesEnum.ADMIN,
-        isActive: ActiveStatusEnum.ACTIVE,
-        emailVerified: true,
-    });
-    await userRepository.save(adminUser);
-    console.log('✅ Admin user created: admin@example.com / admin123');
+    if (adminEmail && adminPassword) {
+        const hashedAdminPassword = await PasswordUtil.hash(adminPassword);
+        console.log(
+            `Admin password hash: ${hashedAdminPassword.substring(0, 20)}...`,
+        );
 
-    // Verify password immediately
-    const testAdmin = await userRepository
-        .createQueryBuilder('user')
-        .addSelect('user.password')
-        .where('user.email = :email', { email: 'admin@example.com' })
-        .getOne();
+        const adminUser = userRepository.create({
+            fullName: 'Admin User',
+            email: adminEmail,
+            password: hashedAdminPassword,
+            role: RolesEnum.ADMIN,
+            isActive: ActiveStatusEnum.ACTIVE,
+            emailVerified: true,
+        });
+        await userRepository.save(adminUser);
+        console.log(`✅ Admin user created: ${adminEmail}`);
 
-    const isAdminPasswordValid = await utilsService.isMatchHash(
-        'admin123',
-        testAdmin!.password,
-    );
-    console.log(
-        `   Password verification: ${isAdminPasswordValid ? '✅ VALID' : '❌ INVALID'}`,
-    );
+        // Verify password immediately
+        const testAdmin = await userRepository
+            .createQueryBuilder('user')
+            .addSelect('user.password')
+            .where('user.email = :email', { email: adminEmail })
+            .getOne();
+
+        const isAdminPasswordValid = await PasswordUtil.compare(
+            adminPassword,
+            testAdmin!.password,
+        );
+        console.log(
+            `   Password verification: ${isAdminPasswordValid ? '✅ VALID' : '❌ INVALID'}`,
+        );
+    } else {
+        console.warn(
+            '⚠️  ADMIN_SEED_EMAIL or ADMIN_SEED_PASSWORD not set. Skipping admin reset.',
+        );
+    }
 
     // Create Regular User
-    const hashedUserPassword = await utilsService.getHash('user123');
+    const hashedUserPassword = await PasswordUtil.hash('user123');
     const regularUser = userRepository.create({
         fullName: 'Test User',
         email: 'user@example.com',
@@ -78,7 +86,7 @@ async function resetUsers() {
         .where('user.email = :email', { email: 'user@example.com' })
         .getOne();
 
-    const isUserPasswordValid = await utilsService.isMatchHash(
+    const isUserPasswordValid = await PasswordUtil.compare(
         'user123',
         testUser!.password,
     );
@@ -86,7 +94,7 @@ async function resetUsers() {
         `   Password verification: ${isUserPasswordValid ? '✅ VALID' : '❌ INVALID'}`,
     );
 
-    console.log(`\n✅ Successfully created 2 users with verified passwords`);
+    console.log(`\n✅ Successfully created users with verified passwords`);
 
     await app.close();
     console.log('\n✨ Reset completed successfully!');

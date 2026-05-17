@@ -6,6 +6,7 @@ import {
     HttpStatus,
     Post,
     Query,
+    Req,
     UseGuards,
     UseInterceptors,
     UsePipes,
@@ -14,17 +15,20 @@ import {
     VERSION_NEUTRAL,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { randomBytes } from 'crypto';
 import { LoginResponsePayloadDto, ResponsePayloadDto } from 'src/shared/dtos';
 import { AuthService } from './auth.service';
 import {
-    AppleLoginDto,
     ChangePasswordDto,
     ForgotPasswordDto,
     ForgotPasswordResponseDto,
     LoginDto,
+    RefreshTokenDto,
+    RegisterDto,
     RegisterFcmTokenDto,
     ResetPasswordDto,
     SocialLoginDto,
+    VerifyOtpDto,
 } from './dtos';
 import { ChangeUserPasswordDto } from './dtos/change-user-password.dto';
 import { ApiSwagger, CurrentUser, Public } from '@core/decorators';
@@ -99,7 +103,7 @@ export class AuthController {
     @ApiSwagger({
         resourceName: 'Social Login',
         operation: 'custom',
-        summary: 'Social login (Google, Kakao, Naver)',
+        summary: 'Social login (Google)',
         requestDto: SocialLoginDto,
         responseDto: LoginResponsePayloadDto,
         requiresAuth: false,
@@ -225,7 +229,115 @@ export class AuthController {
         return await this.authService.resetPassword(dto);
     }
 
+    @Post('verify-otp')
+    @Public()
+    @UsePipes(ValidationPipe)
+    @ApiSwagger({
+        resourceName: 'Verify OTP',
+        operation: 'custom',
+        summary: 'Verify OTP code for password reset',
+        requestDto: VerifyOtpDto,
+        responseDto: LoginResponsePayloadDto,
+        requiresAuth: false,
+        errors: [
+            { status: 400, description: 'Invalid or expired OTP' },
+            { status: 404, description: 'OTP not found' },
+        ],
+    })
+    async verifyOtp(
+        @Body() dto: VerifyOtpDto,
+    ): Promise<ResponsePayloadDto<{ valid: boolean }>> {
+        const result = await this.authService.verifyOtp(dto.email, dto.otp);
+        return new ResponsePayloadDto({
+            success: true,
+            statusCode: 200,
+            message: 'OTP verified successfully',
+            data: result,
+            timestamp: new Date().toISOString(),
+        });
+    }
+
+    @Post('register')
+    @Public()
+    @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.CREATED)
+    @ApiSwagger({
+        resourceName: 'Register',
+        operation: 'custom',
+        summary: 'Register new user with email verification OTP',
+        requestDto: RegisterDto,
+        responseDto: LoginResponsePayloadDto,
+        requiresAuth: false,
+        errors: [
+            { status: 400, description: 'Invalid input data' },
+            { status: 409, description: 'User with this email already exists' },
+        ],
+    })
+    async register(
+        @Body() dto: RegisterDto,
+    ): Promise<ResponsePayloadDto<{ email: string; expiresAt: Date }>> {
+        return await this.authService.register(dto);
+    }
+
+    @Post('verify-email')
+    @Public()
+    @UsePipes(ValidationPipe)
+    @UseInterceptors(SetToken)
+    @ApiSwagger({
+        resourceName: 'Verify Email',
+        operation: 'custom',
+        summary: 'Verify email with OTP and activate account',
+        requestDto: VerifyOtpDto,
+        responseDto: LoginResponsePayloadDto,
+        requiresAuth: false,
+        errors: [
+            { status: 400, description: 'Invalid or expired OTP' },
+            { status: 404, description: 'User not found' },
+        ],
+    })
+    async verifyEmail(
+        @Body() dto: VerifyOtpDto,
+    ): Promise<LoginResponsePayloadDto> {
+        return await this.authService.verifyEmail(dto.email, dto.otp);
+    }
+
+    @Post('refresh')
+    @Public()
+    @UsePipes(ValidationPipe)
+    @UseInterceptors(SetToken)
+    @ApiSwagger({
+        resourceName: 'Refresh Token',
+        operation: 'custom',
+        summary: 'Refresh access token using refresh token',
+        requestDto: RefreshTokenDto,
+        responseDto: LoginResponsePayloadDto,
+        requiresAuth: false,
+        errors: [
+            {
+                status: 401,
+                description: 'Unauthorized - invalid or expired refresh token',
+            },
+            { status: 404, description: 'User not found' },
+            { status: 500, description: 'Failed to generate new token' },
+        ],
+    })
+    async refreshToken(
+        @Body() dto: RefreshTokenDto,
+        @Req() req: any,
+    ): Promise<LoginResponsePayloadDto> {
+        const refreshToken =
+            dto.refreshToken || req.cookies?.['StarterRefreshToken'];
+        if (!refreshToken) {
+            return {
+                success: false,
+                message: 'Refresh token is required',
+            } as LoginResponsePayloadDto;
+        }
+        return await this.authService.refreshAccessToken(refreshToken);
+    }
+
     @Get('me')
+    @Public()
     @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)
     @ApiSwagger({
@@ -233,7 +345,7 @@ export class AuthController {
         operation: 'custom',
         summary: 'Get current authenticated user',
         responseDto: LoginResponsePayloadDto,
-        requiresAuth: true,
+        requiresAuth: false,
         errors: [
             { status: 401, description: 'Unauthorized - invalid token' },
             { status: 404, description: 'User not found' },
@@ -246,6 +358,25 @@ export class AuthController {
             return await this.authService.getUserInformation(user);
         }
         return null;
+    }
+
+    @Get('csrf-token')
+    @Public()
+    @ApiSwagger({
+        resourceName: 'CSRF Token',
+        operation: 'custom',
+        summary: 'Get CSRF token for mutating requests',
+        requiresAuth: false,
+    })
+    getCsrfToken(): ResponsePayloadDto<{ token: string }> {
+        const token = randomBytes(32).toString('hex');
+        return new ResponsePayloadDto({
+            success: true,
+            statusCode: 200,
+            message: 'CSRF token generated',
+            data: { token },
+            timestamp: new Date().toISOString(),
+        });
     }
 
     @Get('check-login')
@@ -336,29 +467,5 @@ export class AuthController {
         @Body() dto: RegisterFcmTokenDto,
     ): Promise<ResponsePayloadDto<string>> {
         return await this.authService.registerFcmToken(user, dto);
-    }
-
-    @Post('apple-login')
-    @HttpCode(HttpStatus.OK)
-    @UseInterceptors(SetToken)
-    @ApiSwagger({
-        resourceName: 'Apple Login',
-        operation: 'custom',
-        summary: 'Apple token-based login',
-        requestDto: AppleLoginDto,
-        responseDto: LoginResponsePayloadDto,
-        requiresAuth: false,
-        errors: [
-            { status: 400, description: 'Invalid Apple token or nonce' },
-            {
-                status: 401,
-                description: 'Token verification failed or expired',
-            },
-        ],
-    })
-    async appleLogin(
-        @Body() dto: AppleLoginDto,
-    ): Promise<LoginResponsePayloadDto> {
-        return await this.authService.appleLogin(dto);
     }
 }

@@ -81,3 +81,73 @@
 .accordion-collapse.collapse {
   visibility: visible !important;
 }
+
+/* Dashboard-specific utilities to match frontend UI */
+@layer components {
+  .dashboard-card {
+    @apply bg-card text-card-foreground rounded-[20px] border border-[#FFFFFF0F];
+  }
+
+  .dashboard-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold text-white transition-all;
+    background: linear-gradient(to right, #A93E17 0%, #15399A 50%, #A93E17 100%);
+    background-size: 200% auto;
+  }
+
+  .dashboard-btn:hover {
+    background-position: right center;
+  }
+
+  .dashboard-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold transition-all;
+    background: linear-gradient(#060606, #060606) padding-box, linear-gradient(to left, #A93E17, #15399A) border-box;
+    border: 1px solid transparent;
+    color: #FFFFFF;
+  }
+
+  .dashboard-table-header {
+    @apply bg-[#0A0A0A] text-sm font-medium text-[#A7AABB];
+  }
+
+  .dashboard-table-row {
+    @apply border-b border-[#FFFFFF0F] transition-colors hover:bg-[#FFFFFF08];
+  }
+
+  .dashboard-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 500;
+  }
+
+  .dashboard-badge-success {
+    background-color: rgba(169, 62, 23, 0.1);
+    color: #A93E17;
+  }
+
+  .dashboard-badge-warning {
+    background-color: rgba(21, 57, 154, 0.1);
+    color: #15399A;
+  }
+
+  .dashboard-badge-danger {
+    background-color: rgba(230, 87, 87, 0.1);
+    color: rgb(230, 87, 87);
+  }
+
+  .dashboard-badge-default {
+    background-color: #FFFFFF0F;
+    color: #A7AABB;
+  }
+
+  .dashboard-input {
+    @apply w-full rounded-[20px] border border-[#FFFFFF0F] bg-transparent px-4 py-2 text-sm text-white placeholder:text-[#A7AABB] focus:border-[#A93E17] focus:outline-none focus:ring-1 focus:ring-[#A93E17];
+  }
+
+  .dashboard-section-title {
+    @apply text-2xl font-bold text-white;
+  }
+}

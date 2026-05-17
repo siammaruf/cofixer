@@ -24,45 +24,45 @@ export default function ServicesDashboard() {
     await dispatch(deleteService(id)).unwrap()
   }
 
-  if (loading) return <div className="text-center py-8">Loading...</div>
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>
+  if (loading) return <div className="text-center py-8 text-[#A7AABB]"><div className="relative mx-auto mb-4" style={{ width: 60, height: 60 }}><div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: "#A93E17", borderBottomColor: "#15399A" }} /><div className="absolute inset-0 flex items-center justify-center"><img src="/images/loader.svg" alt="" className="w-8 h-8" /></div></div>Loading...</div>
+  if (error) return <div className="text-center py-8 text-[rgb(230,87,87)]">{error}</div>
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Services</h1>
+        <h1 className="dashboard-section-title">Services</h1>
         <Link
           to="/admin/services/create"
-          className="bg-primary text-white px-4 py-2 rounded-lg"
+          className="dashboard-btn"
         >
           Add Service
         </Link>
       </div>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="rounded-[20px] border border-[#FFFFFF0F] overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-[#0A0A0A]">
             <tr>
-              <th className="text-left px-4 py-3 text-sm font-medium">Title</th>
-              <th className="text-left px-4 py-3 text-sm font-medium">Slug</th>
-              <th className="text-left px-4 py-3 text-sm font-medium">Featured</th>
-              <th className="text-left px-4 py-3 text-sm font-medium">Active</th>
-              <th className="text-right px-4 py-3 text-sm font-medium">Actions</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Title</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Slug</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Featured</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Active</th>
+              <th className="text-right px-4 py-3 text-sm font-medium text-[#A7AABB]">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-[#FFFFFF0F]">
             {services.map((service) => (
-              <tr key={service.id}>
-                <td className="px-4 py-3">{service.title}</td>
-                <td className="px-4 py-3 text-sm text-gray-500">
+              <tr key={service.id} className="hover:bg-[#FFFFFF08] transition-colors">
+                <td className="px-4 py-3 text-white">{service.title}</td>
+                <td className="px-4 py-3 text-sm text-[#A7AABB]">
                   {service.slug}
                 </td>
                 <td className="px-4 py-3">
                   <button
                     onClick={() => handleToggleFeatured(service.id)}
-                    className={`px-2 py-1 rounded text-xs ${
+                    className={`dashboard-badge ${
                       service.featured
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-[#15399A]/10 text-[#15399A]'
+                        : 'bg-[#FFFFFF0F] text-[#A7AABB]'
                     }`}
                   >
                     {service.featured ? 'Featured' : 'Not Featured'}
@@ -70,10 +70,10 @@ export default function ServicesDashboard() {
                 </td>
                 <td className="px-4 py-3">
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
+                    className={`dashboard-badge ${
                       service.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-[#A93E17]/10 text-[#A93E17]'
+                        : 'bg-[rgb(230,87,87)]/10 text-[rgb(230,87,87)]'
                     }`}
                   >
                     {service.isActive ? 'Active' : 'Inactive'}
@@ -82,7 +82,7 @@ export default function ServicesDashboard() {
                 <td className="px-4 py-3 text-right">
                   <button
                     onClick={() => handleDelete(service.id)}
-                    className="text-red-600 text-sm hover:underline"
+                    className="text-[rgb(230,87,87)] text-sm hover:underline"
                   >
                     Delete
                   </button>
