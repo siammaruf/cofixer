@@ -18,7 +18,7 @@ COPY . .
 RUN bun run build
 
 # Production stage
-FROM oven/bun:latest AS production
+FROM node:24-alpine AS production
 
 WORKDIR /app
 
