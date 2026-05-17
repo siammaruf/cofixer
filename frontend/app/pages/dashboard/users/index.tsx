@@ -48,11 +48,11 @@ export default function UserList() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Users</h2>
-          <p className="text-muted-foreground">Manage system users</p>
+          <h2 className="dashboard-section-title">Users</h2>
+          <p className="text-[#A7AABB] mt-1">Manage system users</p>
         </div>
         <Link to="/admin/users/create">
-          <Button className="flex items-center gap-2">
+          <Button variant="gradient" className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Add User
           </Button>
@@ -62,15 +62,15 @@ export default function UserList() {
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Users className="h-5 w-5 text-[#A93E17]" />
               <span>User List</span>
             </CardTitle>
             <div className="relative w-64">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#A7AABB]" />
               <Input
                 placeholder="Search users..."
-                className="pl-8"
+                className="pl-9 rounded-full border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -91,9 +91,9 @@ export default function UserList() {
             emptyMessage="No users found. Add your first user to get started."
             padding="none"
           >
-            <div className="rounded-md border">
-              <div className="p-4 bg-muted/50">
-                <div className="grid grid-cols-5 font-medium text-sm">
+            <div className="rounded-[20px] border border-[#FFFFFF0F] overflow-hidden">
+              <div className="p-4 bg-[#0A0A0A]">
+                <div className="grid grid-cols-5 font-medium text-sm text-[#A7AABB]">
                   <div>Name</div>
                   <div>Role</div>
                   <div>Email</div>
@@ -101,18 +101,18 @@ export default function UserList() {
                   <div>Status</div>
                 </div>
               </div>
-              <div className="divide-y">
+              <div className="divide-y divide-[#FFFFFF0F]">
                 {currentItems.length > 0 ? (
                   currentItems.map((user) => (
-                    <div key={user.id} className="p-4 hover:bg-muted/50">
+                    <div key={user.id} className="p-4 hover:bg-[#FFFFFF08] transition-colors">
                       <div className="grid grid-cols-5 text-sm">
-                        <div className="font-medium">{user.name}</div>
-                        <div>{user.position ?? "-"}</div>
-                        <div>{user.email}</div>
-                        <div>{user.phone ?? "-"}</div>
+                        <div className="font-medium text-white">{user.name}</div>
+                        <div className="text-[#A7AABB]">{user.position ?? "-"}</div>
+                        <div className="text-[#A7AABB]">{user.email}</div>
+                        <div className="text-[#A7AABB]">{user.phone ?? "-"}</div>
                         <div>
                           <span
-                            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(user.status)}`}
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${getStatusColor(user.status)}`}
                           >
                             {user.status ?? "Unknown"}
                           </span>
@@ -121,7 +121,7 @@ export default function UserList() {
                     </div>
                   ))
                 ) : (
-                  <div className="p-4 text-center text-muted-foreground">
+                  <div className="p-4 text-center text-[#A7AABB]">
                     No users found matching your search.
                   </div>
                 )}
@@ -130,7 +130,7 @@ export default function UserList() {
 
             {filteredUsers.length > 0 && (
               <div className="flex items-center justify-between mt-4">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-[#A7AABB]">
                   Showing {indexOfFirstItem + 1} to{" "}
                   {Math.min(indexOfLastItem, filteredUsers.length)} of{" "}
                   {filteredUsers.length} users
@@ -141,11 +141,12 @@ export default function UserList() {
                     size="sm"
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
+                    className="rounded-full border-[#FFFFFF0F] text-white hover:bg-[#FFFFFF0F]"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     Previous
                   </Button>
-                  <div className="text-sm">
+                  <div className="text-sm text-[#A7AABB]">
                     Page {currentPage} of {totalPages || 1}
                   </div>
                   <Button
@@ -153,6 +154,7 @@ export default function UserList() {
                     size="sm"
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages || totalPages === 0}
+                    className="rounded-full border-[#FFFFFF0F] text-white hover:bg-[#FFFFFF0F]"
                   >
                     Next
                     <ChevronRight className="h-4 w-4" />
@@ -170,12 +172,12 @@ export default function UserList() {
 function getStatusColor(status?: UserStatus) {
   switch (status) {
     case "Active":
-      return "bg-green-50 text-green-700";
+      return "bg-[#A93E17]/10 text-[#A93E17]";
     case "Inactive":
-      return "bg-red-50 text-red-700";
+      return "bg-[rgb(230,87,87)]/10 text-[rgb(230,87,87)]";
     case "Suspended":
-      return "bg-yellow-50 text-yellow-700";
+      return "bg-[#15399A]/10 text-[#15399A]";
     default:
-      return "bg-gray-50 text-gray-700";
+      return "bg-[#FFFFFF0F] text-[#A7AABB]";
   }
 }

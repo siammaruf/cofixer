@@ -26,48 +26,48 @@ export default function BlogDashboard() {
     await dispatch(deleteBlogPost(id)).unwrap()
   }
 
-  if (loading) return <div className="text-center py-8">Loading...</div>
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>
+  if (loading) return <div className="text-center py-8 text-[#A7AABB]"><div className="relative mx-auto mb-4" style={{ width: 60, height: 60 }}><div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: "#A93E17", borderBottomColor: "#15399A" }} /><div className="absolute inset-0 flex items-center justify-center"><img src="/images/loader.svg" alt="" className="w-8 h-8" /></div></div>Loading...</div>
+  if (error) return <div className="text-center py-8 text-[rgb(230,87,87)]">{error}</div>
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Blog Posts</h1>
+        <h1 className="dashboard-section-title">Blog Posts</h1>
         <Link
           to="/admin/blog/create"
-          className="bg-primary text-white px-4 py-2 rounded-lg"
+          className="dashboard-btn"
         >
           Add Post
         </Link>
       </div>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="rounded-[20px] border border-[#FFFFFF0F] overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-[#0A0A0A]">
             <tr>
-              <th className="text-left px-4 py-3 text-sm font-medium">Title</th>
-              <th className="text-left px-4 py-3 text-sm font-medium">Author</th>
-              <th className="text-left px-4 py-3 text-sm font-medium">Category</th>
-              <th className="text-left px-4 py-3 text-sm font-medium">Published</th>
-              <th className="text-right px-4 py-3 text-sm font-medium">Actions</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Title</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Author</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Category</th>
+              <th className="text-left px-4 py-3 text-sm font-medium text-[#A7AABB]">Published</th>
+              <th className="text-right px-4 py-3 text-sm font-medium text-[#A7AABB]">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-[#FFFFFF0F]">
             {posts.map((post) => (
-              <tr key={post.id}>
-                <td className="px-4 py-3">{post.title}</td>
-                <td className="px-4 py-3 text-sm text-gray-500">
+              <tr key={post.id} className="hover:bg-[#FFFFFF08] transition-colors">
+                <td className="px-4 py-3 text-white">{post.title}</td>
+                <td className="px-4 py-3 text-sm text-[#A7AABB]">
                   {post.authorName || '-'}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-500">
+                <td className="px-4 py-3 text-sm text-[#A7AABB]">
                   {post.category || '-'}
                 </td>
                 <td className="px-4 py-3">
                   <button
                     onClick={() => handleTogglePublish(post.id)}
-                    className={`px-2 py-1 rounded text-xs ${
+                    className={`dashboard-badge ${
                       post.isPublished
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-[#A93E17]/10 text-[#A93E17]'
+                        : 'bg-[#FFFFFF0F] text-[#A7AABB]'
                     }`}
                   >
                     {post.isPublished ? 'Published' : 'Draft'}
@@ -76,7 +76,7 @@ export default function BlogDashboard() {
                 <td className="px-4 py-3 text-right">
                   <button
                     onClick={() => handleDelete(post.id)}
-                    className="text-red-600 text-sm hover:underline"
+                    className="text-[rgb(230,87,87)] text-sm hover:underline"
                   >
                     Delete
                   </button>

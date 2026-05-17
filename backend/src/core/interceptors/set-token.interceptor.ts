@@ -31,6 +31,20 @@ export class SetToken implements NestInterceptor {
                         },
                     );
 
+                    if (value.data?.refreshToken) {
+                        res.cookie(
+                            this.configService.get<string>(
+                                'AUTH_REFRESH_TOKEN_COOKIE_NAME',
+                            ),
+                            value.data.refreshToken,
+                            {
+                                httpOnly: true,
+                                secure: true,
+                                sameSite: 'none',
+                            },
+                        );
+                    }
+
                     return value;
                 } else {
                     return value;

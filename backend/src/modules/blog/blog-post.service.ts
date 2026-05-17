@@ -12,7 +12,9 @@ export class BlogPostService extends BaseService<BlogPost> {
     async findBySlugOrFail(slug: string): Promise<BlogPost> {
         const post = await this.blogPostRepository.findBySlug(slug);
         if (!post) {
-            throw new NotFoundException(`Blog post with slug '${slug}' not found`);
+            throw new NotFoundException(
+                `Blog post with slug '${slug}' not found`,
+            );
         }
         return post;
     }
@@ -30,6 +32,6 @@ export class BlogPostService extends BaseService<BlogPost> {
         return this.update(id, {
             isPublished: !post.isPublished,
             publishedAt: !post.isPublished ? new Date() : post.publishedAt,
-        } as any);
+        });
     }
 }

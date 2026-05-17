@@ -29,7 +29,7 @@
 
 ```
 src/
-├── config/                 # Configuration files (DB, JWT, Mail, S3)
+├── config/                 # Configuration files (DB, JWT, Mail)
 ├── core/                   # Framework-level reusable code
 │   ├── base/              # OOP base classes
 │   ├── decorators/        # Custom decorators

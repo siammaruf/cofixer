@@ -48,16 +48,7 @@ class EnvConfigService {
             password: this.getValue('POSTGRES_PASSWORD'),
             database: this.getValue('POSTGRES_DATABASE'),
 
-            nize: false,
-        };
-    }
-
-    public getAwsConfig() {
-        return {
-            AWS_REGION: this.getValue('AWS_REGION'),
-            AWS_ACCESS_KEY_ID: this.getValue('AWS_ACCESS_KEY_ID'),
-            AWS_SECRET_ACCESS_KEY: this.getValue('AWS_SECRET_ACCESS_KEY'),
-            AWS_S3_BUCKET: this.getValue('AWS_S3_BUCKET'),
+            synchronize: false,
         };
     }
 
@@ -66,49 +57,8 @@ class EnvConfigService {
             MAIL_HOST: this.getValue('MAIL_HOST', false) || 'smtp.gmail.com',
             MAIL_PORT: parseInt(this.getValue('MAIL_PORT', false)) || 465,
             MAIL_FROM: this.getValue('MAIL_FROM', false) || 'demo@example.com',
-            GOOGLE_CLIENT_ID:
-                this.getValue('GOOGLE_CLIENT_ID', false) || 'demo-id',
-            GOOGLE_CLIENT_SECRET:
-                this.getValue('GOOGLE_CLIENT_SECRET', false) || 'demo-secret',
-            GOOGLE_CLIENT_REFRESH_TOKEN:
-                this.getValue('GOOGLE_CLIENT_REFRESH_TOKEN', false) ||
-                'demo-refresh-token',
-            GOOGLE_CLIENT_ACCESS_TOKEN:
-                this.getValue('GOOGLE_CLIENT_ACCESS_TOKEN', false) ||
-                'demo-access-token',
-        };
-    }
-
-    public getAppleConfig() {
-        return {
-            APPLE_TEAM_ID: this.getValue('APPLE_TEAM_ID'),
-            APPLE_CLIENT_ID: this.getValue('APPLE_CLIENT_ID'),
-            APPLE_KEY_ID: this.getValue('APPLE_KEY_ID'),
-            APPLE_PRIVATE_KEY: this.getValue('APPLE_PRIVATE_KEY').replace(
-                /\\n/g,
-                '\n',
-            ),
-        };
-    }
-
-    public getTossConfig() {
-        return {
-            TOSS_CLIENT_KEY:
-                this.getValue('TOSS_CLIENT_KEY', false) || 'test_client_key',
-            TOSS_SECRET_KEY:
-                this.getValue('TOSS_SECRET_KEY', false) || 'test_secret_key',
-            TOSS_API_URL:
-                this.getValue('TOSS_API_URL', false) ||
-                'https://api.tosspayments.com',
-        };
-    }
-
-    public getPushNotificationConfig() {
-        return {
-            PROJECT_ID: this.getValue('PROJECT_ID'),
-            PRIVATE_KEY_ID: this.getValue('PRIVATE_KEY_ID'),
-            PRIVATE_KEY: this.getValue('PRIVATE_KEY'),
-            CLIENT_EMAIL: this.getValue('CLIENT_EMAIL'),
+            MAIL_USER: this.getValue('MAIL_USER', false) || '',
+            MAIL_PASS: this.getValue('MAIL_PASS', false) || '',
         };
     }
 
@@ -128,6 +78,15 @@ class EnvConfigService {
             ),
         };
     }
+
+    public getCloudinaryConfig() {
+        return {
+            cloudName: this.getValue('CLOUDINARY_CLOUD_NAME'),
+            apiKey: this.getValue('CLOUDINARY_API_KEY'),
+            apiSecret: this.getValue('CLOUDINARY_API_SECRET'),
+            folder: this.getValue('CLOUDINARY_FOLDER', false) || 'cofixer',
+        };
+    }
 }
 
 const envConfigService = new EnvConfigService(process.env).ensureValues([
@@ -139,19 +98,10 @@ const envConfigService = new EnvConfigService(process.env).ensureValues([
     'ALLOW_ORIGINS',
     'MODE',
     'FRONTEND_URL',
-    'AWS_REGION',
-    'AWS_ACCESS_KEY_ID',
-    'AWS_SECRET_ACCESS_KEY',
-    'AWS_S3_BUCKET',
-    'APPLE_TEAM_ID',
-    'APPLE_CLIENT_ID',
-    'APPLE_KEY_ID',
-    'APPLE_PRIVATE_KEY',
 
-    'PROJECT_ID',
-    'PRIVATE_KEY_ID',
-    'PRIVATE_KEY',
-    'CLIENT_EMAIL',
+    'CLOUDINARY_CLOUD_NAME',
+    'CLOUDINARY_API_KEY',
+    'CLOUDINARY_API_SECRET',
 ]);
 
 export { envConfigService };

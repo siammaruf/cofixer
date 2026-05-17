@@ -12,7 +12,7 @@ import { SocialLoginTypeEnum } from 'src/shared/enums';
 export class SocialLoginDto {
     @ApiProperty({
         example: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ...',
-        description: 'Social login token (Google, Kakao, Naver, etc.)',
+        description: 'Social login token (Google)',
     })
     @IsNotEmpty()
     @IsString()

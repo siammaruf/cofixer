@@ -10,7 +10,16 @@ import { Testimonial } from '../testimonials/testimonial.entity';
 import { Faq } from '../faqs/faq.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Service, Project, BlogPost, TeamMember, Testimonial, Faq])],
+    imports: [
+        TypeOrmModule.forFeature([
+            Service,
+            Project,
+            BlogPost,
+            TeamMember,
+            Testimonial,
+            Faq,
+        ]),
+    ],
     controllers: [SitemapController],
     providers: [SitemapService],
     exports: [SitemapService],

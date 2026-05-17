@@ -36,49 +36,49 @@ export default function CreateBlogPost() {
   return (
     <div>
       <div className="flex items-center gap-2 mb-6">
-        <Link to="/admin/blog" className="text-primary hover:underline">← Back</Link>
-        <h1 className="text-2xl font-bold">Add Blog Post</h1>
+        <Link to="/admin/blog" className="text-[#A93E17] hover:underline">← Back</Link>
+        <h1 className="dashboard-section-title">Add Blog Post</h1>
       </div>
       <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Title *</label>
-          <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Title *</label>
+          <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Slug *</label>
-          <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Slug *</label>
+          <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Excerpt</label>
-          <input type="text" value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Excerpt</label>
+          <input type="text" value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Content</label>
-          <textarea rows={6} value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Content</label>
+          <textarea rows={6} value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Category</label>
-          <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Category</label>
+          <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Author Name</label>
-          <input type="text" value={formData.authorName} onChange={e => setFormData({...formData, authorName: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Author Name</label>
+          <input type="text" value={formData.authorName} onChange={e => setFormData({...formData, authorName: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Tags (comma separated)</label>
-          <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full border rounded-lg px-4 py-2" placeholder="ai, technology, business" />
+          <label className="block text-sm font-medium mb-1 text-white">Tags (comma separated)</label>
+          <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="dashboard-input" placeholder="ai, technology, business" />
         </div>
         <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={formData.isPublished} onChange={e => setFormData({...formData, isPublished: e.target.checked})} />
+          <label className="flex items-center gap-2 text-white">
+            <input type="checkbox" checked={formData.isPublished} onChange={e => setFormData({...formData, isPublished: e.target.checked})} className="accent-[#A93E17]" />
             <span className="text-sm">Published</span>
           </label>
         </div>
         <div className="flex gap-4">
-          <button type="submit" disabled={loading} className="bg-primary text-white px-6 py-2 rounded-lg disabled:opacity-50">
+          <button type="submit" disabled={loading} className="dashboard-btn disabled:opacity-50">
             {loading ? 'Creating...' : 'Create Post'}
           </button>
-          <Link to="/admin/blog" className="border px-6 py-2 rounded-lg hover:bg-gray-50">Cancel</Link>
+          <Link to="/admin/blog" className="dashboard-btn-secondary">Cancel</Link>
         </div>
       </form>
     </div>

@@ -67,11 +67,7 @@ $requiredVars = @(
     "APPLE_TEAM_ID",
     "APPLE_CLIENT_ID",
     "APPLE_KEY_ID",
-    "APPLE_PRIVATE_KEY",
-    "PROJECT_ID",
-    "PRIVATE_KEY_ID",
-    "PRIVATE_KEY",
-    "CLIENT_EMAIL"
+    "APPLE_PRIVATE_KEY"
 )
 
 if (Test-Path ".env") {

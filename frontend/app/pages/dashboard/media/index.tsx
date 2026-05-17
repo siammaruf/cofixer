@@ -64,13 +64,13 @@ export default function MediaDashboard() {
     }
   }
 
-  if (loading) return <div className="text-center py-8">Loading...</div>
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>
+  if (loading) return <div className="text-center py-8 text-[#A7AABB]"><div className="relative mx-auto mb-4" style={{ width: 60, height: 60 }}><div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: "#A93E17", borderBottomColor: "#15399A" }} /><div className="absolute inset-0 flex items-center justify-center"><img src="/images/loader.svg" alt="" className="w-8 h-8" /></div></div>Loading...</div>
+  if (error) return <div className="text-center py-8 text-[rgb(230,87,87)]">{error}</div>
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Media Library</h1>
+        <h1 className="dashboard-section-title">Media Library</h1>
         <div>
           <input
             ref={fileInputRef}
@@ -81,7 +81,7 @@ export default function MediaDashboard() {
           />
           <label
             htmlFor="media-upload"
-            className={`bg-primary text-white px-4 py-2 rounded-lg cursor-pointer inline-block ${uploading ? 'opacity-50' : ''}`}
+            className={`dashboard-btn cursor-pointer inline-block ${uploading ? 'opacity-50' : ''}`}
           >
             {uploading ? 'Uploading...' : 'Upload File'}
           </label>
@@ -89,25 +89,25 @@ export default function MediaDashboard() {
       </div>
 
       {media.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed rounded-lg">
-          <p className="text-gray-500">No media files yet. Upload your first file.</p>
+        <div className="text-center py-16 border-2 border-dashed border-[#FFFFFF0F] rounded-[20px]">
+          <p className="text-[#A7AABB]">No media files yet. Upload your first file.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {media.map((item) => (
-            <div key={item.id} className="border rounded-lg overflow-hidden group relative">
+            <div key={item.id} className="border border-[#FFFFFF0F] rounded-[20px] overflow-hidden group relative bg-[#0A0A0A]">
               {item.mimeType.startsWith('image/') ? (
                 <img src={item.url} alt={item.filename} className="w-full h-32 object-cover" />
               ) : (
-                <div className="w-full h-32 flex items-center justify-center bg-gray-100">
-                  <span className="text-gray-500 text-sm">{item.mimeType}</span>
+                <div className="w-full h-32 flex items-center justify-center bg-[#060606]">
+                  <span className="text-[#A7AABB] text-sm">{item.mimeType}</span>
                 </div>
               )}
               <div className="p-2">
-                <p className="text-xs truncate">{item.filename}</p>
+                <p className="text-xs truncate text-white">{item.filename}</p>
                 <button
                   onClick={() => deleteMediaItem(item.id)}
-                  className="text-red-600 text-xs hover:underline mt-1"
+                  className="text-[rgb(230,87,87)] text-xs hover:underline mt-1"
                 >
                   Delete
                 </button>

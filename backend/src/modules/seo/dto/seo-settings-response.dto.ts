@@ -46,7 +46,8 @@ export class SeoSettingsResponseDto {
     ogTitle?: string;
 
     @ApiPropertyOptional({
-        example: 'Explore our AI services to transform your business operations.',
+        example:
+            'Explore our AI services to transform your business operations.',
         description: 'Open Graph description',
     })
     ogDescription?: string;

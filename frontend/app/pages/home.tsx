@@ -23,7 +23,7 @@ export async function loader() {
         cmsService.getStats(),
         cmsService.getBlogPosts(),
         cmsService.getFaqs(),
-        cmsService.getSeoSettings('/'),
+        cmsService.getSeoSettings(''),
       ])
     return {
       services: servicesRes.data.slice(0, 3),

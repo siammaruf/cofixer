@@ -5,10 +5,11 @@ import { Otp } from './otp.entity';
 import { OtpService } from './otp.service';
 import { User } from '@modules/users';
 import { UtilsModule } from '@infrastructure/utils/utils.module';
+import { MailModule } from '@infrastructure/mail/mail.module';
 import { I18nHelper } from 'src/core/utils/i18n.helper';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Otp, User]), UtilsModule],
+    imports: [TypeOrmModule.forFeature([Otp, User]), UtilsModule, MailModule],
     providers: [OtpService, I18nHelper],
     controllers: [OtpController],
     exports: [OtpService],

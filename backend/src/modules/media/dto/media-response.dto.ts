@@ -38,6 +38,24 @@ export class MediaResponseDto {
     url: string;
 
     @ApiPropertyOptional({
+        example: 'https://cofixer.com/uploads/ai-business-2024-thumb.webp',
+        description: 'Thumbnail URL',
+    })
+    thumbUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/uploads/ai-business-2024-large.webp',
+        description: 'Large version URL',
+    })
+    largeUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/uploads/ai-business-2024-full.webp',
+        description: 'Full optimized version URL',
+    })
+    fullUrl?: string;
+
+    @ApiPropertyOptional({
         example: 'AI business transformation illustration',
         description: 'Alt text',
     })

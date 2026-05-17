@@ -10,7 +10,16 @@ import { Testimonial } from '../testimonials/testimonial.entity';
 import { ContactMessage } from '../contacts/contact-message.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Service, Project, BlogPost, TeamMember, Testimonial, ContactMessage])],
+    imports: [
+        TypeOrmModule.forFeature([
+            Service,
+            Project,
+            BlogPost,
+            TeamMember,
+            Testimonial,
+            ContactMessage,
+        ]),
+    ],
     controllers: [StatsController],
     providers: [StatsService],
     exports: [StatsService],

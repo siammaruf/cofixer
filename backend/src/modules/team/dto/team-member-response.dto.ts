@@ -20,7 +20,8 @@ export class TeamMemberResponseDto {
     role: string;
 
     @ApiPropertyOptional({
-        example: '<p>John has over 10 years of experience in AI and machine learning...</p>',
+        example:
+            '<p>John has over 10 years of experience in AI and machine learning...</p>',
         description: 'Team member biography',
     })
     bio?: string;

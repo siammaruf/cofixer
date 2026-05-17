@@ -64,8 +64,8 @@ async function bootstrap() {
 
     if (!envConfigService.isProduction()) {
         const config = new DocumentBuilder()
-            .setTitle('NestJS Starter Kit')
-            .setDescription('NestJS Starter Kit API Documentation')
+            .setTitle('Cofixer API')
+            .setDescription('Cofixer API Documentation')
             .setVersion('1.0')
             .addBearerAuth()
             .addCookieAuth('accessToken', {
@@ -175,7 +175,7 @@ async function bootstrap() {
                 },
                 withCredentials: true,
             },
-            customSiteTitle: 'NestJS Starter Kit API',
+            customSiteTitle: 'Cofixer API',
         });
     }
 

@@ -12,7 +12,9 @@ export class ProjectService extends BaseService<Project> {
     async findBySlugOrFail(slug: string): Promise<Project> {
         const project = await this.projectRepository.findBySlug(slug);
         if (!project) {
-            throw new NotFoundException(`Project with slug '${slug}' not found`);
+            throw new NotFoundException(
+                `Project with slug '${slug}' not found`,
+            );
         }
         return project;
     }
@@ -27,6 +29,6 @@ export class ProjectService extends BaseService<Project> {
 
     async toggleFeatured(id: string): Promise<Project | null> {
         const project = await this.findByIdOrFail(id);
-        return this.update(id, { featured: !project.featured } as any);
+        return this.update(id, { featured: !project.featured });
     }
 }

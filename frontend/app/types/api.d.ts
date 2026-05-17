@@ -54,7 +54,8 @@ export interface ForgotPasswordRequest {
 }
 
 export interface ResetPasswordRequest {
-  token: string
+  email: string
+  otp: string
   password: string
   confirmPassword: string
 }
@@ -62,6 +63,13 @@ export interface ResetPasswordRequest {
 export interface VerifyOtpRequest {
   otp: string
   email: string
+}
+
+export interface RegisterRequest {
+  email: string
+  password: string
+  firstName?: string
+  lastName?: string
 }
 
 // Form Action Response Types (for server actions)

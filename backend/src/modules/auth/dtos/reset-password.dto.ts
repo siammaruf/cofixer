@@ -13,6 +13,14 @@ export class ResetPasswordDto {
     @IsEmail()
     email: string;
 
+    @ApiProperty({
+        example: '1234',
+        description: 'OTP code received via email',
+    })
+    @IsNotEmpty()
+    @IsString()
+    otp: string;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsString()

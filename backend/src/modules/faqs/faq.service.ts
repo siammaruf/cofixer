@@ -15,11 +15,14 @@ export class FaqService extends BaseService<Faq> {
 
     async findGroupedByCategory(): Promise<Record<string, Faq[]>> {
         const faqs = await this.findActiveOrdered();
-        return faqs.reduce((groups, faq) => {
-            const category = faq.category || 'General';
-            if (!groups[category]) groups[category] = [];
-            groups[category].push(faq);
-            return groups;
-        }, {} as Record<string, Faq[]>);
+        return faqs.reduce(
+            (groups, faq) => {
+                const category = faq.category || 'General';
+                if (!groups[category]) groups[category] = [];
+                groups[category].push(faq);
+                return groups;
+            },
+            {} as Record<string, Faq[]>,
+        );
     }
 }

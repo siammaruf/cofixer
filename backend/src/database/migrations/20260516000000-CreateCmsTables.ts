@@ -24,10 +24,18 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_services" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_services_slug" ON "services" ("slug")`);
-        await queryRunner.query(`CREATE INDEX "IDX_services_featured" ON "services" ("featured")`);
-        await queryRunner.query(`CREATE INDEX "IDX_services_is_active" ON "services" ("is_active")`);
-        await queryRunner.query(`CREATE INDEX "IDX_services_order" ON "services" ("order")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_services_slug" ON "services" ("slug")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_services_featured" ON "services" ("featured")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_services_is_active" ON "services" ("is_active")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_services_order" ON "services" ("order")`,
+        );
 
         // 2. projects
         await queryRunner.query(`
@@ -50,10 +58,18 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_projects" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_projects_slug" ON "projects" ("slug")`);
-        await queryRunner.query(`CREATE INDEX "IDX_projects_featured" ON "projects" ("featured")`);
-        await queryRunner.query(`CREATE INDEX "IDX_projects_is_active" ON "projects" ("is_active")`);
-        await queryRunner.query(`CREATE INDEX "IDX_projects_category" ON "projects" ("category")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_projects_slug" ON "projects" ("slug")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_projects_featured" ON "projects" ("featured")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_projects_is_active" ON "projects" ("is_active")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_projects_category" ON "projects" ("category")`,
+        );
 
         // 3. blog_posts
         await queryRunner.query(`
@@ -76,10 +92,18 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_blog_posts" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_blog_posts_slug" ON "blog_posts" ("slug")`);
-        await queryRunner.query(`CREATE INDEX "IDX_blog_posts_is_published" ON "blog_posts" ("is_published")`);
-        await queryRunner.query(`CREATE INDEX "IDX_blog_posts_published_at" ON "blog_posts" ("published_at")`);
-        await queryRunner.query(`CREATE INDEX "IDX_blog_posts_category" ON "blog_posts" ("category")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_blog_posts_slug" ON "blog_posts" ("slug")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_blog_posts_is_published" ON "blog_posts" ("is_published")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_blog_posts_published_at" ON "blog_posts" ("published_at")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_blog_posts_category" ON "blog_posts" ("category")`,
+        );
 
         // 4. team_members
         await queryRunner.query(`
@@ -98,8 +122,12 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_team_members" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_team_members_order" ON "team_members" ("order")`);
-        await queryRunner.query(`CREATE INDEX "IDX_team_members_is_active" ON "team_members" ("is_active")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_team_members_order" ON "team_members" ("order")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_team_members_is_active" ON "team_members" ("is_active")`,
+        );
 
         // 5. testimonials
         await queryRunner.query(`
@@ -119,8 +147,12 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_testimonials" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_testimonials_featured" ON "testimonials" ("featured")`);
-        await queryRunner.query(`CREATE INDEX "IDX_testimonials_is_active" ON "testimonials" ("is_active")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_testimonials_featured" ON "testimonials" ("featured")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_testimonials_is_active" ON "testimonials" ("is_active")`,
+        );
 
         // 6. faqs
         await queryRunner.query(`
@@ -137,9 +169,15 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_faqs" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_faqs_category" ON "faqs" ("category")`);
-        await queryRunner.query(`CREATE INDEX "IDX_faqs_order" ON "faqs" ("order")`);
-        await queryRunner.query(`CREATE INDEX "IDX_faqs_is_active" ON "faqs" ("is_active")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_faqs_category" ON "faqs" ("category")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_faqs_order" ON "faqs" ("order")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_faqs_is_active" ON "faqs" ("is_active")`,
+        );
 
         // 7. contact_messages
         await queryRunner.query(`
@@ -159,9 +197,15 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_contact_messages" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_contact_messages_email" ON "contact_messages" ("email")`);
-        await queryRunner.query(`CREATE INDEX "IDX_contact_messages_status" ON "contact_messages" ("status")`);
-        await queryRunner.query(`CREATE INDEX "IDX_contact_messages_read" ON "contact_messages" ("read")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_contact_messages_email" ON "contact_messages" ("email")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_contact_messages_status" ON "contact_messages" ("status")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_contact_messages_read" ON "contact_messages" ("read")`,
+        );
 
         // 8. seo_settings
         await queryRunner.query(`
@@ -187,8 +231,12 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_seo_settings" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_seo_settings_route" ON "seo_settings" ("route")`);
-        await queryRunner.query(`CREATE INDEX "IDX_seo_settings_page_type" ON "seo_settings" ("page_type")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_seo_settings_route" ON "seo_settings" ("route")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_seo_settings_page_type" ON "seo_settings" ("page_type")`,
+        );
 
         // 9. site_settings
         await queryRunner.query(`
@@ -223,8 +271,12 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_navigation_menus" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_navigation_menus_name" ON "navigation_menus" ("name")`);
-        await queryRunner.query(`CREATE INDEX "IDX_navigation_menus_is_active" ON "navigation_menus" ("is_active")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_navigation_menus_name" ON "navigation_menus" ("name")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_navigation_menus_is_active" ON "navigation_menus" ("is_active")`,
+        );
 
         // 11. media
         await queryRunner.query(`
@@ -244,9 +296,15 @@ export class CreateCmsTables20260516000000 implements MigrationInterface {
                 CONSTRAINT "PK_media" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`CREATE INDEX "IDX_media_mime_type" ON "media" ("mime_type")`);
-        await queryRunner.query(`CREATE INDEX "IDX_media_folder" ON "media" ("folder")`);
-        await queryRunner.query(`CREATE INDEX "IDX_media_is_active" ON "media" ("is_active")`);
+        await queryRunner.query(
+            `CREATE INDEX "IDX_media_mime_type" ON "media" ("mime_type")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_media_folder" ON "media" ("folder")`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_media_is_active" ON "media" ("is_active")`,
+        );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

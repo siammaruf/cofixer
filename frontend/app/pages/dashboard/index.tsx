@@ -11,11 +11,11 @@ export default function DashboardOverview() {
   }, [dispatch])
 
   if (loading) {
-    return <div className="text-center py-8">Loading stats...</div>
+    return <div className="text-center py-8 text-[#A7AABB]"><div className="relative mx-auto mb-4" style={{ width: 60, height: 60 }}><div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: "#A93E17", borderBottomColor: "#15399A" }} /><div className="absolute inset-0 flex items-center justify-center"><img src="/images/loader.svg" alt="" className="w-8 h-8" /></div></div>Loading stats...</div>
   }
 
   if (error) {
-    return <div className="text-center py-8 text-red-600">{error}</div>
+    return <div className="text-center py-8 text-[rgb(230,87,87)]">{error}</div>
   }
 
   const statCards = stats
@@ -23,44 +23,51 @@ export default function DashboardOverview() {
         {
           label: 'Services',
           value: stats.services,
-          color: 'bg-blue-50 text-blue-700',
+          icon: 'icon-about-item-1.svg',
         },
         {
           label: 'Projects',
           value: stats.projects,
-          color: 'bg-green-50 text-green-700',
+          icon: 'icon-about-item-2.svg',
         },
         {
           label: 'Blog Posts',
           value: stats.blogPosts,
-          color: 'bg-purple-50 text-purple-700',
+          icon: 'icon-about-item-3.svg',
         },
         {
           label: 'Team Members',
           value: stats.teamMembers,
-          color: 'bg-orange-50 text-orange-700',
+          icon: 'icon-about-item-4.svg',
         },
         {
           label: 'Testimonials',
           value: stats.testimonials,
-          color: 'bg-pink-50 text-pink-700',
+          icon: 'icon-sparkle.svg',
         },
         {
           label: 'Contacts',
           value: stats.contacts,
-          color: 'bg-gray-50 text-gray-700',
+          icon: 'icon-mail.svg',
         },
       ]
     : []
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+      <h1 className="dashboard-section-title mb-6">Dashboard Overview</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {statCards.map((card) => (
-          <div key={card.label} className={`rounded-lg p-6 ${card.color}`}>
-            <div className="text-3xl font-bold">{card.value}</div>
-            <div className="text-sm opacity-80">{card.label}</div>
+          <div key={card.label} className="dashboard-card p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-3xl font-bold text-white">{card.value}</div>
+                <div className="text-sm text-[#A7AABB] mt-1">{card.label}</div>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-[#060606] border border-[#FFFFFF0F] flex items-center justify-center">
+                <img src={`/images/${card.icon}`} alt="" className="w-5 h-5" />
+              </div>
+            </div>
           </div>
         ))}
       </div>

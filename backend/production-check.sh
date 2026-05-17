@@ -76,10 +76,6 @@ required_vars=(
     "APPLE_CLIENT_ID"
     "APPLE_KEY_ID"
     "APPLE_PRIVATE_KEY"
-    "PROJECT_ID"
-    "PRIVATE_KEY_ID"
-    "PRIVATE_KEY"
-    "CLIENT_EMAIL"
 )
 
 if [ -f ".env" ]; then

@@ -51,16 +51,28 @@ function SuspenseLoader({
   ...props
 }: SuspenseLoaderProps) {
   const resolvedSpinnerSize = spinnerSize ?? (size === "sm" ? "sm" : size === "lg" ? "lg" : "default")
+  const spinnerSizeClass = resolvedSpinnerSize === "sm" ? "size-4" : resolvedSpinnerSize === "lg" ? "size-12" : "size-8"
 
   return (
     <div
       className={cn(suspenseLoaderVariants({ size, className }))}
       {...props}
     >
-      <div className="flex flex-col items-center gap-3">
-        <div className={cn(spinnerVariants({ size: resolvedSpinnerSize }))} />
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative" style={{ width: 80, height: 80 }}>
+          <div
+            className={cn("absolute inset-0 rounded-full border-2 border-transparent animate-spin")}
+            style={{
+              borderTopColor: "#A93E17",
+              borderBottomColor: "#15399A",
+            }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img src="/images/loader.svg" alt="" className="w-10 h-10" />
+          </div>
+        </div>
         {message && (
-          <p className="text-sm text-muted-foreground">{message}</p>
+          <p className="text-sm text-[#A7AABB]">{message}</p>
         )}
       </div>
     </div>

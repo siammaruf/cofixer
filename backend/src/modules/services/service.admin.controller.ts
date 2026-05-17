@@ -10,11 +10,14 @@ import {
     HttpCode,
     HttpStatus,
     UseGuards,
+    UseInterceptors,
     ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../core/decorators/roles.decorator';
 import { RolesGuard } from '../../core/guards/roles.guard';
+import { CacheClear } from '../../core/decorators/cache-clear.decorator';
+import { CacheClearInterceptor } from '../../core/interceptors/cache-clear.interceptor';
 import { ApiSwagger } from '../../core/decorators/api-swagger.decorator';
 import { PaginationDto } from '../../shared/dtos/pagination.dto';
 import { RolesEnum } from '../../shared/enums/role.enum';
@@ -32,6 +35,7 @@ import { CreateServiceDto, UpdateServiceDto } from './dto';
 @ApiTags('Admin - Services')
 @Controller('admin/services')
 @UseGuards(RolesGuard)
+@UseInterceptors(CacheClearInterceptor)
 export class ServiceAdminController {
     constructor(private readonly serviceService: ServiceService) {}
 
@@ -74,10 +78,14 @@ export class ServiceAdminController {
         @Param('id', ParseUUIDPipe) id: string,
     ): Promise<SuccessResponseDto<Service>> {
         const service = await this.serviceService.findByIdOrFail(id);
-        return new SuccessResponseDto(service, 'Service retrieved successfully');
+        return new SuccessResponseDto(
+            service,
+            'Service retrieved successfully',
+        );
     }
 
     @Post()
+    @CacheClear('services')
     @Roles(RolesEnum.ADMIN, RolesEnum.MODERATOR)
     @HttpCode(HttpStatus.CREATED)
     @ApiSwagger({
@@ -93,6 +101,7 @@ export class ServiceAdminController {
     }
 
     @Patch(':id')
+    @CacheClear('services')
     @Roles(RolesEnum.ADMIN, RolesEnum.MODERATOR)
     @HttpCode(HttpStatus.OK)
     @ApiSwagger({
@@ -104,11 +113,12 @@ export class ServiceAdminController {
         @Param('id', ParseUUIDPipe) id: string,
         @Body() updateDto: UpdateServiceDto,
     ): Promise<UpdatedResponseDto<Service>> {
-        const service = await this.serviceService.update(id, updateDto as any);
+        const service = await this.serviceService.update(id, updateDto);
         return new UpdatedResponseDto(service!, 'Service updated successfully');
     }
 
     @Delete(':id')
+    @CacheClear('services')
     @Roles(RolesEnum.ADMIN, RolesEnum.MODERATOR)
     @HttpCode(HttpStatus.OK)
     @ApiSwagger({
@@ -124,6 +134,7 @@ export class ServiceAdminController {
     }
 
     @Patch(':id/feature')
+    @CacheClear('services')
     @Roles(RolesEnum.ADMIN, RolesEnum.MODERATOR)
     @HttpCode(HttpStatus.OK)
     @ApiSwagger({
@@ -135,10 +146,14 @@ export class ServiceAdminController {
         @Param('id', ParseUUIDPipe) id: string,
     ): Promise<UpdatedResponseDto<Service>> {
         const service = await this.serviceService.toggleFeatured(id);
-        return new UpdatedResponseDto(service!, 'Service featured status toggled');
+        return new UpdatedResponseDto(
+            service!,
+            'Service featured status toggled',
+        );
     }
 
     @Post('reorder')
+    @CacheClear('services')
     @Roles(RolesEnum.ADMIN, RolesEnum.MODERATOR)
     @HttpCode(HttpStatus.OK)
     @ApiSwagger({
@@ -150,6 +165,9 @@ export class ServiceAdminController {
         @Body() body: { ids: string[] },
     ): Promise<SuccessResponseDto<{ message: string }>> {
         await this.serviceService.reorder(body.ids);
-        return new SuccessResponseDto({ message: 'Services reordered' }, 'Services reordered successfully');
+        return new SuccessResponseDto(
+            { message: 'Services reordered' },
+            'Services reordered successfully',
+        );
     }
 }

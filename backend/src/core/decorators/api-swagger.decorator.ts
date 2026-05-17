@@ -228,7 +228,7 @@ export function ApiSwagger(
                 config.responseDto,
                 config.successStatus,
                 config.isArray,
-            ) as any,
+            ),
         );
     } else {
         decorators.push(

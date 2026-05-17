@@ -31,41 +31,41 @@ export default function CreateTeamMember() {
   return (
     <div>
       <div className="flex items-center gap-2 mb-6">
-        <Link to="/admin/team" className="text-primary hover:underline">← Back</Link>
-        <h1 className="text-2xl font-bold">Add Team Member</h1>
+        <Link to="/admin/team" className="text-[#A93E17] hover:underline">← Back</Link>
+        <h1 className="dashboard-section-title">Add Team Member</h1>
       </div>
       <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Name *</label>
-          <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Name *</label>
+          <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Role *</label>
-          <input required type="text" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Role *</label>
+          <input required type="text" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Bio</label>
-          <textarea rows={4} value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Bio</label>
+          <textarea rows={4} value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Image URL</label>
-          <input type="text" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Image URL</label>
+          <input type="text" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="dashboard-input" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Order</label>
-          <input type="number" value={formData.order} onChange={e => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="w-full border rounded-lg px-4 py-2" />
+          <label className="block text-sm font-medium mb-1 text-white">Order</label>
+          <input type="number" value={formData.order} onChange={e => setFormData({...formData, order: parseInt(e.target.value) || 0})} className="dashboard-input" />
         </div>
         <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} />
+          <label className="flex items-center gap-2 text-white">
+            <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="accent-[#A93E17]" />
             <span className="text-sm">Active</span>
           </label>
         </div>
         <div className="flex gap-4">
-          <button type="submit" disabled={loading} className="bg-primary text-white px-6 py-2 rounded-lg disabled:opacity-50">
+          <button type="submit" disabled={loading} className="dashboard-btn disabled:opacity-50">
             {loading ? 'Creating...' : 'Create Member'}
           </button>
-          <Link to="/admin/team" className="border px-6 py-2 rounded-lg hover:bg-gray-50">Cancel</Link>
+          <Link to="/admin/team" className="dashboard-btn-secondary">Cancel</Link>
         </div>
       </form>
     </div>

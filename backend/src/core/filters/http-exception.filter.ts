@@ -305,7 +305,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             baseDetail.constraints = {
                 stack: exception.stack || '',
                 originalMessage: exception.message || '',
-            } as any;
+            };
         }
 
         const errorDetails: ErrorDetailDto[] = [baseDetail];

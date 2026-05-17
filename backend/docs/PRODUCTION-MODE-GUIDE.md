@@ -35,38 +35,13 @@ AUTH_TOKEN_EXPIRED_TIME_REMEMBER_ME=2592000
 AUTH_REFRESH_TOKEN_COOKIE_NAME="YourRefreshToken"
 AUTH_REFRESH_TOKEN_EXPIRED_TIME=604800
 
-# AWS S3 (Required)
-AWS_ACCESS_KEY_ID=your-production-key
-AWS_SECRET_ACCESS_KEY=your-production-secret
-AWS_REGION=your-region
-AWS_S3_BUCKET=your-production-bucket
-
 # Mail Configuration
 MAIL_PORT=587
 MAIL_HOST=smtp.gmail.com
 MAIL_FROM=your-production-email@domain.com
-GOOGLE_CLIENT_ID=your-production-client-id
-GOOGLE_CLIENT_SECRET=your-production-client-secret
-GOOGLE_CLIENT_REFRESH_TOKEN=your-production-refresh-token
-GOOGLE_CLIENT_ACCESS_TOKEN=your-production-access-token
+MAIL_USER=your-production-email@domain.com
+MAIL_PASS=your-app-specific-password
 
-# Apple Authentication
-APPLE_TEAM_ID=your-production-team-id
-APPLE_CLIENT_ID=your-production-client-id
-APPLE_KEY_ID=your-production-key-id
-APPLE_PRIVATE_KEY=your-production-private-key
-
-# Push Notifications
-PROJECT_ID=your-production-project-id
-PRIVATE_KEY_ID=your-production-private-key-id
-PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-CLIENT_EMAIL=your-production-service-account@project.iam.gserviceaccount.com
-
-# Payment Gateway (Toss Payments)
-TOSS_CLIENT_ID=live_ck_XXXXXXXXXX           # Use LIVE credentials
-TOSS_SECRET_KEY=live_sk_XXXXXXXXXX          # Use LIVE credentials
-TOSS_BASE_URL="https://api.tosspayments.com"
-TOSS_WEBHOOK_SECRET=your-production-webhook-secret
 ```
 
 ---
@@ -295,7 +270,7 @@ Before deploying to production with `MODE=PROD`:
 - [ ] Verify authentication flows work correctly
 - [ ] Test error handling and logging
 - [ ] Verify email sending works
-- [ ] Test file uploads to S3
+- [ ] Test file uploads
 
 ---
 

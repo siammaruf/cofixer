@@ -5,7 +5,9 @@ import { NavigationMenuRepository } from './navigation-menu.repository';
 
 @Injectable()
 export class NavigationMenuService extends BaseService<NavigationMenu> {
-    constructor(private readonly navigationMenuRepository: NavigationMenuRepository) {
+    constructor(
+        private readonly navigationMenuRepository: NavigationMenuRepository,
+    ) {
         super(navigationMenuRepository, 'NavigationMenu');
     }
 

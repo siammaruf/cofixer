@@ -5,7 +5,9 @@ import { ContactMessageRepository } from './contact-message.repository';
 
 @Injectable()
 export class ContactMessageService extends BaseService<ContactMessage> {
-    constructor(private readonly contactMessageRepository: ContactMessageRepository) {
+    constructor(
+        private readonly contactMessageRepository: ContactMessageRepository,
+    ) {
         super(contactMessageRepository, 'ContactMessage');
     }
 

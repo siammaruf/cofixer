@@ -1,10 +1,5 @@
-import {
-    IsString,
-    IsOptional,
-    IsObject,
-    MaxLength,
-} from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsOptional, IsObject, MaxLength } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateSiteSettingsDto {
     @ApiPropertyOptional({

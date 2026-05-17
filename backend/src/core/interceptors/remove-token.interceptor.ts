@@ -28,6 +28,15 @@ export class RemoveToken implements NestInterceptor {
                             httpOnly: true,
                         },
                     );
+                    res.cookie(
+                        this.configService.get<string>(
+                            'AUTH_REFRESH_TOKEN_COOKIE_NAME',
+                        ),
+                        '',
+                        {
+                            httpOnly: true,
+                        },
+                    );
                     return {
                         success: true,
                         message: value.message,

@@ -15,6 +15,6 @@ export class TestimonialService extends BaseService<Testimonial> {
 
     async toggleFeatured(id: string): Promise<Testimonial | null> {
         const testimonial = await this.findByIdOrFail(id);
-        return this.update(id, { featured: !testimonial.featured } as any);
+        return this.update(id, { featured: !testimonial.featured });
     }
 }
