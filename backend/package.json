@@ -35,6 +35,8 @@
         "migration:dev-run": "npm run build && npm run typeorm -- migration:run",
         "seed:run": "ts-node -r tsconfig-paths/register ./src/database/seeders/seed.helper.ts",
         "seed:reset-users": "ts-node -r tsconfig-paths/register ./src/database/seeders/reset-users.ts",
+        "seed:run:prod": "node dist/database/seeders/seed.helper.js",
+        "seed:reset-users:prod": "node dist/database/seeders/reset-users.js",
         "docker:dev": "docker-compose --profile dev up",
         "docker:dev:build": "docker-compose --profile dev up --build",
         "docker:dev:down": "docker-compose down",
