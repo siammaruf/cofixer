@@ -40,7 +40,7 @@ export class RedisCacheInterceptor implements NestInterceptor {
             return next.handle();
         }
 
-        const cacheKey = `cofixer:cache:${tag}:${request.originalUrl}`;
+        const cacheKey = `cache:${tag}:${request.originalUrl}`;
 
         return new Observable((subscriber) => {
             this.redisService

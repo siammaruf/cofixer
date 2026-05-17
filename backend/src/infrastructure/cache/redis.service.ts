@@ -7,6 +7,7 @@ export class RedisService implements OnModuleDestroy {
     private readonly redis: Redis;
     private readonly logger = new Logger(RedisService.name);
     private readonly defaultTtl: number;
+    private readonly prefix: string;
     private isConnected = false;
 
     constructor(private readonly configService: ConfigService) {
@@ -18,6 +19,7 @@ export class RedisService implements OnModuleDestroy {
             'REDIS_CACHE_TTL',
             3600,
         );
+        this.prefix = this.configService.get<string>('REDIS_PREFIX', '');
 
         this.redis = new Redis({
             host,
@@ -58,10 +60,14 @@ export class RedisService implements OnModuleDestroy {
         });
     }
 
+    private buildKey(key: string): string {
+        return this.prefix ? `${this.prefix}:${key}` : key;
+    }
+
     async get<T>(key: string): Promise<T | null> {
         if (!this.isConnected) return null;
         try {
-            const value = await this.redis.get(key);
+            const value = await this.redis.get(this.buildKey(key));
             return value ? (JSON.parse(value) as T) : null;
         } catch {
             return null;
@@ -72,7 +78,11 @@ export class RedisService implements OnModuleDestroy {
         if (!this.isConnected) return;
         try {
             const seconds = ttl ?? this.defaultTtl;
-            await this.redis.setex(key, seconds, JSON.stringify(value));
+            await this.redis.setex(
+                this.buildKey(key),
+                seconds,
+                JSON.stringify(value),
+            );
         } catch {
             // Silently fail
         }
@@ -81,7 +91,7 @@ export class RedisService implements OnModuleDestroy {
     async del(key: string): Promise<void> {
         if (!this.isConnected) return;
         try {
-            await this.redis.del(key);
+            await this.redis.del(this.buildKey(key));
         } catch {
             // Silently fail
         }
@@ -91,7 +101,7 @@ export class RedisService implements OnModuleDestroy {
         if (!this.isConnected) return;
         try {
             const stream = this.redis.scanStream({
-                match: pattern,
+                match: this.buildKey(pattern),
                 count: 100,
             });
 

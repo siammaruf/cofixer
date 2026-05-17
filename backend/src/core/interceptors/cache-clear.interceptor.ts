@@ -42,7 +42,7 @@ export class CacheClearInterceptor implements NestInterceptor {
             return next.handle();
         }
 
-        const pattern = `cofixer:cache:${tag}:*`;
+        const pattern = `cache:${tag}:*`;
 
         return next.handle().pipe(
             tap({
