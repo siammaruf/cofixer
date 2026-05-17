@@ -12,5 +12,14 @@ if [ "$MIGRATE_ON_START" = "true" ]; then
   }
 fi
 
+# Optional: Run database seeds if SEED_ON_START=true
+if [ "$SEED_ON_START" = "true" ]; then
+  echo "Running database seeds..."
+  node dist/database/seeders/seed.helper.js || {
+    echo "Seeding failed. Exiting."
+    exit 1
+  }
+fi
+
 echo "Starting backend server on port ${PORT:-3000}..."
 exec bun dist/main.js

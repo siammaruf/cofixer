@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../../app.module';
-import { User } from 'src/modules/users/user.entity';
-import { RolesEnum } from 'src/shared/enums/role.enum';
-import { ActiveStatusEnum } from 'src/shared/enums/active-status.enum';
-import { PasswordUtil } from 'src/core/utils/password.util';
+import { User } from '../../modules/users/user.entity';
+import { RolesEnum } from '../../shared/enums/role.enum';
+import { ActiveStatusEnum } from '../../shared/enums/active-status.enum';
+import { PasswordUtil } from '../../core/utils/password.util';
 
 async function resetUsers() {
     const app = await NestFactory.create(AppModule);
