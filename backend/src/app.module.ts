@@ -62,7 +62,7 @@ import { CacheModule } from '@infrastructure/cache';
         I18nModule.forRoot({
             fallbackLanguage: LanguageEnum.ENGLISH,
             loaderOptions: {
-                path: join(process.cwd(), 'src/i18n'),
+                path: join(__dirname, 'i18n'),
                 watch: true,
             },
             resolvers: [
