@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
 import { logout } from "~/redux/features/authSlice";
-import { appConfig } from "~/config/app.config";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { cn } from "~/lib/utils";
 
@@ -97,13 +96,20 @@ export default function Sidebar() {
     <aside className="w-72 bg-sidebar min-h-screen flex flex-col border-r border-sidebar-border/50">
       <div className="p-5 border-b border-sidebar-border/50">
         <Link to="/admin" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-300">
-            <span className="text-white font-bold text-sm">{appConfig.name[0]}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-base font-bold text-sidebar-foreground tracking-tight">{appConfig.name}</span>
-            <span className="text-[10px] text-sidebar-muted uppercase tracking-wider font-medium">Admin Panel</span>
-          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="140" height="36" className="shrink-0">
+            <defs>
+              <linearGradient id="cofixerGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#953A26"/>
+                <stop offset="100%" stopColor="#213581"/>
+              </linearGradient>
+            </defs>
+            <g transform="translate(5, 5)">
+              <g transform="matrix(2.8125,0,0,2.8125,0,0)" stroke="none" fill="url(#cofixerGradient)">
+                <path d="M9.382 8.675h13.943v13.943L32 31.293V0H.707zM22.618 23.325H8.675V9.382L0 .707V32h31.293z"/>
+              </g>
+            </g>
+            <text x="105" y="76" style={{ fontFamily: "'Racing Sans One', sans-serif", fontSize: '78px', fontWeight: 400, fill: '#a03028', letterSpacing: '-1px' }}>CoFixer</text>
+          </svg>
         </Link>
       </div>
 
@@ -165,9 +171,9 @@ export default function Sidebar() {
               {getInitials(user?.fullName)}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 leading-tight">
             <p className="text-sm font-semibold text-sidebar-foreground truncate">{userName}</p>
-            <p className="text-xs text-sidebar-muted truncate">{user?.email || "user@example.com"}</p>
+            <p className="text-[11px] text-sidebar-muted truncate">{user?.email || "user@example.com"}</p>
           </div>
         </Link>
         <button
