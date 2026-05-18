@@ -77,14 +77,7 @@ export default function SeoDashboard() {
 
   const form = useForm<SeoEditFormData>({
     resolver: zodResolver(seoEditSchema),
-    defaultValues: {
-      title: "",
-      metaDescription: "",
-      metaKeywords: "",
-      ogTitle: "",
-      ogDescription: "",
-      ogImage: "",
-    },
+    defaultValues: { title: "", metaDescription: "", metaKeywords: "", ogTitle: "", ogDescription: "", ogImage: "" },
     mode: "onChange",
   });
 
@@ -104,11 +97,7 @@ export default function SeoDashboard() {
 
   const onSubmit = async (data: SeoEditFormData) => {
     if (!editingSeo) return;
-
-    const keywords = data.metaKeywords
-      ? data.metaKeywords.split(",").map((k) => k.trim()).filter(Boolean)
-      : [];
-
+    const keywords = data.metaKeywords ? data.metaKeywords.split(",").map((k) => k.trim()).filter(Boolean) : [];
     const result = await dispatch(
       updateSeoSettings({
         route: editingSeo.route,
@@ -122,13 +111,9 @@ export default function SeoDashboard() {
         },
       })
     );
-
     if (updateSeoSettings.fulfilled.match(result)) {
       setSaveSuccess(true);
-      setTimeout(() => {
-        setEditDialogOpen(false);
-        setSaveSuccess(false);
-      }, 1200);
+      setTimeout(() => { setEditDialogOpen(false); setSaveSuccess(false); }, 1200);
     }
   };
 
@@ -138,150 +123,116 @@ export default function SeoDashboard() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
+    <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">SEO Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage meta tags and Open Graph settings for each page</p>
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">SEO Settings</h1>
+        <p className="text-muted-foreground mt-1 text-sm">Manage meta tags and Open Graph settings for each page</p>
       </div>
 
-      {/* Main Card */}
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <Globe className="h-5 w-5 text-primary" />
-              <span>All Pages</span>
-              <Badge variant="secondary" className="ml-2">{filteredSeo.length}</Badge>
+      <Card className="border-border/50">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <CardTitle className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-blue-500/10">
+                <Globe className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <span className="text-lg font-semibold">All Pages</span>
+                <Badge variant="outline" className="ml-2">{filteredSeo.length}</Badge>
+              </div>
             </CardTitle>
-            <div className="relative w-64">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search pages..."
-                className="pl-9"
+                className="pl-10"
                 value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               />
             </div>
           </div>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="relative mx-auto mb-4" style={{ width: 40, height: 40 }}>
-                  <div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin border-t-primary border-b-secondary" />
-                </div>
-                <p className="text-muted-foreground">Loading SEO settings...</p>
-              </div>
+            <div className="flex items-center justify-center py-16">
+              <div className="w-10 h-10 rounded-full border-4 border-muted border-t-primary animate-spin mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm">Loading SEO settings...</p>
             </div>
           ) : error ? (
-            <div className="text-center py-12">
+            <div className="text-center py-16">
               <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-              <p className="text-destructive mb-2">Failed to load SEO settings</p>
+              <p className="text-destructive mb-2 font-medium">Failed to load SEO settings</p>
               <p className="text-muted-foreground text-sm mb-4">{error}</p>
-              <Button variant="outline" onClick={() => dispatch(fetchSeoSettings())}>
-                Retry
-              </Button>
+              <Button variant="outline" onClick={() => dispatch(fetchSeoSettings())}>Retry</Button>
             </div>
           ) : seoList.length === 0 ? (
-            <div className="text-center py-12">
-              <Globe className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-muted-foreground mb-4">No SEO settings found.</p>
+            <div className="text-center py-16">
+              <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mx-auto mb-4">
+                <Globe className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground">No SEO settings found.</p>
             </div>
           ) : (
             <>
-              <div className="rounded-lg border border-border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-border hover:bg-transparent">
-                      <TableHead>Page</TableHead>
-                      <TableHead>Route</TableHead>
-                      <TableHead>Meta Title</TableHead>
-                      <TableHead>Meta Description</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentItems.length > 0 ? (
-                      currentItems.map((seo) => (
-                        <TableRow key={seo.id} className="border-border">
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-xs font-mono">
-                                {seo.pageType}
-                              </Badge>
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-mono text-sm text-muted-foreground">
-                            {seo.route}
-                          </TableCell>
-                          <TableCell>
-                            <div className="max-w-[200px]">
-                              <p className="text-sm text-foreground truncate">
-                                {seo.title || <span className="text-muted-foreground italic">Not set</span>}
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="max-w-[250px]">
-                              <p className="text-sm text-muted-foreground truncate">
-                                {truncate(seo.metaDescription, 80)}
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                              onClick={() => handleEdit(seo)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                          No pages found matching your search.
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Page</TableHead>
+                    <TableHead>Route</TableHead>
+                    <TableHead>Meta Title</TableHead>
+                    <TableHead>Meta Description</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentItems.length > 0 ? (
+                    currentItems.map((seo) => (
+                      <TableRow key={seo.id}>
+                        <TableCell>
+                          <Badge variant="outline" className="text-xs font-mono">{seo.pageType}</Badge>
+                        </TableCell>
+                        <TableCell className="font-mono text-sm text-muted-foreground">{seo.route}</TableCell>
+                        <TableCell>
+                          <div className="max-w-[200px]">
+                            <p className="text-sm text-foreground truncate">{seo.title || <span className="text-muted-foreground italic">Not set</span>}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-[250px]">
+                            <p className="text-sm text-muted-foreground truncate">{truncate(seo.metaDescription, 80)}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => handleEdit(seo)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                        No pages found matching your search.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
 
               {filteredSeo.length > 0 && (
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
                   <p className="text-sm text-muted-foreground">
-                    Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredSeo.length)} of {filteredSeo.length} pages
+                    Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
+                    <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredSeo.length)}</span> of{" "}
+                    <span className="font-medium text-foreground">{filteredSeo.length}</span> pages
                   </p>
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      Previous
+                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                      <ChevronLeft className="h-4 w-4 mr-1" />Previous
                     </Button>
-                    <span className="text-sm text-muted-foreground">
-                      Page {currentPage} of {totalPages || 1}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                      disabled={currentPage === totalPages || totalPages === 0}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4 ml-1" />
+                    <span className="text-sm text-muted-foreground px-2">Page {currentPage} of {totalPages || 1}</span>
+                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0}>
+                      Next<ChevronRight className="h-4 w-4 ml-1" />
                     </Button>
                   </div>
                 </div>
@@ -291,172 +242,93 @@ export default function SeoDashboard() {
         </CardContent>
       </Card>
 
-      {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Edit className="h-5 w-5 text-primary" />
+              <div className="p-1.5 rounded-lg bg-primary/10"><Edit className="h-4 w-4 text-primary" /></div>
               Edit SEO Settings
             </DialogTitle>
             <DialogDescription>
               {editingSeo && (
-                <span>
-                  Updating SEO for <code className="text-foreground font-mono">{editingSeo.route}</code> ({editingSeo.pageType})
-                </span>
+                <span>Updating SEO for <code className="text-foreground font-mono">{editingSeo.route}</code> ({editingSeo.pageType})</span>
               )}
             </DialogDescription>
           </DialogHeader>
 
           {saveSuccess && (
-            <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              <p className="text-sm text-green-500">SEO settings updated successfully</p>
+            <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+              <CheckCircle className="h-4 w-4 text-emerald-600" />
+              <p className="text-sm text-emerald-700 font-medium">SEO settings updated successfully</p>
             </div>
           )}
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {error && !saveSuccess && (
-                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4">
                   <p className="text-sm text-destructive">{error}</p>
                 </div>
               )}
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-foreground">Meta Tags</h3>
+                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Meta Tags</h3>
                 <div className="grid grid-cols-1 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Meta Title</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Page title for search engines" {...field} />
-                        </FormControl>
-                        <div className="flex justify-between">
-                          <FormMessage />
-                          <span className="text-xs text-muted-foreground">
-                            {field.value?.length ?? 0}/70
-                          </span>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="metaDescription"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Meta Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Brief description for search results"
-                            rows={3}
-                            {...field}
-                          />
-                        </FormControl>
-                        <div className="flex justify-between">
-                          <FormMessage />
-                          <span className="text-xs text-muted-foreground">
-                            {field.value?.length ?? 0}/160
-                          </span>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="metaKeywords"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Meta Keywords</FormLabel>
-                        <FormControl>
-                          <Input placeholder="keyword1, keyword2, keyword3" {...field} />
-                        </FormControl>
-                        <FormDescription>Separate keywords with commas</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <FormField control={form.control} name="title" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Meta Title</FormLabel>
+                      <FormControl><Input placeholder="Page title for search engines" {...field} /></FormControl>
+                      <div className="flex justify-between"><FormMessage /><span className="text-xs text-muted-foreground">{field.value?.length ?? 0}/70</span></div>
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="metaDescription" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Meta Description</FormLabel>
+                      <FormControl><Textarea placeholder="Brief description for search results" rows={3} {...field} /></FormControl>
+                      <div className="flex justify-between"><FormMessage /><span className="text-xs text-muted-foreground">{field.value?.length ?? 0}/160</span></div>
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="metaKeywords" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Meta Keywords</FormLabel>
+                      <FormControl><Input placeholder="keyword1, keyword2, keyword3" {...field} /></FormControl>
+                      <FormDescription>Separate keywords with commas</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-foreground">Open Graph</h3>
+                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Open Graph</h3>
                 <div className="grid grid-cols-1 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="ogTitle"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>OG Title</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Title for social media sharing" {...field} />
-                        </FormControl>
-                        <div className="flex justify-between">
-                          <FormMessage />
-                          <span className="text-xs text-muted-foreground">
-                            {field.value?.length ?? 0}/70
-                          </span>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="ogDescription"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>OG Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Description for social media sharing"
-                            rows={2}
-                            {...field}
-                          />
-                        </FormControl>
-                        <div className="flex justify-between">
-                          <FormMessage />
-                          <span className="text-xs text-muted-foreground">
-                            {field.value?.length ?? 0}/200
-                          </span>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="ogImage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>OG Image URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://example.com/image.jpg" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <FormField control={form.control} name="ogTitle" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Title</FormLabel>
+                      <FormControl><Input placeholder="Title for social media sharing" {...field} /></FormControl>
+                      <div className="flex justify-between"><FormMessage /><span className="text-xs text-muted-foreground">{field.value?.length ?? 0}/70</span></div>
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="ogDescription" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Description</FormLabel>
+                      <FormControl><Textarea placeholder="Description for social media sharing" rows={2} {...field} /></FormControl>
+                      <div className="flex justify-between"><FormMessage /><span className="text-xs text-muted-foreground">{field.value?.length ?? 0}/200</span></div>
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="ogImage" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Image URL</FormLabel>
+                      <FormControl><Input placeholder="https://example.com/image.jpg" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
                 </div>
               </div>
 
               <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
-                </Button>
+                <Button type="button" variant="outline" onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
               </DialogFooter>
             </form>
           </Form>

@@ -24,9 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from '~/components/ui/form'
-import { User, Mail, Shield, Edit3, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
-
-// --- Validation Schemas ---
+import { User, Mail, Shield, Edit3, Loader2, CheckCircle2, AlertCircle, KeyRound } from 'lucide-react'
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -47,129 +45,66 @@ const passwordSchema = z.object({
 
 type PasswordFormData = z.infer<typeof passwordSchema>
 
-// --- Helper ---
-
 function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
+  return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
 }
-
-// --- Main Page ---
 
 export default function Profile() {
   const dispatch = useAppDispatch()
-  const { user, loading, profileUpdating, profileUpdateError, passwordChanging, passwordChangeError } =
-    useAppSelector((state) => state.auth)
-
+  const { user, loading, profileUpdating, profileUpdateError, passwordChanging, passwordChangeError } = useAppSelector((state) => state.auth)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  // Fetch current user on mount
-  useEffect(() => {
-    dispatch(getCurrentUser())
-  }, [dispatch])
+  useEffect(() => { dispatch(getCurrentUser()) }, [dispatch])
 
-  // --- Edit Profile Form ---
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      fullName: '',
-      email: '',
-      image: '',
-    },
+    defaultValues: { fullName: '', email: '', image: '' },
     mode: 'onChange',
   })
 
-  // Reset form when user data loads or dialog opens
   useEffect(() => {
     if (user && editDialogOpen) {
-      profileForm.reset({
-        fullName: user.fullName ?? '',
-        email: user.email ?? '',
-        image: user.image ?? '',
-      })
+      profileForm.reset({ fullName: user.fullName ?? '', email: user.email ?? '', image: user.image ?? '' })
     }
   }, [user, editDialogOpen, profileForm])
 
   const onProfileSubmit = async (data: ProfileFormData) => {
     if (!user?.id) return
     try {
-      const result = await dispatch(
-        updateProfile({
-          id: user.id,
-          data: {
-            fullName: data.fullName,
-            email: data.email,
-            image: data.image || null,
-          },
-        })
-      ).unwrap()
+      const result = await dispatch(updateProfile({ id: user.id, data: { fullName: data.fullName, email: data.email, image: data.image || null } })).unwrap()
       if (result) {
         setSuccessMessage('Profile updated successfully')
         setEditDialogOpen(false)
         setTimeout(() => setSuccessMessage(null), 3000)
       }
-    } catch {
-      // Error is in Redux state
-    }
+    } catch { /* Error is in Redux state */ }
   }
 
-  // --- Password Change Form ---
   const passwordForm = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
-    defaultValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
-    },
+    defaultValues: { currentPassword: '', newPassword: '', confirmNewPassword: '' },
     mode: 'onChange',
   })
 
   const onPasswordSubmit = async (data: PasswordFormData) => {
     try {
-      await dispatch(
-        changePassword({
-          currentPassword: data.currentPassword,
-          newPassword: data.newPassword,
-          confirmNewPassword: data.confirmNewPassword,
-        })
-      ).unwrap()
+      await dispatch(changePassword({ currentPassword: data.currentPassword, newPassword: data.newPassword, confirmNewPassword: data.confirmNewPassword })).unwrap()
       setSuccessMessage('Password changed successfully')
       setPasswordDialogOpen(false)
       passwordForm.reset()
       setTimeout(() => setSuccessMessage(null), 3000)
-    } catch {
-      // Error is in Redux state
-    }
+    } catch { /* Error is in Redux state */ }
   }
 
-  // Clear states when dialogs close
-  const handleEditDialogClose = () => {
-    setEditDialogOpen(false)
-    dispatch(clearProfileUpdateState())
-  }
+  const handleEditDialogClose = () => { setEditDialogOpen(false); dispatch(clearProfileUpdateState()) }
+  const handlePasswordDialogClose = () => { setPasswordDialogOpen(false); dispatch(clearPasswordChangeState()); passwordForm.reset() }
 
-  const handlePasswordDialogClose = () => {
-    setPasswordDialogOpen(false)
-    dispatch(clearPasswordChangeState())
-    passwordForm.reset()
-  }
-
-  // --- Loading State ---
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="relative mx-auto mb-4" style={{ width: 48, height: 48 }}>
-            <div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin border-t-primary border-b-secondary" />
-          </div>
-          <p className="text-muted-foreground">Loading profile...</p>
-        </div>
+        <div className="w-10 h-10 rounded-full border-4 border-muted border-t-primary animate-spin" />
       </div>
     )
   }
@@ -178,7 +113,7 @@ export default function Profile() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <p className="text-destructive mb-2">Unable to load profile</p>
+          <p className="text-destructive mb-2 font-medium">Unable to load profile</p>
           <Button onClick={() => dispatch(getCurrentUser())}>Retry</Button>
         </div>
       </div>
@@ -188,197 +123,153 @@ export default function Profile() {
   const initials = getInitials(user.fullName ?? 'User')
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
+    <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Profile Settings</h1>
-        <p className="text-muted-foreground mt-1">
-          Manage your account information and security settings
-        </p>
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">Profile Settings</h1>
+        <p className="text-muted-foreground mt-1 text-sm">Manage your account information and security settings</p>
       </div>
 
-      {/* Success Message */}
       {successMessage && (
-        <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 p-4 text-sm text-green-400">
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-700 font-medium">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           {successMessage}
         </div>
       )}
 
-      {/* Profile Card */}
-      <Card className="bg-card border-border">
+      <Card className="border-border/50">
         <CardHeader className="pb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
-              <Avatar className="h-20 w-20 border-2 border-border">
+              <Avatar className="h-20 w-20 ring-4 ring-border/50">
                 <AvatarImage src={user.image ?? undefined} alt={user.fullName} />
-                <AvatarFallback className="bg-primary/10 text-lg font-semibold text-primary">
+                <AvatarFallback className="bg-gradient-to-br from-primary/20 to-secondary/20 text-lg font-bold text-primary">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div>
                 <CardTitle className="text-xl text-foreground">{user.fullName}</CardTitle>
-                <CardDescription className="text-muted-foreground mt-1">{user.email}</CardDescription>
+                <CardDescription className="text-muted-foreground mt-1 font-mono text-sm">{user.email}</CardDescription>
                 {user.role && (
-                  <span className="inline-flex items-center gap-1.5 mt-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <span className="inline-flex items-center gap-1.5 mt-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                     <Shield className="h-3 w-3" />
                     {user.role}
                   </span>
                 )}
               </div>
             </div>
-            <Button
-              variant="outline"
-              className="shrink-0"
-              onClick={() => setEditDialogOpen(true)}
-            >
-              <Edit3 className="mr-2 h-4 w-4" />
+            <Button variant="outline" className="shrink-0 gap-2" onClick={() => setEditDialogOpen(true)}>
+              <Edit3 className="h-4 w-4" />
               Edit Profile
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+            <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-muted/30 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                 <User className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Name</p>
-                <p className="text-sm font-medium text-foreground">{user.fullName}</p>
+                <p className="text-xs text-muted-foreground font-medium">Name</p>
+                <p className="text-sm font-semibold text-foreground">{user.fullName}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
-                <Mail className="h-5 w-5 text-blue-500" />
+            <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-muted/30 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10">
+                <Mail className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Email</p>
-                <p className="text-sm font-medium text-foreground">{user.email}</p>
+                <p className="text-xs text-muted-foreground font-medium">Email</p>
+                <p className="text-sm font-semibold text-foreground">{user.email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
-                <Shield className="h-5 w-5 text-green-500" />
+            <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-muted/30 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10">
+                <Shield className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Role</p>
-                <p className="text-sm font-medium text-foreground capitalize">{user.role ?? 'User'}</p>
+                <p className="text-xs text-muted-foreground font-medium">Role</p>
+                <p className="text-sm font-semibold text-foreground capitalize">{user.role ?? 'User'}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/10">
-                <CheckCircle2 className="h-5 w-5 text-orange-500" />
+            <div className="flex items-center gap-3 rounded-xl border border-border/50 bg-muted/30 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10">
+                <CheckCircle2 className="h-5 w-5 text-amber-600" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Status</p>
-                <p className="text-sm font-medium text-foreground">{user.isActive ? 'Active' : 'Inactive'}</p>
+                <p className="text-xs text-muted-foreground font-medium">Status</p>
+                <p className="text-sm font-semibold text-foreground">{user.isActive ? 'Active' : 'Inactive'}</p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Security Section */}
-      <Card className="bg-card border-border">
+      <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-foreground">Security</CardTitle>
+          <CardTitle className="flex items-center gap-2 text-lg"><KeyRound className="h-5 w-5 text-muted-foreground" />Security</CardTitle>
           <CardDescription>Manage your password and account security</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-lg border border-border bg-background/50 p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-border/50 bg-muted/30 p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
-                <Shield className="h-5 w-5 text-purple-500" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10">
+                <Shield className="h-5 w-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">Password</p>
+                <p className="text-sm font-semibold text-foreground">Password</p>
                 <p className="text-xs text-muted-foreground">Change your account password</p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="shrink-0"
-              onClick={() => setPasswordDialogOpen(true)}
-            >
+            <Button variant="outline" size="sm" className="shrink-0" onClick={() => setPasswordDialogOpen(true)}>
               Change Password
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Edit Profile Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={handleEditDialogClose}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit Profile</DialogTitle>
-            <DialogDescription>
-              Update your personal information below
-            </DialogDescription>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-primary/10"><Edit3 className="h-4 w-4 text-primary" /></div>
+              Edit Profile
+            </DialogTitle>
+            <DialogDescription>Update your personal information below</DialogDescription>
           </DialogHeader>
           <Form {...profileForm}>
             <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
-              <FormField
-                control={profileForm.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your full name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={profileForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Enter your email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={profileForm.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Avatar URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/avatar.jpg" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+              <FormField control={profileForm.control} name="fullName" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl><Input placeholder="Enter your full name" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={profileForm.control} name="email" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl><Input type="email" placeholder="Enter your email" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={profileForm.control} name="image" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Avatar URL</FormLabel>
+                  <FormControl><Input placeholder="https://example.com/avatar.jpg" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
               {profileUpdateError && (
-                <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+                <div className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   {profileUpdateError}
                 </div>
               )}
-
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={handleEditDialogClose}>
-                  Cancel
-                </Button>
+                <Button type="button" variant="outline" onClick={handleEditDialogClose}>Cancel</Button>
                 <Button type="submit" disabled={profileUpdating || !profileForm.formState.isValid}>
-                  {profileUpdating ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    'Save Changes'
-                  )}
+                  {profileUpdating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : 'Save Changes'}
                 </Button>
               </DialogFooter>
             </form>
@@ -386,77 +277,48 @@ export default function Profile() {
         </DialogContent>
       </Dialog>
 
-      {/* Change Password Dialog */}
       <Dialog open={passwordDialogOpen} onOpenChange={handlePasswordDialogClose}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-            <DialogDescription>
-              Enter your current password and a new password
-            </DialogDescription>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-purple-500/10"><KeyRound className="h-4 w-4 text-purple-600" /></div>
+              Change Password
+            </DialogTitle>
+            <DialogDescription>Enter your current password and a new password</DialogDescription>
           </DialogHeader>
           <Form {...passwordForm}>
             <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
-              <FormField
-                control={passwordForm.control}
-                name="currentPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Current Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="Enter current password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={passwordForm.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>New Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="Enter new password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={passwordForm.control}
-                name="confirmNewPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm New Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="Confirm new password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+              <FormField control={passwordForm.control} name="currentPassword" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Password</FormLabel>
+                  <FormControl><Input type="password" placeholder="Enter current password" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={passwordForm.control} name="newPassword" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl><Input type="password" placeholder="Enter new password" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={passwordForm.control} name="confirmNewPassword" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormControl><Input type="password" placeholder="Confirm new password" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
               {passwordChangeError && (
-                <div className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+                <div className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   {passwordChangeError}
                 </div>
               )}
-
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={handlePasswordDialogClose}>
-                  Cancel
-                </Button>
+                <Button type="button" variant="outline" onClick={handlePasswordDialogClose}>Cancel</Button>
                 <Button type="submit" disabled={passwordChanging || !passwordForm.formState.isValid}>
-                  {passwordChanging ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    'Update Password'
-                  )}
+                  {passwordChanging ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Updating...</> : 'Update Password'}
                 </Button>
               </DialogFooter>
             </form>
