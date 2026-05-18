@@ -120,11 +120,11 @@ const authSlice = createSlice({
           state.isAuthenticated = false
         }
       })
-      .addCase(getCurrentUser.rejected, (state, action) => {
+      .addCase(getCurrentUser.rejected, (state) => {
         state.loading = false
         state.user = null
         state.isAuthenticated = false
-        state.error = action.payload as string
+        // Don't set error — this is a silent background check
       })
   },
 })
