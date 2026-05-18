@@ -1,6 +1,7 @@
 import {
     BadRequestException,
     ConflictException,
+    HttpException,
     Injectable,
     InternalServerErrorException,
     Logger,
@@ -1212,6 +1213,9 @@ export class AuthService {
             });
         } catch (error: any) {
             this.logger.error(error);
+            if (error instanceof HttpException) {
+                throw error;
+            }
             if (error instanceof QueryFailedError) {
                 if (error.driverError.errno == 1062) {
                     throw new QueryFailedError(
