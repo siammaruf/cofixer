@@ -35,7 +35,6 @@ import {
   Twitter,
   Linkedin,
   Github,
-  ExternalLink,
 } from "lucide-react";
 import type { TeamMember } from "~/types/cms";
 
@@ -84,42 +83,23 @@ export default function TeamList() {
   const SocialLinks = ({ member }: { member: TeamMember }) => {
     const links = member.socialLinks;
     if (!links) return <span className="text-muted-foreground">-</span>;
-
     const hasLinks = links.twitter || links.linkedin || links.github;
     if (!hasLinks) return <span className="text-muted-foreground">-</span>;
 
     return (
       <div className="flex items-center gap-2">
         {links.twitter && (
-          <a
-            href={links.twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            aria-label={`${member.name}'s Twitter`}
-          >
+          <a href={links.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-sky-500 transition-colors" aria-label={`${member.name}'s Twitter`}>
             <Twitter className="h-4 w-4" />
           </a>
         )}
         {links.linkedin && (
-          <a
-            href={links.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            aria-label={`${member.name}'s LinkedIn`}
-          >
+          <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-blue-600 transition-colors" aria-label={`${member.name}'s LinkedIn`}>
             <Linkedin className="h-4 w-4" />
           </a>
         )}
         {links.github && (
-          <a
-            href={links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            aria-label={`${member.name}'s GitHub`}
-          >
+          <a href={links.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label={`${member.name}'s GitHub`}>
             <Github className="h-4 w-4" />
           </a>
         )}
@@ -128,39 +108,37 @@ export default function TeamList() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Team Members</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your team members and their profiles
-          </p>
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">Team Members</h1>
+          <p className="text-muted-foreground mt-1 text-sm">Manage your team members and their profiles</p>
         </div>
         <Link to="/admin/team/create">
-          <Button className="flex items-center gap-2">
+          <Button className="gap-2 shadow-lg shadow-primary/25">
             <Plus className="h-4 w-4" />
             Add Member
           </Button>
         </Link>
       </div>
 
-      {/* Main Card */}
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <Users className="h-5 w-5 text-primary" />
-              <span>All Members</span>
-              <Badge variant="secondary" className="ml-2">
-                {filteredMembers.length}
-              </Badge>
+      <Card className="border-border/50">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <CardTitle className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-emerald-500/10">
+                <Users className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <span className="text-lg font-semibold">All Members</span>
+                <Badge variant="outline" className="ml-2">{filteredMembers.length}</Badge>
+              </div>
             </CardTitle>
-            <div className="relative w-64">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search members..."
-                className="pl-9"
+                className="pl-10"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -172,25 +150,15 @@ export default function TeamList() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="relative mx-auto mb-4" style={{ width: 40, height: 40 }}>
-                  <div className="absolute inset-0 rounded-full border-2 border-transparent animate-spin border-t-primary border-b-secondary" />
-                </div>
-                <p className="text-muted-foreground">Loading team members...</p>
-              </div>
+            <div className="flex items-center justify-center py-16">
+              <div className="w-10 h-10 rounded-full border-4 border-muted border-t-primary animate-spin mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm">Loading team members...</p>
             </div>
           ) : error ? (
-            <div className="text-center py-12">
-              <p className="text-destructive mb-2">Failed to load team members</p>
-              <p className="text-muted-foreground text-sm">{error}</p>
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={() => dispatch(fetchTeamMembers())}
-              >
-                Retry
-              </Button>
+            <div className="text-center py-16">
+              <p className="text-destructive mb-2 font-medium">Failed to load team members</p>
+              <p className="text-muted-foreground text-sm mb-4">{error}</p>
+              <Button variant="outline" onClick={() => dispatch(fetchTeamMembers())}>Retry</Button>
             </div>
           ) : teamMembers.length === 0 ? (
             <EmptyState
@@ -199,130 +167,95 @@ export default function TeamList() {
               description="Add your first team member to get started."
               action={
                 <Link to="/admin/team/create">
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Member
-                  </Button>
+                  <Button><Plus className="w-4 h-4 mr-2" />Add Member</Button>
                 </Link>
               }
             />
           ) : (
             <>
-              <div className="rounded-lg border border-border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-border hover:bg-transparent">
-                      <TableHead>Name</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead className="hidden md:table-cell">Social</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentItems.length > 0 ? (
-                      currentItems.map((member) => (
-                        <TableRow key={member.id} className="border-border">
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8">
-                                <AvatarImage src={member.image} alt={member.name} />
-                                <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-                                  {getInitials(member.name)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <span className="font-medium text-foreground">{member.name}</span>
-                                {member.bio && (
-                                  <p className="text-xs text-muted-foreground truncate max-w-[200px]">
-                                    {member.bio}
-                                  </p>
-                                )}
-                              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead className="hidden md:table-cell">Social</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentItems.length > 0 ? (
+                    currentItems.map((member) => (
+                      <TableRow key={member.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9 ring-2 ring-border/50">
+                              <AvatarImage src={member.image} alt={member.name} />
+                              <AvatarFallback className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 text-xs font-bold text-emerald-700">
+                                {getInitials(member.name)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <span className="font-semibold text-foreground">{member.name}</span>
+                              {member.bio && (
+                                <p className="text-xs text-muted-foreground truncate max-w-[200px]">{member.bio}</p>
+                              )}
                             </div>
-                          </TableCell>
-                          <TableCell className="text-muted-foreground">{member.role}</TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <SocialLinks member={member} />
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={member.isActive ? "success" : "destructive"}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">{member.role}</TableCell>
+                        <TableCell className="hidden md:table-cell"><SocialLinks member={member} /></TableCell>
+                        <TableCell>
+                          <Badge variant={member.isActive ? "success" : "destructive"}>
+                            {member.isActive ? "Active" : "Inactive"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" asChild>
+                              <Link to={`/admin/team/edit/${member.id}`}>
+                                <Edit className="h-4 w-4" />
+                              </Link>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                              onClick={() => {
+                                setMemberToDelete(member.id);
+                                setDeleteDialogOpen(true);
+                              }}
                             >
-                              {member.isActive ? "Active" : "Inactive"}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                asChild
-                              >
-                                <Link to={`/admin/team/edit/${member.id}`}>
-                                  <Edit className="h-4 w-4" />
-                                </Link>
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                onClick={() => {
-                                  setMemberToDelete(member.id);
-                                  setDeleteDialogOpen(true);
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="text-center py-8 text-muted-foreground"
-                        >
-                          No members found matching your search.
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                        No members found matching your search.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
 
               {filteredMembers.length > 0 && (
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
                   <p className="text-sm text-muted-foreground">
-                    Showing {indexOfFirstItem + 1} to{" "}
-                    {Math.min(indexOfLastItem, filteredMembers.length)} of{" "}
-                    {filteredMembers.length} members
+                    Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
+                    <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredMembers.length)}</span> of{" "}
+                    <span className="font-medium text-foreground">{filteredMembers.length}</span> members
                   </p>
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      Previous
+                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                      <ChevronLeft className="h-4 w-4 mr-1" />Previous
                     </Button>
-                    <span className="text-sm text-muted-foreground">
-                      Page {currentPage} of {totalPages || 1}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setCurrentPage((p) => Math.min(p + 1, totalPages))
-                      }
-                      disabled={currentPage === totalPages || totalPages === 0}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4 ml-1" />
+                    <span className="text-sm text-muted-foreground px-2">Page {currentPage} of {totalPages || 1}</span>
+                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0}>
+                      Next<ChevronRight className="h-4 w-4 ml-1" />
                     </Button>
                   </div>
                 </div>
@@ -332,23 +265,18 @@ export default function TeamList() {
         </CardContent>
       </Card>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Team Member</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this team member? This action cannot
-              be undone.
-            </DialogDescription>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-destructive/10"><Trash2 className="h-4 w-4 text-destructive" /></div>
+              Delete Team Member
+            </DialogTitle>
+            <DialogDescription>Are you sure you want to delete this team member? This action cannot be undone.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              Delete
-            </Button>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDelete}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
