@@ -13,6 +13,7 @@ import type {
   Stats,
   NavigationMenu,
   CmsState,
+  MediaItem,
 } from '~/types/cms'
 import type { ApiError } from '~/types/api'
 
@@ -28,6 +29,7 @@ const initialState: CmsState = {
   siteSettings: null,
   stats: null,
   navigation: null,
+  media: [],
   loading: false,
   error: null,
 }
@@ -88,6 +90,32 @@ export const toggleServiceFeatured = createAsyncThunk(
   }
 )
 
+export const createService = createAsyncThunk(
+  'cms/createService',
+  async (data: Partial<Service>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createService(data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const updateService = createAsyncThunk(
+  'cms/updateService',
+  async ({ id, data }: { id: string; data: Partial<Service> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateService(id, data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
 // ─── Projects ───
 
 export const fetchProjects = createAsyncThunk(
@@ -129,6 +157,32 @@ export const toggleProjectFeatured = createAsyncThunk(
   }
 )
 
+export const createProject = createAsyncThunk(
+  'cms/createProject',
+  async (data: Partial<Project>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createProject(data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const updateProject = createAsyncThunk(
+  'cms/updateProject',
+  async ({ id, data }: { id: string; data: Partial<Project> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateProject(id, data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
 // ─── Blog Posts ───
 
 export const fetchBlogPosts = createAsyncThunk(
@@ -136,6 +190,19 @@ export const fetchBlogPosts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await cmsAdminService.getAllBlogPosts()
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const createBlogPost = createAsyncThunk(
+  'cms/createBlogPost',
+  async (data: Partial<BlogPost>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createBlogPost(data)
       return res.data
     } catch (error) {
       const apiError = error as ApiError
@@ -198,6 +265,32 @@ export const deleteTeamMember = createAsyncThunk(
   }
 )
 
+export const createTeamMember = createAsyncThunk(
+  'cms/createTeamMember',
+  async (data: Partial<TeamMember>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createTeamMember(data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const updateTeamMember = createAsyncThunk(
+  'cms/updateTeamMember',
+  async ({ id, data }: { id: string; data: Partial<TeamMember> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateTeamMember(id, data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
 // ─── Testimonials ───
 
 export const fetchTestimonials = createAsyncThunk(
@@ -239,6 +332,32 @@ export const toggleTestimonialFeatured = createAsyncThunk(
   }
 )
 
+export const createTestimonial = createAsyncThunk(
+  'cms/createTestimonial',
+  async (data: Partial<Testimonial>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createTestimonial(data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const updateTestimonial = createAsyncThunk(
+  'cms/updateTestimonial',
+  async ({ id, data }: { id: string; data: Partial<Testimonial> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateTestimonial(id, data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
 // ─── FAQs ───
 
 export const fetchFaqs = createAsyncThunk(
@@ -260,6 +379,32 @@ export const deleteFaq = createAsyncThunk(
     try {
       await cmsAdminService.deleteFaq(id)
       return id
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const createFaq = createAsyncThunk(
+  'cms/createFaq',
+  async (data: Partial<Faq>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createFaq(data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const updateFaq = createAsyncThunk(
+  'cms/updateFaq',
+  async ({ id, data }: { id: string; data: Partial<Faq> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateFaq(id, data)
+      return res.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -392,6 +537,50 @@ export const updateNavigation = createAsyncThunk(
   }
 )
 
+// ─── Media ───
+
+export const fetchMedia = createAsyncThunk(
+  'cms/fetchMedia',
+  async (_, { rejectWithValue }) => {
+    try {
+      // Backend list endpoint not yet available; returns empty array
+      // When backend implements GET /admin/media, replace with:
+      // const res = await cmsAdminService.getAllMedia()
+      // return res.data
+      return [] as MediaItem[]
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const uploadMedia = createAsyncThunk(
+  'cms/uploadMedia',
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.uploadMedia(formData)
+      return res.data as { id: string; url: string }
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const deleteMedia = createAsyncThunk(
+  'cms/deleteMedia',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await cmsAdminService.deleteMedia(id)
+      return id
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
 // ─── Slice ───
 
 const cmsSlice = createSlice({
@@ -440,6 +629,15 @@ const cmsSlice = createSlice({
           state.services[index] = action.payload
         }
       })
+      .addCase(createService.fulfilled, (state, action) => {
+        state.services.push(action.payload)
+      })
+      .addCase(updateService.fulfilled, (state, action) => {
+        const index = state.services.findIndex((s) => s.id === action.payload.id)
+        if (index !== -1) {
+          state.services[index] = action.payload
+        }
+      })
 
       // Projects
       .addCase(fetchProjects.pending, (state) => {
@@ -463,6 +661,15 @@ const cmsSlice = createSlice({
           state.projects[index] = action.payload
         }
       })
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.projects.push(action.payload)
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        const index = state.projects.findIndex((p) => p.id === action.payload.id)
+        if (index !== -1) {
+          state.projects[index] = action.payload
+        }
+      })
 
       // Blog Posts
       .addCase(fetchBlogPosts.pending, (state) => {
@@ -476,6 +683,9 @@ const cmsSlice = createSlice({
       .addCase(fetchBlogPosts.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
+      })
+      .addCase(createBlogPost.fulfilled, (state, action) => {
+        state.blogPosts.push(action.payload)
       })
       .addCase(deleteBlogPost.fulfilled, (state, action) => {
         state.blogPosts = state.blogPosts.filter((p) => p.id !== action.payload)
@@ -503,6 +713,15 @@ const cmsSlice = createSlice({
       .addCase(deleteTeamMember.fulfilled, (state, action) => {
         state.teamMembers = state.teamMembers.filter((m) => m.id !== action.payload)
       })
+      .addCase(createTeamMember.fulfilled, (state, action) => {
+        state.teamMembers.push(action.payload)
+      })
+      .addCase(updateTeamMember.fulfilled, (state, action) => {
+        const index = state.teamMembers.findIndex((m) => m.id === action.payload.id)
+        if (index !== -1) {
+          state.teamMembers[index] = action.payload
+        }
+      })
 
       // Testimonials
       .addCase(fetchTestimonials.pending, (state) => {
@@ -526,6 +745,15 @@ const cmsSlice = createSlice({
           state.testimonials[index] = action.payload
         }
       })
+      .addCase(createTestimonial.fulfilled, (state, action) => {
+        state.testimonials.push(action.payload)
+      })
+      .addCase(updateTestimonial.fulfilled, (state, action) => {
+        const index = state.testimonials.findIndex((t) => t.id === action.payload.id)
+        if (index !== -1) {
+          state.testimonials[index] = action.payload
+        }
+      })
 
       // FAQs
       .addCase(fetchFaqs.pending, (state) => {
@@ -542,6 +770,15 @@ const cmsSlice = createSlice({
       })
       .addCase(deleteFaq.fulfilled, (state, action) => {
         state.faqs = state.faqs.filter((f) => f.id !== action.payload)
+      })
+      .addCase(createFaq.fulfilled, (state, action) => {
+        state.faqs.push(action.payload)
+      })
+      .addCase(updateFaq.fulfilled, (state, action) => {
+        const index = state.faqs.findIndex((f) => f.id === action.payload.id)
+        if (index !== -1) {
+          state.faqs[index] = action.payload
+        }
       })
 
       // Contacts
@@ -622,6 +859,35 @@ const cmsSlice = createSlice({
       })
       .addCase(updateNavigation.fulfilled, (state, action) => {
         state.navigation = action.payload
+      })
+
+      // Media
+      .addCase(fetchMedia.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchMedia.fulfilled, (state, action) => {
+        state.loading = false
+        state.media = action.payload
+      })
+      .addCase(fetchMedia.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+      .addCase(uploadMedia.fulfilled, (state, action) => {
+        // Backend returns { id, url }; construct a minimal MediaItem
+        // When backend returns full MediaItem, use action.payload directly
+        state.media.push({
+          id: action.payload.id,
+          url: action.payload.url,
+          filename: action.payload.url.split('/').pop() || 'uploaded-file',
+          mimeType: 'application/octet-stream',
+          size: 0,
+          createdAt: new Date().toISOString(),
+        })
+      })
+      .addCase(deleteMedia.fulfilled, (state, action) => {
+        state.media = state.media.filter((m) => m.id !== action.payload)
       })
   },
 })

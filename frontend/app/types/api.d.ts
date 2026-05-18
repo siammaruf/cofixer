@@ -89,3 +89,15 @@ export type RegisterFormResponse = FormActionResponse<{
   password: string
   name?: string
 }>
+
+export interface ChangePasswordRequest {
+  currentPassword?: string
+  newPassword: string
+  confirmNewPassword: string
+}
+
+export interface UpdateProfileRequest {
+  fullName?: string
+  email?: string
+  image?: string | null
+}

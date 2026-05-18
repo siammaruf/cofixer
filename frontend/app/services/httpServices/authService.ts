@@ -1,5 +1,6 @@
 import { get } from '../httpMethods/get'
 import { post } from '../httpMethods/post'
+import { patch } from '../httpMethods/patch'
 import type {
   LoginCredentials,
   LoginResponse,
@@ -9,6 +10,8 @@ import type {
   ResetPasswordRequest,
   VerifyOtpRequest,
   RegisterRequest,
+  ChangePasswordRequest,
+  UpdateProfileRequest,
 } from '~/types/api'
 
 export const authService = {
@@ -16,7 +19,7 @@ export const authService = {
     post<ApiResponse<LoginResponse>>('/auth/login', credentials),
 
   logout: () =>
-    post<ApiResponse<void>>('/auth/logout'),
+    get<ApiResponse<void>>('/auth/logout'),
 
   refreshToken: (refreshToken: string) =>
     post<ApiResponse<{ token: string }>>('/auth/refresh', { refreshToken }),
@@ -38,4 +41,10 @@ export const authService = {
 
   getCurrentUser: () =>
     get<ApiResponse<AuthUser>>('/auth/me'),
+
+  changePassword: (data: ChangePasswordRequest) =>
+    post<ApiResponse<{ message: string }>>('/auth/change-password', data),
+
+  updateProfile: (id: string, data: UpdateProfileRequest) =>
+    patch<ApiResponse<AuthUser>>(`/users/${id}`, data),
 }

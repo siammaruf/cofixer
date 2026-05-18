@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router';
 
 export default function MagicCursor() {
+  const location = useLocation();
+
   useEffect(() => {
+    if (location.pathname.startsWith('/admin')) return;
     if (typeof window === 'undefined') return;
 
     const gsap = (window as any).gsap;
