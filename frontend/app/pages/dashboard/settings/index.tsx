@@ -31,6 +31,7 @@ import {
   type AnalyticsSettingsFormData,
 } from '~/utils/validations/settings';
 import { Settings, Palette, Share2, BarChart3, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useSearchParams } from 'react-router';
 
 interface TabFormProps<T> {
   defaultValues: T;
@@ -263,12 +264,17 @@ function AnalyticsTab({ defaultValues, isSaving, onSave, saveError, saveSuccess 
 export default function SettingsDashboard() {
   const dispatch = useAppDispatch();
   const { siteSettings, loading, error } = useAppSelector((state) => state.cms);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState('general');
+  const activeTab = searchParams.get('tab') || 'general';
 
   useEffect(() => { dispatch(fetchSiteSettings()); }, [dispatch]);
+
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value });
+  };
 
   const handleSaveGeneral = useCallback((data: GeneralSettingsFormData) => {
     setSaving(true); setSaveError(null); setSaveSuccess(false);
@@ -326,13 +332,13 @@ export default function SettingsDashboard() {
   const analyticsDefaults: AnalyticsSettingsFormData = { googleAnalyticsId: settings?.googleAnalyticsId ?? '', googleTagManagerId: settings?.googleTagManagerId ?? '', facebookPixelId: '' };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground tracking-tight">Site Settings</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Manage your website configuration, appearance, social links, and analytics.</p>
+    <div className="space-y-8 animate-fade-in">
+      <div className="space-y-1">
+        <h1 className="text-3xl font-bold tracking-tight" style={{ color: 'var(--foreground)' }}>Site Settings</h1>
+        <p className="text-muted-foreground text-sm">Manage your website configuration, appearance, social links, and analytics.</p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <TabsList className="grid w-full sm:w-auto grid-cols-2 lg:grid-cols-4 gap-2">
             <TabsTrigger value="general" className="gap-2"><Settings className="h-4 w-4" /><span className="hidden sm:inline">General</span></TabsTrigger>
