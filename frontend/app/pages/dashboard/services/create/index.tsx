@@ -86,14 +86,14 @@ export default function CreateService() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-white">Add Service</h1>
+          <h1 className="text-2xl font-bold text-foreground">Add Service</h1>
           <p className="text-muted-foreground mt-1">Create a new service for your business</p>
         </div>
       </div>
 
       <Card className="bg-card border-border max-w-2xl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Wrench className="h-5 w-5 text-primary" />
             Service Details
           </CardTitle>

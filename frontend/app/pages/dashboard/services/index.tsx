@@ -77,7 +77,7 @@ export default function ServicesList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Services</h1>
+          <h1 className="text-2xl font-bold text-foreground">Services</h1>
           <p className="text-muted-foreground mt-1">Manage your business services and offerings</p>
         </div>
         <Link to="/admin/services/create">
@@ -91,7 +91,7 @@ export default function ServicesList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Wrench className="h-5 w-5 text-primary" />
               <span>All Services</span>
               <Badge variant="secondary" className="ml-2">{filteredServices.length}</Badge>
@@ -163,7 +163,7 @@ export default function ServicesList() {
                                   <span className="text-sm">{service.icon}</span>
                                 </div>
                               )}
-                              <span className="font-medium text-white">{service.title}</span>
+                              <span className="font-medium text-foreground">{service.title}</span>
                             </div>
                           </TableCell>
                           <TableCell className="text-muted-foreground font-mono text-sm">{service.slug}</TableCell>

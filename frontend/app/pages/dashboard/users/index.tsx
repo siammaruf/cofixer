@@ -71,7 +71,7 @@ export default function UserList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Users</h1>
+          <h1 className="text-2xl font-bold text-foreground">Users</h1>
           <p className="text-muted-foreground mt-1">Manage system users and their permissions</p>
         </div>
         <Link to="/admin/users/create">
@@ -85,7 +85,7 @@ export default function UserList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Users className="h-5 w-5 text-primary" />
               <span>All Users</span>
               <Badge variant="secondary" className="ml-2">{filteredUsers.length}</Badge>
@@ -156,7 +156,7 @@ export default function UserList() {
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                 <span className="text-xs font-semibold text-primary">{getInitials(user.name)}</span>
                               </div>
-                              <span className="font-medium text-white">{user.name}</span>
+                              <span className="font-medium text-foreground">{user.name}</span>
                             </div>
                           </TableCell>
                           <TableCell className="text-muted-foreground">{user.position ?? "-"}</TableCell>

@@ -141,7 +141,7 @@ export default function SeoDashboard() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">SEO Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground">SEO Settings</h1>
         <p className="text-muted-foreground mt-1">Manage meta tags and Open Graph settings for each page</p>
       </div>
 
@@ -149,7 +149,7 @@ export default function SeoDashboard() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Globe className="h-5 w-5 text-primary" />
               <span>All Pages</span>
               <Badge variant="secondary" className="ml-2">{filteredSeo.length}</Badge>
@@ -221,7 +221,7 @@ export default function SeoDashboard() {
                           </TableCell>
                           <TableCell>
                             <div className="max-w-[200px]">
-                              <p className="text-sm text-white truncate">
+                              <p className="text-sm text-foreground truncate">
                                 {seo.title || <span className="text-muted-foreground italic">Not set</span>}
                               </p>
                             </div>
@@ -324,7 +324,7 @@ export default function SeoDashboard() {
               )}
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white">Meta Tags</h3>
+                <h3 className="text-sm font-semibold text-foreground">Meta Tags</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <FormField
                     control={form.control}
@@ -386,7 +386,7 @@ export default function SeoDashboard() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-white">Open Graph</h3>
+                <h3 className="text-sm font-semibold text-foreground">Open Graph</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <FormField
                     control={form.control}

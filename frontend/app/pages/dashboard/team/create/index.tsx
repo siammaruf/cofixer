@@ -80,7 +80,7 @@ export default function CreateTeamMember() {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-white">
+        <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
           <Link to="/admin/team">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Team
@@ -89,7 +89,7 @@ export default function CreateTeamMember() {
       </div>
 
       <div>
-        <h1 className="text-3xl font-bold text-white">Add Team Member</h1>
+        <h1 className="text-2xl font-bold text-foreground">Add Team Member</h1>
         <p className="text-muted-foreground mt-1">
           Create a new team member profile
         </p>
@@ -98,7 +98,7 @@ export default function CreateTeamMember() {
       {/* Form Card */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             <Users className="h-5 w-5 text-primary" />
             <span>Member Information</span>
           </CardTitle>
@@ -181,7 +181,7 @@ export default function CreateTeamMember() {
               />
 
               <div className="space-y-4">
-                <h3 className="text-sm font-medium text-white">Social Links</h3>
+                <h3 className="text-sm font-medium text-foreground">Social Links</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField
                     control={form.control}

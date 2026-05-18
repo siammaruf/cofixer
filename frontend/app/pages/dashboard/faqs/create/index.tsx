@@ -64,13 +64,13 @@ export default function CreateFaq() {
       </div>
 
       <div>
-        <h1 className="text-3xl font-bold text-white">Add FAQ</h1>
+        <h1 className="text-2xl font-bold text-foreground">Add FAQ</h1>
         <p className="text-muted-foreground mt-1">Create a new frequently asked question</p>
       </div>
 
       <Card className="bg-card border-border max-w-2xl">
         <CardHeader>
-          <CardTitle className="text-white">FAQ Details</CardTitle>
+          <CardTitle className="text-foreground">FAQ Details</CardTitle>
           <CardDescription>Fill in the question, answer, and optional category.</CardDescription>
         </CardHeader>
         <CardContent>

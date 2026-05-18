@@ -82,14 +82,14 @@ export default function CreateTestimonial() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-white">Testimonial Information</CardTitle>
+          <CardTitle className="text-foreground">Testimonial Information</CardTitle>
         </CardHeader>
         <CardContent>
           <LoadingOverlay isLoading={loading} message="Creating testimonial...">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {error && (
-                  <div className="rounded-[20px] bg-destructive/10 p-3 text-sm text-destructive">
+                  <div className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
                     {error}
                   </div>
                 )}
@@ -100,11 +100,11 @@ export default function CreateTestimonial() {
                     name="clientName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Client Name</FormLabel>
+                        <FormLabel className="text-foreground">Client Name</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter client name"
-                            className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                            className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -118,11 +118,11 @@ export default function CreateTestimonial() {
                     name="clientRole"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Client Role</FormLabel>
+                        <FormLabel className="text-foreground">Client Role</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="e.g. CEO, Manager"
-                            className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                            className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -137,11 +137,11 @@ export default function CreateTestimonial() {
                   name="company"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Company</FormLabel>
+                      <FormLabel className="text-foreground">Company</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter company name"
-                          className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                          className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground"
                           {...field}
                         />
                       </FormControl>
@@ -155,12 +155,12 @@ export default function CreateTestimonial() {
                   name="content"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Content</FormLabel>
+                      <FormLabel className="text-foreground">Content</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Enter the testimonial content..."
                           rows={4}
-                          className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB] resize-none"
+                          className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground resize-none"
                           {...field}
                         />
                       </FormControl>
@@ -175,14 +175,14 @@ export default function CreateTestimonial() {
                     name="rating"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Rating</FormLabel>
+                        <FormLabel className="text-foreground">Rating</FormLabel>
                         <FormControl>
                           <div className="space-y-2">
                             <Input
                               type="number"
                               min={1}
                               max={5}
-                              className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white"
+                              className="rounded-xl border-border bg-muted text-foreground"
                               {...field}
                               onChange={(e) => {
                                 const val = parseInt(e.target.value, 10);
@@ -214,11 +214,11 @@ export default function CreateTestimonial() {
                     name="image"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Image URL</FormLabel>
+                        <FormLabel className="text-foreground">Image URL</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://example.com/avatar.jpg"
-                            className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                            className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -240,7 +240,7 @@ export default function CreateTestimonial() {
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal text-white">Featured</FormLabel>
+                        <FormLabel className="font-normal text-foreground">Featured</FormLabel>
                       </FormItem>
                     )}
                   />
@@ -256,7 +256,7 @@ export default function CreateTestimonial() {
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal text-white">Active</FormLabel>
+                        <FormLabel className="font-normal text-foreground">Active</FormLabel>
                       </FormItem>
                     )}
                   />
@@ -264,7 +264,7 @@ export default function CreateTestimonial() {
 
                 <div className="flex justify-end space-x-4">
                   <Link to="/admin/testimonials">
-                    <Button type="button" variant="outline" className="rounded-full border-[#FFFFFF0F] text-white hover:bg-[#FFFFFF0F]">
+                    <Button type="button" variant="outline" className="rounded-lg border-border text-foreground hover:bg-muted">
                       Cancel
                     </Button>
                   </Link>

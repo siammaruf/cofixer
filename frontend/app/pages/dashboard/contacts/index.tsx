@@ -135,7 +135,7 @@ export default function ContactsDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Contact Inbox</h1>
+          <h1 className="text-2xl font-bold text-foreground">Contact Inbox</h1>
           <p className="text-muted-foreground mt-1">
             Manage and respond to contact form submissions
           </p>
@@ -152,7 +152,7 @@ export default function ContactsDashboard() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Messages</p>
-                <p className="text-2xl font-bold text-white">{contacts.length}</p>
+                <p className="text-2xl font-bold text-foreground">{contacts.length}</p>
               </div>
             </div>
           </CardContent>
@@ -165,7 +165,7 @@ export default function ContactsDashboard() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Unread Messages</p>
-                <p className="text-2xl font-bold text-white">{unreadCount}</p>
+                <p className="text-2xl font-bold text-foreground">{unreadCount}</p>
               </div>
             </div>
           </CardContent>
@@ -176,7 +176,7 @@ export default function ContactsDashboard() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Mail className="h-5 w-5 text-primary" />
               <span>All Messages</span>
               <Badge variant="secondary" className="ml-2">
@@ -301,7 +301,7 @@ export default function ContactsDashboard() {
                                     .slice(0, 2)}
                                 </span>
                               </div>
-                              <span className="font-medium text-white">
+                              <span className="font-medium text-foreground">
                                 {contact.name}
                               </span>
                             </div>
@@ -311,7 +311,7 @@ export default function ContactsDashboard() {
                           </TableCell>
                           <TableCell className="text-muted-foreground max-w-[250px]">
                             <button
-                              className="hover:text-white transition-colors text-left"
+                              className="hover:text-foreground transition-colors text-left"
                               onClick={() => handleViewDetails(contact)}
                             >
                               {truncateSubject(contact.subject)}
@@ -464,7 +464,7 @@ export default function ContactsDashboard() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-white">
+              <DialogTitle className="text-foreground">
                 {selectedContact?.subject}
               </DialogTitle>
               <Badge

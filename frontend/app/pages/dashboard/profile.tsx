@@ -191,7 +191,7 @@ export default function Profile() {
     <div className="space-y-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">Profile Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground">Profile Settings</h1>
         <p className="text-muted-foreground mt-1">
           Manage your account information and security settings
         </p>
@@ -217,7 +217,7 @@ export default function Profile() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-xl text-white">{user.fullName}</CardTitle>
+                <CardTitle className="text-xl text-foreground">{user.fullName}</CardTitle>
                 <CardDescription className="text-muted-foreground mt-1">{user.email}</CardDescription>
                 {user.role && (
                   <span className="inline-flex items-center gap-1.5 mt-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
@@ -245,7 +245,7 @@ export default function Profile() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Name</p>
-                <p className="text-sm font-medium text-white">{user.fullName}</p>
+                <p className="text-sm font-medium text-foreground">{user.fullName}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
@@ -254,7 +254,7 @@ export default function Profile() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Email</p>
-                <p className="text-sm font-medium text-white">{user.email}</p>
+                <p className="text-sm font-medium text-foreground">{user.email}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
@@ -263,7 +263,7 @@ export default function Profile() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Role</p>
-                <p className="text-sm font-medium text-white capitalize">{user.role ?? 'User'}</p>
+                <p className="text-sm font-medium text-foreground capitalize">{user.role ?? 'User'}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 p-4">
@@ -272,7 +272,7 @@ export default function Profile() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Status</p>
-                <p className="text-sm font-medium text-white">{user.isActive ? 'Active' : 'Inactive'}</p>
+                <p className="text-sm font-medium text-foreground">{user.isActive ? 'Active' : 'Inactive'}</p>
               </div>
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function Profile() {
       {/* Security Section */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-white">Security</CardTitle>
+          <CardTitle className="text-lg font-semibold text-foreground">Security</CardTitle>
           <CardDescription>Manage your password and account security</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -292,7 +292,7 @@ export default function Profile() {
                 <Shield className="h-5 w-5 text-purple-500" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Password</p>
+                <p className="text-sm font-medium text-foreground">Password</p>
                 <p className="text-xs text-muted-foreground">Change your account password</p>
               </div>
             </div>

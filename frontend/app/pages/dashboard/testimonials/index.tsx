@@ -83,7 +83,7 @@ export default function TestimonialList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Testimonials</h1>
+          <h1 className="text-2xl font-bold text-foreground">Testimonials</h1>
           <p className="text-muted-foreground mt-1">Manage client testimonials and reviews</p>
         </div>
         <Link to="/admin/testimonials/create">
@@ -97,7 +97,7 @@ export default function TestimonialList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <MessageSquare className="h-5 w-5 text-primary" />
               <span>All Testimonials</span>
               <Badge variant="secondary" className="ml-2">{filteredTestimonials.length}</Badge>
@@ -178,7 +178,7 @@ export default function TestimonialList() {
                                 </div>
                               )}
                               <div>
-                                <span className="font-medium text-white">{t.clientName}</span>
+                                <span className="font-medium text-foreground">{t.clientName}</span>
                                 {t.clientRole && (
                                   <p className="text-xs text-muted-foreground">{t.clientRole}</p>
                                 )}
@@ -210,7 +210,7 @@ export default function TestimonialList() {
                               className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
                                 t.featured
                                   ? "bg-primary/10 text-primary hover:bg-primary/20"
-                                  : "bg-[#FFFFFF0F] text-muted-foreground hover:bg-[#FFFFFF1A]"
+                                  : "bg-muted text-muted-foreground hover:bg-muted/50"
                               }`}
                             >
                               <Star className="h-3 w-3" />
