@@ -5,10 +5,8 @@ FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json bun.lock* ./
-
-# Install dependencies
+# Install dependencies (fresh install in Linux container to get correct native modules)
+COPY package.json ./
 RUN bun install
 
 # Copy source code
