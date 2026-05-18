@@ -95,7 +95,7 @@ export default function TeamList() {
             href={links.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
             aria-label={`${member.name}'s Twitter`}
           >
             <Twitter className="h-4 w-4" />
@@ -106,7 +106,7 @@ export default function TeamList() {
             href={links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
             aria-label={`${member.name}'s LinkedIn`}
           >
             <Linkedin className="h-4 w-4" />
@@ -117,7 +117,7 @@ export default function TeamList() {
             href={links.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
             aria-label={`${member.name}'s GitHub`}
           >
             <Github className="h-4 w-4" />
@@ -132,7 +132,7 @@ export default function TeamList() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Team Members</h1>
+          <h1 className="text-2xl font-bold text-foreground">Team Members</h1>
           <p className="text-muted-foreground mt-1">
             Manage your team members and their profiles
           </p>
@@ -149,7 +149,7 @@ export default function TeamList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Users className="h-5 w-5 text-primary" />
               <span>All Members</span>
               <Badge variant="secondary" className="ml-2">
@@ -232,7 +232,7 @@ export default function TeamList() {
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <span className="font-medium text-white">{member.name}</span>
+                                <span className="font-medium text-foreground">{member.name}</span>
                                 {member.bio && (
                                   <p className="text-xs text-muted-foreground truncate max-w-[200px]">
                                     {member.bio}

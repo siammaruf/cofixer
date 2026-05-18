@@ -71,11 +71,11 @@ export default function DashboardOverview() {
     : [];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Welcome back! Here's what's happening with your CMS.</p>
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-1 text-sm">Welcome back! Here's what's happening with your CMS.</p>
         </div>
         <Badge variant="success" className="flex items-center gap-1">
           <TrendingUp className="w-3 h-3" />
@@ -83,12 +83,12 @@ export default function DashboardOverview() {
         </Badge>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {statCards.map((card) => {
           const Icon = iconMap[card.label] || Eye;
           const colors = colorMap[card.label] || 'bg-gray-500/10 text-gray-500';
           return (
-            <Card key={card.label} className="bg-card border-border hover:border-primary/50 transition-colors">
+            <Card key={card.label} className="hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {card.label}
@@ -98,10 +98,10 @@ export default function DashboardOverview() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-white">{card.value}</div>
+                <div className="text-3xl font-bold text-foreground">{card.value}</div>
                 <div className="flex items-center mt-2 text-xs text-muted-foreground">
-                  <TrendingUp className="w-3 h-3 mr-1 text-green-500" />
-                  <span className="text-green-500 font-medium">{card.change}</span>
+                  <TrendingUp className="w-3 h-3 mr-1 text-emerald-500" />
+                  <span className="text-emerald-600 font-medium">{card.change}</span>
                   <span className="ml-1">from last month</span>
                 </div>
               </CardContent>
@@ -110,10 +110,10 @@ export default function DashboardOverview() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-card border-border">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-white">Recent Activity</CardTitle>
+            <CardTitle className="text-base font-semibold text-foreground">Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -122,27 +122,27 @@ export default function DashboardOverview() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-white">Quick Actions</CardTitle>
+            <CardTitle className="text-base font-semibold text-foreground">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-3">
-              <a href="/admin/services/create" className="p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors text-center">
+              <a href="/admin/services/create" className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-center group">
                 <Briefcase className="w-5 h-5 mx-auto mb-2 text-primary" />
-                <span className="text-sm text-white font-medium">Add Service</span>
+                <span className="text-sm text-foreground font-medium">Add Service</span>
               </a>
-              <a href="/admin/projects/create" className="p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors text-center">
-                <FolderGit2 className="w-5 h-5 mx-auto mb-2 text-blue-500" />
-                <span className="text-sm text-white font-medium">Add Project</span>
+              <a href="/admin/projects/create" className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-center group">
+                <FolderGit2 className="w-5 h-5 mx-auto mb-2 text-blue-600" />
+                <span className="text-sm text-foreground font-medium">Add Project</span>
               </a>
-              <a href="/admin/blog/create" className="p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors text-center">
-                <BookOpen className="w-5 h-5 mx-auto mb-2 text-purple-500" />
-                <span className="text-sm text-white font-medium">Write Post</span>
+              <a href="/admin/blog/create" className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-center group">
+                <BookOpen className="w-5 h-5 mx-auto mb-2 text-purple-600" />
+                <span className="text-sm text-foreground font-medium">Write Post</span>
               </a>
-              <a href="/admin/contacts" className="p-3 rounded-lg bg-accent/50 hover:bg-accent transition-colors text-center">
-                <Mail className="w-5 h-5 mx-auto mb-2 text-cyan-500" />
-                <span className="text-sm text-white font-medium">View Contacts</span>
+              <a href="/admin/contacts" className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors text-center group">
+                <Mail className="w-5 h-5 mx-auto mb-2 text-cyan-600" />
+                <span className="text-sm text-foreground font-medium">View Contacts</span>
               </a>
             </div>
           </CardContent>

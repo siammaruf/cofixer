@@ -21,7 +21,7 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         gradient:
-          "text-white shadow-xs hover:opacity-90 rounded-full px-6 py-2.5 font-bold",
+          "text-white shadow-xs hover:opacity-90 rounded-lg px-5 py-2.5 font-semibold",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -52,8 +52,7 @@ function Button({
 
   const gradientStyle = variant === "gradient"
     ? {
-        background: "linear-gradient(to right, #A93E17 0%, #15399A 50%, #A93E17 100%)",
-        backgroundSize: "200% auto",
+        background: "linear-gradient(135deg, #A93E17 0%, #15399A 100%)",
         ...style,
       }
     : style

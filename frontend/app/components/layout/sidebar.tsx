@@ -91,22 +91,22 @@ export default function Sidebar() {
   const userName = user?.fullName || user?.email || "User";
 
   return (
-    <div className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
-      <div className="p-6 border-b border-border">
+    <div className="w-64 bg-white border-r border-border min-h-screen flex flex-col">
+      <div className="p-5 border-b border-border">
         <Link to="/admin" className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-            <span className="text-white font-bold text-sm">{appConfig.name[0]}</span>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-sm">
+            <span className="text-foreground font-bold text-sm">{appConfig.name[0]}</span>
           </div>
-          <span className="text-lg font-bold text-white">{appConfig.name}</span>
+          <span className="text-base font-bold text-foreground">{appConfig.name}</span>
         </Link>
       </div>
 
-      <nav className="flex-1 overflow-y-auto p-4 space-y-6">
+      <nav className="flex-1 overflow-y-auto p-3 space-y-5">
         {navSections.map((section) => (
           <div key={section.title}>
             <button
               onClick={() => toggleSection(section.title)}
-              className="flex items-center justify-between w-full px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+              className="flex items-center justify-between w-full px-3 mb-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
             >
               <span>{section.title}</span>
               {collapsedSections[section.title] ? (
@@ -130,7 +130,7 @@ export default function Sidebar() {
                       "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
                       active
                         ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
                     <Icon className={cn(
@@ -146,18 +146,18 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-border">
+      <div className="p-3 border-t border-border">
         <Link
           to="/admin/profile"
-          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent/50 transition-colors mb-2"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors mb-1"
         >
           <Avatar className="w-8 h-8">
-            <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
               {getInitials(user?.fullName)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{userName}</p>
+            <p className="text-sm font-medium text-foreground truncate">{userName}</p>
             <p className="text-xs text-muted-foreground truncate">{user?.email || "user@example.com"}</p>
           </div>
         </Link>

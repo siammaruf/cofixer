@@ -72,7 +72,7 @@ export default function ProjectList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Projects</h1>
+          <h1 className="text-2xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground mt-1">Manage your portfolio projects and case studies</p>
         </div>
         <Link to="/admin/projects/create">
@@ -86,7 +86,7 @@ export default function ProjectList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <FolderOpen className="h-5 w-5 text-primary" />
               <span>All Projects</span>
               <Badge variant="secondary" className="ml-2">{filteredProjects.length}</Badge>
@@ -168,14 +168,14 @@ export default function ProjectList() {
                                 </div>
                               )}
                               <div>
-                                <span className="font-medium text-white">{project.title}</span>
+                                <span className="font-medium text-foreground">{project.title}</span>
                                 <div className="flex items-center gap-2 mt-1">
                                   {project.liveUrl && (
                                     <a
                                       href={project.liveUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-muted-foreground hover:text-white transition-colors"
+                                      className="text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                       <ExternalLink className="h-3 w-3" />
                                     </a>
@@ -185,7 +185,7 @@ export default function ProjectList() {
                                       href={project.githubUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-muted-foreground hover:text-white transition-colors"
+                                      className="text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                       <Github className="h-3 w-3" />
                                     </a>

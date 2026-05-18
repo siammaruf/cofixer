@@ -87,9 +87,9 @@ function MediaCard({ item, onDelete }: MediaCardProps) {
   }, [item.url])
 
   return (
-    <div className="group relative rounded-[20px] border border-[#FFFFFF0F] bg-card overflow-hidden transition-all hover:border-white/20 hover:shadow-lg">
+    <div className="group relative rounded-xl border border-border bg-card overflow-hidden transition-all hover:border-primary/30 hover:shadow-lg">
       {/* Thumbnail */}
-      <div className="relative aspect-square bg-[#060606] flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-square bg-muted flex items-center justify-center overflow-hidden">
         {item.mimeType.startsWith('image/') ? (
           <img
             src={item.url}
@@ -108,18 +108,18 @@ function MediaCard({ item, onDelete }: MediaCardProps) {
         <div className="absolute top-2 left-2">
           <Badge
             variant="secondary"
-            className="bg-black/60 text-white backdrop-blur-sm text-[10px] px-1.5 py-0 h-5"
+            className="bg-foreground/60 text-foreground backdrop-blur-sm text-[10px] px-1.5 py-0 h-5"
           >
             {getFileCategory(item.mimeType)}
           </Badge>
         </div>
 
         {/* Hover actions overlay */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
           <Button
             size="icon"
             variant="secondary"
-            className="size-9 rounded-full"
+            className="size-9 rounded-lg"
             onClick={handleCopyUrl}
             aria-label="Copy URL"
           >
@@ -128,7 +128,7 @@ function MediaCard({ item, onDelete }: MediaCardProps) {
           <Button
             size="icon"
             variant="destructive"
-            className="size-9 rounded-full"
+            className="size-9 rounded-lg"
             onClick={() => onDelete(item)}
             aria-label="Delete media"
           >
@@ -150,7 +150,7 @@ function MediaCard({ item, onDelete }: MediaCardProps) {
 
       {/* Copied toast */}
       {copied && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs px-3 py-1.5 rounded-full animate-in fade-in slide-in-from-bottom-2">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs px-3 py-1.5 rounded-lg animate-in fade-in slide-in-from-bottom-2">
           URL copied!
         </div>
       )}
@@ -341,7 +341,7 @@ function DeleteDialog({ item, open, onOpenChange, onConfirm }: DeleteDialogProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <div className="mx-auto size-12 rounded-full bg-destructive/10 flex items-center justify-center mb-2">
+          <div className="mx-auto size-12 rounded-lg bg-destructive/10 flex items-center justify-center mb-2">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
           <DialogTitle className="text-center">Delete Media</DialogTitle>

@@ -564,7 +564,7 @@ export default function SettingsDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white">Site Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground">Site Settings</h1>
         <p className="text-muted-foreground mt-1">Manage your website configuration, appearance, social links, and analytics.</p>
       </div>
 
@@ -591,7 +591,7 @@ export default function SettingsDashboard() {
         <TabsContent value="general">
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">General Settings</CardTitle>
+              <CardTitle className="text-foreground">General Settings</CardTitle>
               <CardDescription>Configure basic site information and contact details.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -609,7 +609,7 @@ export default function SettingsDashboard() {
         <TabsContent value="appearance">
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Appearance Settings</CardTitle>
+              <CardTitle className="text-foreground">Appearance Settings</CardTitle>
               <CardDescription>Customize your site logo, favicon, and color scheme.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -627,7 +627,7 @@ export default function SettingsDashboard() {
         <TabsContent value="social">
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Social Media Links</CardTitle>
+              <CardTitle className="text-foreground">Social Media Links</CardTitle>
               <CardDescription>Add links to your social media profiles.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -645,7 +645,7 @@ export default function SettingsDashboard() {
         <TabsContent value="analytics">
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Analytics &amp; Tracking</CardTitle>
+              <CardTitle className="text-foreground">Analytics &amp; Tracking</CardTitle>
               <CardDescription>Configure analytics and tracking scripts for your site.</CardDescription>
             </CardHeader>
             <CardContent>

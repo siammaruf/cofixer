@@ -61,7 +61,7 @@ export default function FaqList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">FAQs</h1>
+          <h1 className="text-2xl font-bold text-foreground">FAQs</h1>
           <p className="text-muted-foreground mt-1">Manage frequently asked questions and answers</p>
         </div>
         <Link to="/admin/faqs/create">
@@ -75,7 +75,7 @@ export default function FaqList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <HelpCircle className="h-5 w-5 text-primary" />
               <span>All FAQs</span>
               <Badge variant="secondary" className="ml-2">{filteredFaqs.length}</Badge>
@@ -141,7 +141,7 @@ export default function FaqList() {
                         <TableRow key={faq.id} className="border-border">
                           <TableCell>
                             <div className="max-w-md">
-                              <p className="font-medium text-white truncate">{faq.question}</p>
+                              <p className="font-medium text-foreground truncate">{faq.question}</p>
                               <p className="text-sm text-muted-foreground truncate mt-0.5">{faq.answer}</p>
                             </div>
                           </TableCell>

@@ -87,7 +87,7 @@ export default function BlogList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Blog Posts</h1>
+          <h1 className="text-2xl font-bold text-foreground">Blog Posts</h1>
           <p className="text-muted-foreground mt-1">
             Manage your blog posts and content
           </p>
@@ -103,7 +103,7 @@ export default function BlogList() {
       <Card className="bg-card border-border">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <FileText className="h-5 w-5 text-primary" />
               <span>All Posts</span>
               <Badge variant="secondary" className="ml-2">
@@ -181,7 +181,7 @@ export default function BlogList() {
                       currentItems.map((post) => (
                         <TableRow key={post.id} className="border-border">
                           <TableCell>
-                            <span className="font-medium text-white">
+                            <span className="font-medium text-foreground">
                               {post.title}
                             </span>
                           </TableCell>

@@ -76,14 +76,14 @@ export default function CreateUser() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-white">User Information</CardTitle>
+          <CardTitle className="text-foreground">User Information</CardTitle>
         </CardHeader>
         <CardContent>
           <LoadingOverlay isLoading={loading} message="Creating user...">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {error && (
-                  <div className="rounded-[20px] bg-[rgb(230,87,87)]/10 p-3 text-sm text-[rgb(230,87,87)]">
+                  <div className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
                     {error}
                   </div>
                 )}
@@ -94,9 +94,9 @@ export default function CreateUser() {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">First Name</FormLabel>
+                        <FormLabel className="text-foreground">First Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter first name" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
+                          <Input placeholder="Enter first name" className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -108,9 +108,9 @@ export default function CreateUser() {
                     name="lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Last Name</FormLabel>
+                        <FormLabel className="text-foreground">Last Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter last name" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
+                          <Input placeholder="Enter last name" className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -123,12 +123,12 @@ export default function CreateUser() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Email Address</FormLabel>
+                      <FormLabel className="text-foreground">Email Address</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
                           placeholder="user@example.com"
-                          className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                          className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground"
                           {...field}
                         />
                       </FormControl>
@@ -142,9 +142,9 @@ export default function CreateUser() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Phone Number</FormLabel>
+                      <FormLabel className="text-foreground">Phone Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="(555) 123-4567" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
+                        <Input placeholder="(555) 123-4567" className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -156,9 +156,9 @@ export default function CreateUser() {
                   name="position"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Position</FormLabel>
+                      <FormLabel className="text-foreground">Position</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Admin, Editor, Viewer" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
+                        <Input placeholder="e.g. Admin, Editor, Viewer" className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -170,9 +170,9 @@ export default function CreateUser() {
                   name="startDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Start Date</FormLabel>
+                      <FormLabel className="text-foreground">Start Date</FormLabel>
                       <FormControl>
-                        <Input type="date" className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]" {...field} />
+                        <Input type="date" className="rounded-xl border-border bg-muted text-foreground placeholder:text-muted-foreground" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -188,17 +188,17 @@ export default function CreateUser() {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="border-[#FFFFFF0F] data-[state=checked]:bg-[#A93E17] data-[state=checked]:text-white"
+                          className="border-border data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                         />
                       </FormControl>
-                      <FormLabel className="font-normal text-white">Active User</FormLabel>
+                      <FormLabel className="font-normal text-foreground">Active User</FormLabel>
                     </FormItem>
                   )}
                 />
 
                 <div className="flex justify-end space-x-4">
                   <Link to="/admin/users">
-                    <Button type="button" variant="outline" className="rounded-full border-[#FFFFFF0F] text-white hover:bg-[#FFFFFF0F]">
+                    <Button type="button" variant="outline" className="rounded-lg border-border text-foreground hover:bg-muted">
                       Cancel
                     </Button>
                   </Link>

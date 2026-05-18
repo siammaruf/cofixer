@@ -101,7 +101,7 @@ export default function CreateProject() {
           </Button>
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-white">Add New Project</h2>
+          <h2 className="text-xl font-bold text-foreground">Add New Project</h2>
           <p className="text-muted-foreground">
             Create a new project for your portfolio
           </p>
@@ -110,7 +110,7 @@ export default function CreateProject() {
 
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-white">Project Information</CardTitle>
+          <CardTitle className="text-foreground">Project Information</CardTitle>
         </CardHeader>
         <CardContent>
           <LoadingOverlay isLoading={loading} message="Creating project...">
@@ -128,11 +128,11 @@ export default function CreateProject() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Title</FormLabel>
+                        <FormLabel className="text-foreground">Title</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter project title"
-                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -146,11 +146,11 @@ export default function CreateProject() {
                     name="slug"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Slug</FormLabel>
+                        <FormLabel className="text-foreground">Slug</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="project-slug"
-                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -165,12 +165,12 @@ export default function CreateProject() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Description</FormLabel>
+                      <FormLabel className="text-foreground">Description</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Describe the project..."
                           rows={4}
-                          className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                          className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                           {...field}
                         />
                       </FormControl>
@@ -185,11 +185,11 @@ export default function CreateProject() {
                     name="imageUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Image URL</FormLabel>
+                        <FormLabel className="text-foreground">Image URL</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://example.com/image.jpg"
-                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -203,11 +203,11 @@ export default function CreateProject() {
                     name="liveUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Live URL</FormLabel>
+                        <FormLabel className="text-foreground">Live URL</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://example.com"
-                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -222,11 +222,11 @@ export default function CreateProject() {
                   name="githubUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">GitHub URL</FormLabel>
+                      <FormLabel className="text-foreground">GitHub URL</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="https://github.com/username/repo"
-                          className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                          className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                           {...field}
                         />
                       </FormControl>
@@ -240,7 +240,7 @@ export default function CreateProject() {
                   name="techStack"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-white">Tech Stack</FormLabel>
+                      <FormLabel className="text-foreground">Tech Stack</FormLabel>
                       <div className="space-y-2">
                         <div className="flex gap-2">
                           <Input
@@ -248,7 +248,7 @@ export default function CreateProject() {
                             value={techInput}
                             onChange={(e) => setTechInput(e.target.value)}
                             onKeyDown={handleTechKeyDown}
-                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
                           />
                           <Button
                             type="button"
@@ -292,7 +292,7 @@ export default function CreateProject() {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-white">Featured Project</FormLabel>
+                        <FormLabel className="text-foreground">Featured Project</FormLabel>
                         <p className="text-sm text-muted-foreground">
                           Show this project prominently on the homepage
                         </p>
@@ -309,7 +309,7 @@ export default function CreateProject() {
 
                 <div className="flex justify-end space-x-4">
                   <Link to="/admin/projects">
-                    <Button type="button" variant="outline" className="rounded-lg border-border text-white hover:bg-muted">
+                    <Button type="button" variant="outline" className="rounded-lg border-border text-foreground hover:bg-muted">
                       Cancel
                     </Button>
                   </Link>

@@ -72,7 +72,7 @@ function SuspenseLoader({
           </div>
         </div>
         {message && (
-          <p className="text-sm text-[#A7AABB]">{message}</p>
+          <p className="text-sm text-muted-foreground">{message}</p>
         )}
       </div>
     </div>
