@@ -23,6 +23,10 @@ export interface Project {
   category?: string
   images: string[]
   featuredImage?: string
+  imageUrl?: string
+  liveUrl?: string
+  githubUrl?: string
+  techStack: string[]
   featured: boolean
   isActive: boolean
   createdAt: string
@@ -153,6 +157,15 @@ export interface Stats {
   contacts: number
 }
 
+export interface MediaItem {
+  id: string
+  url: string
+  filename: string
+  mimeType: string
+  size: number
+  createdAt: string
+}
+
 export interface ContactFormData {
   name: string
   email: string
@@ -173,6 +186,7 @@ export interface CmsState {
   siteSettings: SiteSettings | null
   stats: Stats | null
   navigation: NavigationMenu | null
+  media: MediaItem[]
   loading: boolean
   error: string | null
 }

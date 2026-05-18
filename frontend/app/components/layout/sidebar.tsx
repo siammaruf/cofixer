@@ -1,94 +1,173 @@
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useState } from "react";
 import {
   LayoutDashboard, Users, UserCircle, LogOut, Settings,
   Briefcase, FolderGit2, BookOpen, Users2, MessageSquare,
-  HelpCircle, Mail, Globe, FileText
+  HelpCircle, Mail, Globe, FileText, ChevronDown, ChevronRight, Image
 } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
+import { logout } from "~/redux/features/authSlice";
 import { appConfig } from "~/config/app.config";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { cn } from "~/lib/utils";
+
+interface NavItem {
+  title: string;
+  icon: React.ElementType;
+  href: string;
+}
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+const navSections: NavSection[] = [
+  {
+    title: "Overview",
+    items: [
+      { title: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+    ],
+  },
+  {
+    title: "Content",
+    items: [
+      { title: "Services", icon: Briefcase, href: "/admin/services" },
+      { title: "Projects", icon: FolderGit2, href: "/admin/projects" },
+      { title: "Blog Posts", icon: BookOpen, href: "/admin/blog" },
+      { title: "Team", icon: Users2, href: "/admin/team" },
+      { title: "Testimonials", icon: MessageSquare, href: "/admin/testimonials" },
+      { title: "FAQs", icon: HelpCircle, href: "/admin/faqs" },
+    ],
+  },
+  {
+    title: "Management",
+    items: [
+      { title: "Contacts", icon: Mail, href: "/admin/contacts" },
+      { title: "Users", icon: Users, href: "/admin/users" },
+      { title: "Media Library", icon: Image, href: "/admin/media" },
+      { title: "SEO", icon: Globe, href: "/admin/seo" },
+      { title: "Settings", icon: Settings, href: "/admin/settings" },
+    ],
+  },
+];
 
 export default function Sidebar() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAppSelector((state) => state.auth);
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate("/login", { replace: true });
+  };
+
+  const toggleSection = (title: string) => {
+    setCollapsedSections((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
+  const isActive = (href: string) => {
+    if (href === "/admin") {
+      return location.pathname === "/admin";
+    }
+    return location.pathname.startsWith(href);
+  };
+
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const userName = user?.fullName || user?.email || "User";
+
   return (
-    <div className="w-64 bg-[#0A0A0A] border-r border-[#FFFFFF0F] min-h-screen">
-      <div className="p-4">
-        <h2 className="text-xl font-bold mb-6 text-white">{appConfig.name}</h2>
-        <nav className="space-y-6">
-          <div>
-            <Link to="/admin" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-              <LayoutDashboard className="w-5 h-5 mr-3 text-[#A93E17]" />
-              <span className="font-medium text-sm">Dashboard</span>
-            </Link>
+    <div className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
+      <div className="p-6 border-b border-border">
+        <Link to="/admin" className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+            <span className="text-white font-bold text-sm">{appConfig.name[0]}</span>
           </div>
+          <span className="text-lg font-bold text-white">{appConfig.name}</span>
+        </Link>
+      </div>
 
-          <div>
-            <h3 className="text-xs font-semibold text-[#A7AABB] uppercase tracking-wider mb-3 px-2">Content</h3>
-            <div className="space-y-1">
-              <Link to="/admin/services" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <Briefcase className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Services</span>
-              </Link>
-              <Link to="/admin/projects" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <FolderGit2 className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Projects</span>
-              </Link>
-              <Link to="/admin/blog" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <BookOpen className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Blog</span>
-              </Link>
-              <Link to="/admin/team" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <Users2 className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Team</span>
-              </Link>
-              <Link to="/admin/testimonials" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <MessageSquare className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Testimonials</span>
-              </Link>
-              <Link to="/admin/faqs" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <HelpCircle className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">FAQs</span>
-              </Link>
+      <nav className="flex-1 overflow-y-auto p-4 space-y-6">
+        {navSections.map((section) => (
+          <div key={section.title}>
+            <button
+              onClick={() => toggleSection(section.title)}
+              className="flex items-center justify-between w-full px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+            >
+              <span>{section.title}</span>
+              {collapsedSections[section.title] ? (
+                <ChevronRight className="w-3 h-3" />
+              ) : (
+                <ChevronDown className="w-3 h-3" />
+              )}
+            </button>
+            <div className={cn(
+              "space-y-1 overflow-hidden transition-all duration-200",
+              collapsedSections[section.title] ? "max-h-0" : "max-h-[500px]"
+            )}>
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                      active
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                    )}
+                  >
+                    <Icon className={cn(
+                      "w-4 h-4",
+                      active ? "text-primary" : "text-muted-foreground"
+                    )} />
+                    <span>{item.title}</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
+        ))}
+      </nav>
 
-          <div>
-            <h3 className="text-xs font-semibold text-[#A7AABB] uppercase tracking-wider mb-3 px-2">Management</h3>
-            <div className="space-y-1">
-              <Link to="/admin/contacts" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <Mail className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Contacts</span>
-              </Link>
-              <Link to="/admin/users" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <Users className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Users</span>
-              </Link>
-              <Link to="/admin/seo" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <Globe className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">SEO</span>
-              </Link>
-              <Link to="/admin/media" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <FileText className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Media</span>
-              </Link>
-              <Link to="/admin/settings" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <Settings className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Settings</span>
-              </Link>
-            </div>
+      <div className="p-4 border-t border-border">
+        <Link
+          to="/admin/profile"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent/50 transition-colors mb-2"
+        >
+          <Avatar className="w-8 h-8">
+            <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">
+              {getInitials(user?.fullName)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white truncate">{userName}</p>
+            <p className="text-xs text-muted-foreground truncate">{user?.email || "user@example.com"}</p>
           </div>
-
-          <div>
-            <h3 className="text-xs font-semibold text-[#A7AABB] uppercase tracking-wider mb-3 px-2">Account</h3>
-            <div className="space-y-1">
-              <Link to="/admin/profile" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <UserCircle className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Profile</span>
-              </Link>
-              <Link to="/login" className="flex items-center p-2 rounded-full hover:bg-[#FFFFFF0F] text-[#A7AABB] hover:text-white transition-colors">
-                <LogOut className="w-4 h-4 mr-3 text-[#A7AABB]" />
-                <span className="text-sm">Logout</span>
-              </Link>
-            </div>
-          </div>
-        </nav>
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          <span>Logout</span>
+        </button>
       </div>
     </div>
   );

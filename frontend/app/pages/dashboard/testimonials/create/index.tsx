@@ -1,83 +1,282 @@
-import { useState } from 'react';
-import { getErrorMessage } from "~/utils/errorHandler"
-import { useNavigate, Link } from 'react-router';
-import { cmsAdminService } from '~/services/httpServices/cmsService';
+import { Link, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
+import { createTestimonial } from "~/redux/features/cmsSlice";
+import {
+  createTestimonialSchema,
+  type CreateTestimonialFormData,
+} from "~/utils/validations/testimonial";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Switch } from "~/components/ui/switch";
+import { LoadingOverlay } from "~/components/ui/loading-overlay";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { ArrowLeft, Star } from "lucide-react";
 
 export default function CreateTestimonial() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    clientName: '',
-    clientRole: '',
-    company: '',
-    content: '',
-    rating: 5,
-    image: '',
-    featured: false,
-    isActive: true,
+  const { loading, error } = useAppSelector((state) => state.cms);
+
+  const form = useForm<CreateTestimonialFormData>({
+    resolver: zodResolver(createTestimonialSchema),
+    defaultValues: {
+      clientName: "",
+      clientRole: "",
+      company: "",
+      content: "",
+      rating: 5,
+      image: "",
+      featured: false,
+      isActive: true,
+    },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await cmsAdminService.createTestimonial(formData);
-      navigate('/admin/testimonials');
-    } catch (err) {
-      alert(getErrorMessage(err) || 'Failed to create testimonial');
-    } finally {
-      setLoading(false);
+  const onSubmit = async (data: CreateTestimonialFormData) => {
+    const result = await dispatch(
+      createTestimonial({
+        clientName: data.clientName,
+        clientRole: data.clientRole,
+        company: data.company,
+        content: data.content,
+        rating: data.rating,
+        image: data.image || undefined,
+        featured: data.featured,
+        isActive: data.isActive,
+      })
+    );
+
+    if (createTestimonial.fulfilled.match(result)) {
+      navigate("/admin/testimonials");
     }
   };
 
+  const rating = form.watch("rating");
+
   return (
-    <div>
-      <div className="flex items-center gap-2 mb-6">
-        <Link to="/admin/testimonials" className="text-[#A93E17] hover:underline">← Back</Link>
-        <h1 className="dashboard-section-title">Add Testimonial</h1>
+    <div className="space-y-6">
+      <div className="flex items-center gap-2">
+        <Link to="/admin/testimonials">
+          <Button variant="ghost" size="sm" className="gap-1">
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </Link>
+        <div>
+          <h2 className="dashboard-section-title">Add New Testimonial</h2>
+          <p className="text-muted-foreground">
+            Create a new client testimonial for your website
+          </p>
+        </div>
       </div>
-      <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Client Name *</label>
-          <input required type="text" value={formData.clientName} onChange={e => setFormData({...formData, clientName: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Client Role</label>
-          <input type="text" value={formData.clientRole} onChange={e => setFormData({...formData, clientRole: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Company</label>
-          <input type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Content *</label>
-          <textarea required rows={4} value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Rating (1-5)</label>
-          <input type="number" min={1} max={5} value={formData.rating} onChange={e => setFormData({...formData, rating: parseInt(e.target.value) || 5})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Image URL</label>
-          <input type="text" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="dashboard-input" />
-        </div>
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-white">
-            <input type="checkbox" checked={formData.featured} onChange={e => setFormData({...formData, featured: e.target.checked})} className="accent-[#A93E17]" />
-            <span className="text-sm">Featured</span>
-          </label>
-          <label className="flex items-center gap-2 text-white">
-            <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="accent-[#A93E17]" />
-            <span className="text-sm">Active</span>
-          </label>
-        </div>
-        <div className="flex gap-4">
-          <button type="submit" disabled={loading} className="dashboard-btn disabled:opacity-50">
-            {loading ? 'Creating...' : 'Create Testimonial'}
-          </button>
-          <Link to="/admin/testimonials" className="dashboard-btn-secondary">Cancel</Link>
-        </div>
-      </form>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-white">Testimonial Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LoadingOverlay isLoading={loading} message="Creating testimonial...">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {error && (
+                  <div className="rounded-[20px] bg-destructive/10 p-3 text-sm text-destructive">
+                    {error}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="clientName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Client Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter client name"
+                            className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="clientRole"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Client Role</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g. CEO, Manager"
+                            className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Company</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter company name"
+                          className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Content</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter the testimonial content..."
+                          rows={4}
+                          className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="rating"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Rating</FormLabel>
+                        <FormControl>
+                          <div className="space-y-2">
+                            <Input
+                              type="number"
+                              min={1}
+                              max={5}
+                              className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white"
+                              {...field}
+                              onChange={(e) => {
+                                const val = parseInt(e.target.value, 10);
+                                field.onChange(isNaN(val) ? 1 : Math.min(5, Math.max(1, val)));
+                              }}
+                              value={field.value ?? 5}
+                            />
+                            <div className="flex items-center gap-1">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-5 w-5 ${
+                                    i < rating
+                                      ? "fill-yellow-400 text-yellow-400"
+                                      : "text-muted-foreground"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Image URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="https://example.com/avatar.jpg"
+                            className="rounded-[20px] border-[#FFFFFF0F] bg-[#060606] text-white placeholder:text-[#A7AABB]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex items-center gap-8">
+                  <FormField
+                    control={form.control}
+                    name="featured"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal text-white">Featured</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="isActive"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal text-white">Active</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-4">
+                  <Link to="/admin/testimonials">
+                    <Button type="button" variant="outline" className="rounded-full border-[#FFFFFF0F] text-white hover:bg-[#FFFFFF0F]">
+                      Cancel
+                    </Button>
+                  </Link>
+                  <Button type="submit" disabled={loading} variant="gradient">
+                    Create Testimonial
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </LoadingOverlay>
+        </CardContent>
+      </Card>
     </div>
   );
 }

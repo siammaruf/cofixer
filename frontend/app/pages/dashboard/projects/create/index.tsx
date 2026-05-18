@@ -1,83 +1,327 @@
-import { useState } from 'react';
-import { getErrorMessage } from "~/utils/errorHandler"
-import { useNavigate, Link } from 'react-router';
-import { cmsAdminService } from '~/services/httpServices/cmsService';
+import { Link, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
+import { createProject } from "~/redux/features/cmsSlice";
+import {
+  createProjectSchema,
+  type CreateProjectFormData,
+} from "~/utils/validations/project";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Switch } from "~/components/ui/switch";
+import { Badge } from "~/components/ui/badge";
+import { LoadingOverlay } from "~/components/ui/loading-overlay";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { ArrowLeft, X, Plus } from "lucide-react";
+import { useState } from "react";
 
 export default function CreateProject() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    slug: '',
-    summary: '',
-    description: '',
-    clientName: '',
-    category: '',
-    featured: false,
-    isActive: true,
+  const { loading, error } = useAppSelector((state) => state.cms);
+  const [techInput, setTechInput] = useState("");
+
+  const form = useForm<CreateProjectFormData>({
+    resolver: zodResolver(createProjectSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      description: "",
+      imageUrl: "",
+      liveUrl: "",
+      githubUrl: "",
+      techStack: [],
+      featured: false,
+    },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await cmsAdminService.createProject(formData);
-      navigate('/admin/projects');
-    } catch (err) {
-      alert(getErrorMessage(err) || 'Failed to create project');
-    } finally {
-      setLoading(false);
+  const onSubmit = async (data: CreateProjectFormData) => {
+    const result = await dispatch(
+      createProject({
+        title: data.title,
+        slug: data.slug,
+        description: data.description || undefined,
+        featuredImage: data.imageUrl || undefined,
+        imageUrl: data.imageUrl || undefined,
+        liveUrl: data.liveUrl || undefined,
+        githubUrl: data.githubUrl || undefined,
+        techStack: data.techStack,
+        featured: data.featured,
+        isActive: true,
+        images: data.imageUrl ? [data.imageUrl] : [],
+      })
+    );
+
+    if (createProject.fulfilled.match(result)) {
+      navigate("/admin/projects");
+    }
+  };
+
+  const addTech = () => {
+    const trimmed = techInput.trim();
+    if (!trimmed) return;
+    const current = form.getValues("techStack");
+    if (current.includes(trimmed)) {
+      setTechInput("");
+      return;
+    }
+    form.setValue("techStack", [...current, trimmed]);
+    setTechInput("");
+  };
+
+  const removeTech = (tech: string) => {
+    const current = form.getValues("techStack");
+    form.setValue("techStack", current.filter((t) => t !== tech));
+  };
+
+  const handleTechKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTech();
     }
   };
 
   return (
-    <div>
-      <div className="flex items-center gap-2 mb-6">
-        <Link to="/admin/projects" className="text-[#A93E17] hover:underline">← Back</Link>
-        <h1 className="dashboard-section-title">Add Project</h1>
+    <div className="space-y-6">
+      <div className="flex items-center gap-2">
+        <Link to="/admin/projects">
+          <Button variant="ghost" size="sm" className="gap-1">
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </Link>
+        <div>
+          <h2 className="text-2xl font-bold text-white">Add New Project</h2>
+          <p className="text-muted-foreground">
+            Create a new project for your portfolio
+          </p>
+        </div>
       </div>
-      <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Title *</label>
-          <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Slug *</label>
-          <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Summary</label>
-          <input type="text" value={formData.summary} onChange={e => setFormData({...formData, summary: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Description</label>
-          <textarea rows={4} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Client Name</label>
-          <input type="text" value={formData.clientName} onChange={e => setFormData({...formData, clientName: e.target.value})} className="dashboard-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1 text-white">Category</label>
-          <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="dashboard-input" />
-        </div>
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-white">
-            <input type="checkbox" checked={formData.featured} onChange={e => setFormData({...formData, featured: e.target.checked})} className="accent-[#A93E17]" />
-            <span className="text-sm">Featured</span>
-          </label>
-          <label className="flex items-center gap-2 text-white">
-            <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="accent-[#A93E17]" />
-            <span className="text-sm">Active</span>
-          </label>
-        </div>
-        <div className="flex gap-4">
-          <button type="submit" disabled={loading} className="dashboard-btn disabled:opacity-50">
-            {loading ? 'Creating...' : 'Create Project'}
-          </button>
-          <Link to="/admin/projects" className="dashboard-btn-secondary">Cancel</Link>
-        </div>
-      </form>
+
+      <Card className="bg-card border-border">
+        <CardHeader>
+          <CardTitle className="text-white">Project Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LoadingOverlay isLoading={loading} message="Creating project...">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {error && (
+                  <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+                    {error}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter project title"
+                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="slug"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Slug</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="project-slug"
+                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Describe the project..."
+                          rows={4}
+                          className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Image URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="https://example.com/image.jpg"
+                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="liveUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">Live URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="https://example.com"
+                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="githubUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">GitHub URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://github.com/username/repo"
+                          className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="techStack"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel className="text-white">Tech Stack</FormLabel>
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Add a technology and press Enter"
+                            value={techInput}
+                            onChange={(e) => setTechInput(e.target.value)}
+                            onKeyDown={handleTechKeyDown}
+                            className="rounded-lg border-border bg-background text-white placeholder:text-muted-foreground"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={addTech}
+                            className="rounded-lg border-border"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        {form.getValues("techStack").length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {form.getValues("techStack").map((tech) => (
+                              <Badge
+                                key={tech}
+                                variant="secondary"
+                                className="flex items-center gap-1"
+                              >
+                                {tech}
+                                <button
+                                  type="button"
+                                  onClick={() => removeTech(tech)}
+                                  className="ml-1 hover:text-destructive"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="featured"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-white">Featured Project</FormLabel>
+                        <p className="text-sm text-muted-foreground">
+                          Show this project prominently on the homepage
+                        </p>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex justify-end space-x-4">
+                  <Link to="/admin/projects">
+                    <Button type="button" variant="outline" className="rounded-lg border-border text-white hover:bg-muted">
+                      Cancel
+                    </Button>
+                  </Link>
+                  <Button type="submit" disabled={loading}>
+                    Create Project
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </LoadingOverlay>
+        </CardContent>
+      </Card>
     </div>
   );
 }
