@@ -55,14 +55,14 @@ export default function DashboardOverview() {
 
   return (
     <div>
-      <h1 className="dashboard-section-title mb-6">Dashboard Overview</h1>
+      <h1 className="dashboard-section-title mb-6">Dashboard <span>Overview</span></h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {statCards.map((card) => (
           <div key={card.label} className="dashboard-card p-6">
             <div className="flex items-start justify-between">
               <div>
-                <div className="text-3xl font-bold text-white">{card.value}</div>
-                <div className="text-sm text-[#A7AABB] mt-1">{card.label}</div>
+                <div className="dashboard-heading">{card.value}</div>
+                <div className="dashboard-text-sm mt-1">{card.label}</div>
               </div>
               <div className="w-10 h-10 rounded-full bg-[#060606] border border-[#FFFFFF0F] flex items-center justify-center">
                 <img src={`/images/${card.icon}`} alt="" className="w-5 h-5" />

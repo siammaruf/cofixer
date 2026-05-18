@@ -67,7 +67,7 @@ export default function CreateUser() {
           </Button>
         </Link>
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Add New User</h2>
+          <h2 className="dashboard-section-title">Add New User</h2>
           <p className="text-muted-foreground">
             Create a new user record in the system
           </p>

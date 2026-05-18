@@ -1,0 +1,131 @@
+/* Typography system matching public UI */
+
+@layer components {
+  /* Section labels (like .section-title h3) */
+  .typography-section-label {
+    display: inline-block;
+    position: relative;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #A7AABB;
+    background: #FFFFFF0F;
+    border: 1px solid #FFFFFF0F;
+    border-radius: 100px;
+    padding: 10px 50px;
+    margin-bottom: 20px;
+  }
+
+  /* Primary headings (like .section-title h1) */
+  .typography-h1 {
+    font-size: 70px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin-bottom: 0;
+  }
+
+  .typography-h1 span {
+    font-weight: 700;
+    background: linear-gradient(to right, #A93E17 0%, #15399A 50%, #A93E17 100%);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .typography-h1:hover span {
+    background-position: right center;
+  }
+
+  /* Secondary headings (like .section-title h2) */
+  .typography-h2 {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.2;
+    color: #FFFFFF;
+    margin-bottom: 0;
+  }
+
+  .typography-h2 span {
+    font-weight: 700;
+    background: linear-gradient(to right, #A93E17 0%, #15399A 50%, #A93E17 100%);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .typography-h2:hover span {
+    background-position: right center;
+  }
+
+  /* Standard headings */
+  .typography-h3 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #FFFFFF;
+  }
+
+  .typography-h4 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.333;
+    color: #FFFFFF;
+  }
+
+  /* Body text */
+  .typography-body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #A7AABB;
+  }
+
+  /* Small text */
+  .typography-small {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: #A7AABB;
+  }
+
+  /* Button text */
+  .typography-button {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    color: #FFFFFF;
+  }
+
+  /* Link text */
+  .typography-link {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    color: #FFFFFF;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .typography-link:hover {
+    color: #A93E17;
+  }
+
+  /* Error text */
+  .typography-error {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(230, 87, 87);
+  }
+
+  /* Badge text */
+  .typography-badge {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1rem;
+  }
+}
