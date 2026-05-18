@@ -15,4 +15,5 @@ export const publicRoutes = [
   route("testimonials", "pages/public/testimonials.tsx"),
   route("faqs", "pages/public/faqs.tsx"),
   route("contact", "pages/public/contact.tsx"),
+  route("*", "pages/not-found.tsx"),
 ];
