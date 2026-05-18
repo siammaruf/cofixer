@@ -122,8 +122,6 @@ export class AuthController {
     }
 
     @Post('change-password')
-    @Public()
-    @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)
     @ApiSwagger({
         resourceName: 'Change Password',
@@ -338,27 +336,22 @@ export class AuthController {
 
     @Version(['1', VERSION_NEUTRAL])
     @Get('me')
-    @Public()
-    @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)
     @ApiSwagger({
         resourceName: 'Get Current User',
         operation: 'custom',
         summary: 'Get current authenticated user',
         responseDto: LoginResponsePayloadDto,
-        requiresAuth: false,
+        requiresAuth: true,
         errors: [
-            { status: 401, description: 'Unauthorized - invalid token' },
+            { status: 401, description: 'Unauthorized - invalid or missing token' },
             { status: 404, description: 'User not found' },
         ],
     })
     async getCurrentUser(
-        @CurrentUser() user: interfaces.IJwtPayload | null,
-    ): Promise<ResponsePayloadDto<interfaces.IJwtPayload> | null> {
-        if (user) {
-            return await this.authService.getUserInformation(user);
-        }
-        return null;
+        @CurrentUser() user: interfaces.IJwtPayload,
+    ): Promise<ResponsePayloadDto<interfaces.IJwtPayload>> {
+        return await this.authService.getUserInformation(user);
     }
 
     @Version(['1', VERSION_NEUTRAL])
@@ -383,7 +376,6 @@ export class AuthController {
 
     @Version(['1', VERSION_NEUTRAL])
     @Get('check-login')
-    @UsePipes(ValidationPipe)
     @UseGuards(JwtAuthGuard)
     @ApiSwagger({
         resourceName: 'Check Login',
@@ -392,17 +384,14 @@ export class AuthController {
         responseDto: LoginResponsePayloadDto,
         requiresAuth: true,
         errors: [
-            { status: 401, description: 'Unauthorized - invalid token' },
+            { status: 401, description: 'Unauthorized - invalid or missing token' },
             { status: 404, description: 'User not found' },
         ],
     })
     async checkUserLogin(
-        @CurrentUser() user: interfaces.IJwtPayload | null,
-    ): Promise<ResponsePayloadDto<interfaces.IJwtPayload> | null> {
-        if (user) {
-            return await this.authService.getUserInformation(user);
-        }
-        return null;
+        @CurrentUser() user: interfaces.IJwtPayload,
+    ): Promise<ResponsePayloadDto<interfaces.IJwtPayload>> {
+        return await this.authService.getUserInformation(user);
     }
 
     @Version(['1', VERSION_NEUTRAL])
@@ -434,20 +423,19 @@ export class AuthController {
 
     @Version(['1', VERSION_NEUTRAL])
     @Get('logout')
-    @UsePipes(ValidationPipe)
+    @Public()
     @UseInterceptors(RemoveToken)
-    @UseGuards(JwtAuthGuard)
     @ApiSwagger({
         resourceName: 'Logout',
         operation: 'custom',
-        summary: 'Logout user',
+        summary: 'Logout user (clears auth cookies)',
         responseDto: String,
-        requiresAuth: true,
-        errors: [{ status: 401, description: 'Unauthorized - invalid token' }],
+        requiresAuth: false,
+        errors: [{ status: 500, description: 'Failed to clear session' }],
     })
     async logout(
         @CurrentUser() user: interfaces.IJwtPayload | null,
-    ): Promise<ResponsePayloadDto<string> | null> {
+    ): Promise<ResponsePayloadDto<string>> {
         return await this.authService.logout(user);
     }
 
