@@ -6,7 +6,7 @@ import { Label } from "~/components/ui/label";
 export default function Profile() {
   return (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold tracking-tight">Profile</h2>
+      <h2 className="dashboard-section-title">Profile</h2>
       <p className="text-muted-foreground">
         Manage your account settings and preferences
       </p>

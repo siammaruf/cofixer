@@ -49,7 +49,7 @@ export default function UserList() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="dashboard-section-title">Users</h2>
-          <p className="text-[#A7AABB] mt-1">Manage system users</p>
+          <p className="dashboard-text-sm mt-1">Manage system users</p>
         </div>
         <Link to="/admin/users/create">
           <Button variant="gradient" className="flex items-center gap-2">
@@ -94,11 +94,11 @@ export default function UserList() {
             <div className="rounded-[20px] border border-[#FFFFFF0F] overflow-hidden">
               <div className="p-4 bg-[#0A0A0A]">
                 <div className="grid grid-cols-5 font-medium text-sm text-[#A7AABB]">
-                  <div>Name</div>
-                  <div>Role</div>
-                  <div>Email</div>
-                  <div>Phone</div>
-                  <div>Status</div>
+                  <div className="text-base">Name</div>
+                  <div className="text-base">Role</div>
+                  <div className="text-base">Email</div>
+                  <div className="text-base">Phone</div>
+                  <div className="text-base">Status</div>
                 </div>
               </div>
               <div className="divide-y divide-[#FFFFFF0F]">

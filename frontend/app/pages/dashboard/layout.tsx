@@ -24,7 +24,7 @@ export default function DashboardLayout() {
       <div className="flex-1 flex flex-col">
         <header className="border-b border-[#FFFFFF0F] bg-[#060606]">
           <div className="flex h-16 items-center px-6">
-            <h1 className="text-xl font-bold text-white">Dashboard</h1>
+            <h1 className="text-xl font-semibold text-white">Dashboard</h1>
           </div>
         </header>
         <main className="flex-1 p-6">
