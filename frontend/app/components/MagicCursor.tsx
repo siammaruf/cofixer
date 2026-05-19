@@ -1,12 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router';
 
 export default function MagicCursor() {
   const location = useLocation();
+  const cursorElRef = useRef<HTMLDivElement | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (location.pathname.startsWith('/admin')) return;
     if (typeof window === 'undefined') return;
+    if (cursorElRef.current) return; // Prevent duplicate instances
 
     const gsap = (window as any).gsap;
     if (!gsap) {
@@ -31,6 +34,7 @@ export default function MagicCursor() {
     text.className = 'cb-cursor-text';
     el.appendChild(text);
     body.appendChild(el);
+    cursorElRef.current = el;
 
     // State (mirroring original instance properties)
     let visible = false;
@@ -55,7 +59,7 @@ export default function MagicCursor() {
       el.classList.add('-visible');
       visibleTimer = setTimeout(() => {
         visible = true;
-      });
+      }, options.visibleTimeout);
     };
 
     const hide = () => {
@@ -206,7 +210,7 @@ export default function MagicCursor() {
     // Initial off-screen position
     move();
 
-    return () => {
+    cleanupRef.current = () => {
       body.removeEventListener('mouseleave', onBodyMouseLeave);
       body.removeEventListener('mouseenter', onBodyMouseEnter);
       body.removeEventListener('mousemove', onBodyMouseMove);
@@ -216,8 +220,11 @@ export default function MagicCursor() {
       body.removeEventListener('mouseout', handleMouseOut);
       if (visibleTimer) clearTimeout(visibleTimer);
       if (el.parentNode) el.parentNode.removeChild(el);
+      cursorElRef.current = null;
     };
-  }, []);
+
+    return cleanupRef.current;
+  }, [location.pathname]);
 
   return null;
 }
