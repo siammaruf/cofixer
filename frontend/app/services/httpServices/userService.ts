@@ -2,21 +2,22 @@ import { get } from '../httpMethods/get'
 import { post } from '../httpMethods/post'
 import { put } from '../httpMethods/put'
 import { del } from '../httpMethods/delete'
-import type { User } from '~/types/user'
+import type { User, CreateUserRequest } from '~/types/user'
+import type { ApiResponse, PaginatedApiResponse } from '~/types/api'
 
 export const userService = {
   getUsers: () =>
-    get<User[]>('/users'),
+    get<PaginatedApiResponse<User>>('/users'),
 
-  getUserById: (id: number) =>
-    get<User>(`/users/${id}`),
+  getUserById: (id: string) =>
+    get<ApiResponse<User>>(`/users/${id}`),
 
-  createUser: (user: Omit<User, 'id'>) =>
-    post<User>('/users', user),
+  createUser: (user: CreateUserRequest) =>
+    post<ApiResponse<User>>('/users', user as any),
 
-  updateUser: (id: number, user: Partial<User>) =>
-    put<User>(`/users/${id}`, user),
+  updateUser: (id: string, user: Partial<User>) =>
+    put<ApiResponse<User>>(`/users/${id}`, user),
 
-  deleteUser: (id: number) =>
-    del<void>(`/users/${id}`),
+  deleteUser: (id: string) =>
+    del<ApiResponse<void>>(`/users/${id}`),
 }

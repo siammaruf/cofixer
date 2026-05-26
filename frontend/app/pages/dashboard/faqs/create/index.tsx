@@ -53,7 +53,7 @@ export default function CreateFaq() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild className="text-muted-foreground">
           <Link to="/admin/faqs">
@@ -64,18 +64,18 @@ export default function CreateFaq() {
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Add FAQ</h1>
-        <p className="text-muted-foreground mt-1">Create a new frequently asked question</p>
+        <h1 className="text-2xl font-bold text-black">Add FAQ</h1>
+        <p className="text-black/70 mt-1">Create a new frequently asked question</p>
       </div>
 
       <Card className="bg-card border-border max-w-2xl">
         <CardHeader>
-          <CardTitle className="text-foreground">FAQ Details</CardTitle>
+          <CardTitle className="text-black">FAQ Details</CardTitle>
           <CardDescription>Fill in the question, answer, and optional category.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               {error && (
                 <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
                   <p className="text-sm text-destructive">{error}</p>

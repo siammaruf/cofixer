@@ -78,7 +78,7 @@ export default function Login() {
           <div className="row justify-content-center">
             <div className="col-lg-5 col-md-7">
               <div className="conatct-us-form" style={{ display: 'block', borderRadius: '20px' }}>
-                <LoadingOverlay isLoading={loading} message="Signing in...">
+                <LoadingOverlay isLoading={loading} message="Signing in..." variant="dark" size="fullScreen">
                   <div className="contact-form" style={{ width: '100%' }}>
                     <form
                       onSubmit={(e) => {

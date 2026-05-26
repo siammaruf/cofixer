@@ -33,9 +33,8 @@ import {
   Trash2,
   Edit,
   Star,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
+import { TablePagination } from "~/components/ui/table-pagination";
 
 export default function TestimonialList() {
   const dispatch = useAppDispatch();
@@ -80,11 +79,11 @@ export default function TestimonialList() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Testimonials</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Manage client testimonials and reviews</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight">Testimonials</h1>
+          <p className="text-black/70 mt-0.5 text-sm">Manage client testimonials and reviews</p>
         </div>
         <Link to="/admin/testimonials/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">
@@ -110,7 +109,7 @@ export default function TestimonialList() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search testimonials..."
-                className="pl-10"
+                className="pl-[34px]"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -188,27 +187,29 @@ export default function TestimonialList() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <button
-                            onClick={() => handleToggleFeatured(t.id)}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`h-7 gap-1.5 ${
                               t.featured
-                                ? "bg-amber-500/10 text-amber-700 hover:bg-amber-500/20"
-                                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                                ? "text-amber-600 hover:bg-amber-500/10"
+                                : "text-muted-foreground hover:bg-muted/50"
                             }`}
+                            onClick={() => handleToggleFeatured(t.id)}
                           >
                             <Star className={`h-3.5 w-3.5 ${t.featured ? "fill-current" : ""}`} />
                             {t.featured ? "Featured" : "Not Featured"}
-                          </button>
+                          </Button>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                              className="h-8 w-8 text-destructive hover:bg-destructive/10"
                               onClick={() => {
                                 setTestimonialToDelete(t.id);
                                 setDeleteDialogOpen(true);
@@ -231,21 +232,13 @@ export default function TestimonialList() {
               </Table>
 
               {filteredTestimonials.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3">
                   <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
                     <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredTestimonials.length)}</span> of{" "}
                     <span className="font-medium text-foreground">{filteredTestimonials.length}</span> testimonials
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-                      <ChevronLeft className="h-4 w-4 mr-1" />Previous
-                    </Button>
-                    <span className="text-sm text-muted-foreground px-2">Page {currentPage} of {totalPages || 1}</span>
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0}>
-                      Next<ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
+                  <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
                 </div>
               )}
             </>

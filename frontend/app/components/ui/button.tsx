@@ -5,29 +5,29 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "~/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill text-sm font-bold transition-all duration-[400ms] ease-in-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:scale-[0.98] capitalize",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5",
+          "btn-gradient-primary text-white shadow-lg shadow-[#A93E17]/25 hover:shadow-xl hover:shadow-[#A93E17]/30 border-none",
         destructive:
-          "bg-destructive text-white shadow-lg shadow-destructive/25 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/30 hover:-translate-y-0.5 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white shadow-lg shadow-destructive/25 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/30 border-none",
         outline:
-          "border border-border bg-card shadow-sm hover:bg-muted hover:border-border/80 hover:-translate-y-0.5 dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border-2 border-[#A93E17] bg-transparent text-[#A93E17] shadow-sm hover:bg-gradient-to-r hover:from-[#A93E17] hover:to-[#15399A] hover:text-white hover:border-transparent hover:shadow-md",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-lg shadow-secondary/25 hover:bg-secondary/90 hover:shadow-xl hover:-translate-y-0.5",
+          "bg-[#15399A] text-white shadow-lg shadow-[#15399A]/25 hover:bg-[#15399A]/90 hover:shadow-xl hover:shadow-[#15399A]/30 border-none",
         ghost:
-          "hover:bg-muted/60 hover:text-foreground text-muted-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "text-muted-foreground hover:text-[#A93E17] hover:bg-[#A93E17]/10 border-none",
+        link: "text-[#A93E17] underline-offset-4 hover:underline",
         gradient:
-          "text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 rounded-xl px-5 py-2.5 font-semibold",
+          "btn-gradient-primary text-white shadow-lg shadow-[#A93E17]/25 hover:shadow-xl hover:shadow-[#A93E17]/30 border-none",
       },
       size: {
-        default: "h-10 px-5 py-2.5 has-[>svg]:px-4",
-        sm: "h-8 rounded-lg gap-1.5 px-3 text-xs has-[>svg]:px-2.5",
-        lg: "h-12 rounded-xl px-8 text-base has-[>svg]:px-6",
-        icon: "size-10 rounded-xl",
+        default: "px-6 py-3 has-[>svg]:px-5",
+        sm: "h-9 rounded-pill gap-1.5 px-4 text-xs has-[>svg]:px-3",
+        lg: "px-8 py-4 text-base has-[>svg]:px-7",
+        icon: "size-10 rounded-pill",
       },
     },
     defaultVariants: {
@@ -42,7 +42,6 @@ function Button({
   variant,
   size,
   asChild = false,
-  style,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -50,18 +49,10 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button"
 
-  const gradientStyle = variant === "gradient"
-    ? {
-        background: "linear-gradient(135deg, #C2410C 0%, #1E40AF 100%)",
-        ...style,
-      }
-    : style
-
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      style={gradientStyle}
       {...props}
     />
   )

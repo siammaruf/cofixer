@@ -47,7 +47,7 @@ function GeneralTab({ defaultValues, isSaving, onSave, saveError, saveSuccess }:
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSave)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSave)} className="space-y-5">
         {saveError && (
           <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 flex items-start gap-3">
             <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
@@ -106,7 +106,7 @@ function AppearanceTab({ defaultValues, isSaving, onSave, saveError, saveSuccess
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSave)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSave)} className="space-y-5">
         {saveError && (
           <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 flex items-start gap-3">
             <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
@@ -187,7 +187,7 @@ function SocialTab({ defaultValues, isSaving, onSave, saveError, saveSuccess }: 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSave)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSave)} className="space-y-5">
         {saveError && (
           <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 flex items-start gap-3">
             <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
@@ -230,7 +230,7 @@ function AnalyticsTab({ defaultValues, isSaving, onSave, saveError, saveSuccess 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSave)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSave)} className="space-y-5">
         {saveError && (
           <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 flex items-start gap-3">
             <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
@@ -332,13 +332,13 @@ export default function SettingsDashboard() {
   const analyticsDefaults: AnalyticsSettingsFormData = { googleAnalyticsId: settings?.googleAnalyticsId ?? '', googleTagManagerId: settings?.googleTagManagerId ?? '', facebookPixelId: '' };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight" style={{ color: 'var(--foreground)' }}>Site Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-black">Site Settings</h1>
         <p className="text-muted-foreground text-sm">Manage your website configuration, appearance, social links, and analytics.</p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <TabsList className="grid w-full sm:w-auto grid-cols-2 lg:grid-cols-4 gap-2">
             <TabsTrigger value="general" className="gap-2"><Settings className="h-4 w-4" /><span className="hidden sm:inline">General</span></TabsTrigger>

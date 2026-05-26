@@ -99,7 +99,7 @@ export default function CreateBlogPost() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center gap-4">
         <Link to="/admin/blog">
           <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
@@ -108,8 +108,8 @@ export default function CreateBlogPost() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-foreground">New Blog Post</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl font-bold text-black">New Blog Post</h1>
+          <p className="text-black/70 mt-1">
             Create a new blog post for your website
           </p>
         </div>
@@ -123,14 +123,14 @@ export default function CreateBlogPost() {
 
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
+          <CardTitle className="flex items-center gap-2 text-black">
             <FileText className="h-5 w-5 text-primary" />
             Post Details
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-6 md:col-span-2">
                   <FormField
@@ -278,7 +278,7 @@ export default function CreateBlogPost() {
               </div>
 
               <div className="border-t border-border pt-6">
-                <h3 className="text-base font-semibold text-foreground mb-4">
+                <h3 className="text-base font-semibold text-black mb-4">
                   SEO Settings
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

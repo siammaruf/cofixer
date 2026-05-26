@@ -31,12 +31,11 @@ import {
   Trash2,
   Eye,
   EyeOff,
-  ChevronLeft,
-  ChevronRight,
   Filter,
   Inbox,
   MailOpen,
 } from "lucide-react";
+import { TablePagination } from "~/components/ui/table-pagination";
 import type { ContactMessage } from "~/types/cms";
 
 type StatusFilter = "all" | "read" | "unread";
@@ -116,11 +115,11 @@ export default function ContactsDashboard() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Contact Inbox</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Manage and respond to contact form submissions</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight">Contact Inbox</h1>
+          <p className="text-black/70 mt-0.5 text-sm">Manage and respond to contact form submissions</p>
         </div>
       </div>
 
@@ -133,7 +132,7 @@ export default function ContactsDashboard() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Messages</p>
-                <p className="text-3xl font-bold text-foreground tracking-tight">{contacts.length}</p>
+                <p className="text-3xl font-bold text-black tracking-tight">{contacts.length}</p>
               </div>
             </div>
           </CardContent>
@@ -146,7 +145,7 @@ export default function ContactsDashboard() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Unread Messages</p>
-                <p className="text-3xl font-bold text-foreground tracking-tight">{unreadCount}</p>
+                <p className="text-3xl font-bold text-black tracking-tight">{unreadCount}</p>
               </div>
             </div>
           </CardContent>
@@ -170,7 +169,7 @@ export default function ContactsDashboard() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search messages..."
-                  className="pl-10"
+                  className="pl-[34px]"
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
@@ -258,9 +257,9 @@ export default function ContactsDashboard() {
                         </TableCell>
                         <TableCell className="text-muted-foreground max-w-[200px] truncate font-mono text-xs">{contact.email}</TableCell>
                         <TableCell className="text-muted-foreground max-w-[250px]">
-                          <button className="hover:text-foreground transition-colors text-left font-medium" onClick={() => handleViewDetails(contact)}>
+                          <Button variant="link" size="sm" className="p-0 h-auto font-medium text-left" onClick={() => handleViewDetails(contact)}>
                             {truncateSubject(contact.subject)}
-                          </button>
+                          </Button>
                         </TableCell>
                         <TableCell>
                           <Badge variant={contact.read ? "secondary" : "default"}>
@@ -270,13 +269,13 @@ export default function ContactsDashboard() {
                         <TableCell className="text-muted-foreground text-sm whitespace-nowrap">{formatDate(contact.createdAt)}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => handleViewDetails(contact)} title="View details">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleViewDetails(contact)} title="View details">
                               <Eye className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-lg"
+                              className="h-8 w-8"
                               onClick={() => handleToggleRead(contact)}
                               disabled={actionLoading}
                               title={contact.read ? "Mark as unread" : "Mark as read"}
@@ -286,7 +285,7 @@ export default function ContactsDashboard() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                              className="h-8 w-8 text-destructive hover:bg-destructive/10"
                               onClick={() => { setContactToDelete(contact.id); setDeleteDialogOpen(true); }}
                               disabled={actionLoading}
                               title="Delete"
@@ -308,21 +307,13 @@ export default function ContactsDashboard() {
               </Table>
 
               {filteredContacts.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3">
                   <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
                     <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredContacts.length)}</span> of{" "}
                     <span className="font-medium text-foreground">{filteredContacts.length}</span> messages
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-                      <ChevronLeft className="h-4 w-4 mr-1" />Previous
-                    </Button>
-                    <span className="text-sm text-muted-foreground px-2">Page {currentPage} of {totalPages || 1}</span>
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0}>
-                      Next<ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
+                  <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
                 </div>
               )}
             </>
@@ -350,7 +341,7 @@ export default function ContactsDashboard() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-foreground">{selectedContact?.subject}</DialogTitle>
+              <DialogTitle className="text-black">{selectedContact?.subject}</DialogTitle>
               <Badge variant={selectedContact?.read ? "secondary" : "default"}>
                 {selectedContact?.read ? "Read" : "Unread"}
               </Badge>

@@ -86,15 +86,15 @@ function MediaCard({ item, onDelete }: MediaCardProps) {
           </div>
         )}
         <div className="absolute top-3 left-3">
-          <Badge variant="secondary" className="bg-foreground/60 text-foreground backdrop-blur-sm text-[10px] px-2 py-0.5 h-5 rounded-lg">
+          <Badge variant="secondary" className="bg-foreground/60 text-white backdrop-blur-sm text-[10px] px-2 py-0.5 h-5 rounded-lg">
             {getFileCategory(item.mimeType)}
           </Badge>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2">
-          <Button size="icon" variant="secondary" className="size-10 rounded-xl shadow-lg" onClick={handleCopyUrl} aria-label="Copy URL">
+          <Button size="icon" variant="secondary" className="size-10 shadow-lg" onClick={handleCopyUrl} aria-label="Copy URL">
             <Copy className="size-4" />
           </Button>
-          <Button size="icon" variant="destructive" className="size-10 rounded-xl shadow-lg" onClick={() => onDelete(item)} aria-label="Delete media">
+          <Button size="icon" variant="destructive" className="size-10 shadow-lg" onClick={() => onDelete(item)} aria-label="Delete media">
             <Trash2 className="size-4" />
           </Button>
         </div>
@@ -196,7 +196,7 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-foreground">Drop files here or click to browse</p>
-                  <p className="text-xs text-muted-foreground mt-1">Images, videos, documents up to 50MB</p>
+                  <p className="text-xs text-black/70 mt-1">Images, videos, documents up to 50MB</p>
                 </div>
               </div>
             )}
@@ -271,11 +271,11 @@ export default function MediaDashboard() {
   })
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Media Library</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage your images, documents, and videos</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight">Media Library</h1>
+          <p className="text-sm text-black/70 mt-0.5">Manage your images, documents, and videos</p>
         </div>
         <Button onClick={() => setUploadOpen(true)} className="gap-2 shadow-lg shadow-primary/25">
           <Upload className="size-4" />Upload Media
@@ -285,7 +285,7 @@ export default function MediaDashboard() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input placeholder="Search files..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
+          <Input placeholder="Search files..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-[34px]" />
         </div>
         <Tabs value={filter} onValueChange={(v: string) => setFilter(v as MediaFilter)}>
           <TabsList>

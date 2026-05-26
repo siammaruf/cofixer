@@ -80,11 +80,11 @@ export default function DashboardOverview() {
     : [];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Welcome back! Here's what's happening with your CMS.</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight">Dashboard</h1>
+          <p className="text-black/70 mt-0.5 text-sm">Welcome back! Here's what's happening with your CMS.</p>
         </div>
         <Badge variant="success" className="flex items-center gap-1.5 px-3 py-1.5">
           <Sparkles className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export default function DashboardOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Card className="lg:col-span-2 border-border/50">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-foreground">Recent Activity</CardTitle>
+            <CardTitle className="text-lg font-semibold text-black">Recent Activity</CardTitle>
             <p className="text-sm text-muted-foreground">Latest updates from your CMS</p>
           </CardHeader>
           <CardContent>
@@ -142,7 +142,7 @@ export default function DashboardOverview() {
 
         <Card className="border-border/50">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-foreground">Quick Actions</CardTitle>
+            <CardTitle className="text-lg font-semibold text-black">Quick Actions</CardTitle>
             <p className="text-sm text-muted-foreground">Frequently used actions</p>
           </CardHeader>
           <CardContent>

@@ -30,12 +30,11 @@ import {
   Search,
   Trash2,
   Edit,
-  ChevronLeft,
-  ChevronRight,
   Twitter,
   Linkedin,
   Github,
 } from "lucide-react";
+import { TablePagination } from "~/components/ui/table-pagination";
 import type { TeamMember } from "~/types/cms";
 
 export default function TeamList() {
@@ -108,11 +107,11 @@ export default function TeamList() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Team Members</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Manage your team members and their profiles</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight">Team Members</h1>
+          <p className="text-black/70 mt-0.5 text-sm">Manage your team members and their profiles</p>
         </div>
         <Link to="/admin/team/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">
@@ -138,7 +137,7 @@ export default function TeamList() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search members..."
-                className="pl-10"
+                className="pl-[34px]"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -212,7 +211,7 @@ export default function TeamList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                               <Link to={`/admin/team/edit/${member.id}`}>
                                 <Edit className="h-4 w-4" />
                               </Link>
@@ -220,7 +219,7 @@ export default function TeamList() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                              className="h-8 w-8 text-destructive hover:bg-destructive/10"
                               onClick={() => {
                                 setMemberToDelete(member.id);
                                 setDeleteDialogOpen(true);
@@ -243,21 +242,13 @@ export default function TeamList() {
               </Table>
 
               {filteredMembers.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3">
                   <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
                     <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredMembers.length)}</span> of{" "}
                     <span className="font-medium text-foreground">{filteredMembers.length}</span> members
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-                      <ChevronLeft className="h-4 w-4 mr-1" />Previous
-                    </Button>
-                    <span className="text-sm text-muted-foreground px-2">Page {currentPage} of {totalPages || 1}</span>
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0}>
-                      Next<ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
+                  <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
                 </div>
               )}
             </>

@@ -13,7 +13,7 @@ export const createUserSchema = z.object({
 export type CreateUserFormData = z.infer<typeof createUserSchema>;
 
 export const updateUserSchema = createUserSchema.partial().extend({
-  id: z.number(),
+  id: z.string(),
 });
 
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
