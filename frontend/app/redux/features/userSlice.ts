@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { userService } from '~/services'
-import type { User, UserState } from '~/types/user'
+import type { User, UserState, CreateUserRequest } from '~/types/user'
 import type { ApiError } from '~/types/api'
 
 const initialState: UserState = {
@@ -15,7 +15,8 @@ export const fetchUsers = createAsyncThunk(
   'user/fetchUsers',
   async (_, { rejectWithValue }) => {
     try {
-      return await userService.getUsers()
+      const response = await userService.getUsers()
+      return response.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -25,9 +26,10 @@ export const fetchUsers = createAsyncThunk(
 
 export const fetchUserById = createAsyncThunk(
   'user/fetchUserById',
-  async (id: number, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
-      return await userService.getUserById(id)
+      const response = await userService.getUserById(id)
+      return response.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -37,9 +39,10 @@ export const fetchUserById = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
   'user/createUser',
-  async (userData: Omit<User, 'id'>, { rejectWithValue }) => {
+  async (userData: CreateUserRequest, { rejectWithValue }) => {
     try {
-      return await userService.createUser(userData)
+      const response = await userService.createUser(userData)
+      return response.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -49,9 +52,10 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'user/updateUser',
-  async ({ id, data }: { id: number; data: Partial<User> }, { rejectWithValue }) => {
+  async ({ id, data }: { id: string; data: Partial<User> }, { rejectWithValue }) => {
     try {
-      return await userService.updateUser(id, data)
+      const response = await userService.updateUser(id, data)
+      return response.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -61,7 +65,7 @@ export const updateUser = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
   'user/deleteUser',
-  async (id: number, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       await userService.deleteUser(id)
       return id

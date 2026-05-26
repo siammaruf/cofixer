@@ -123,10 +123,10 @@ export default function Profile() {
   const initials = getInitials(user.fullName ?? 'User')
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold text-foreground tracking-tight">Profile Settings</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Manage your account information and security settings</p>
+        <h1 className="text-3xl font-bold text-black tracking-tight">Profile Settings</h1>
+        <p className="text-black/70 mt-0.5 text-sm">Manage your account information and security settings</p>
       </div>
 
       {successMessage && (
@@ -147,8 +147,8 @@ export default function Profile() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-xl text-foreground">{user.fullName}</CardTitle>
-                <CardDescription className="text-muted-foreground mt-1 font-mono text-sm">{user.email}</CardDescription>
+                <CardTitle className="text-xl text-black">{user.fullName}</CardTitle>
+                <CardDescription className="text-black/70 mt-1 font-mono text-sm">{user.email}</CardDescription>
                 {user.role && (
                   <span className="inline-flex items-center gap-1.5 mt-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                     <Shield className="h-3 w-3" />

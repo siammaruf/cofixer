@@ -22,7 +22,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { Users, Plus, Search, Trash2, Edit, ChevronLeft, ChevronRight, UserCircle } from "lucide-react";
+import { Users, Plus, Search, Trash2, Edit, UserCircle } from "lucide-react";
+import { TablePagination } from "~/components/ui/table-pagination";
 import type { UserStatus } from "~/types/user";
 
 export default function UserList() {
@@ -31,7 +32,7 @@ export default function UserList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -40,9 +41,9 @@ export default function UserList() {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (user.fullName ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getRoleLabel(user.role).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.email ?? "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -68,11 +69,11 @@ export default function UserList() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Users</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Manage system users and their permissions</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight">Users</h1>
+          <p className="text-black/70 mt-0.5 text-sm">Manage system users and their permissions</p>
         </div>
         <Link to="/admin/users/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">
@@ -98,7 +99,7 @@ export default function UserList() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search users..."
-                className="pl-10"
+                className="pl-[34px]"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -152,28 +153,28 @@ export default function UserList() {
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center ring-2 ring-border/50">
-                              <span className="text-xs font-bold text-primary">{getInitials(user.name)}</span>
+                              <span className="text-xs font-bold text-primary">{getInitials(user.fullName ?? "")}</span>
                             </div>
-                            <span className="font-semibold text-foreground">{user.name}</span>
+                            <span className="font-semibold text-foreground">{user.fullName ?? "Unknown"}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-muted-foreground">{user.position ?? "-"}</TableCell>
+                        <TableCell className="text-muted-foreground">{getRoleLabel(user.role)}</TableCell>
                         <TableCell className="text-muted-foreground font-mono text-xs">{user.email}</TableCell>
-                        <TableCell className="text-muted-foreground">{user.phone ?? "-"}</TableCell>
+                        <TableCell className="text-muted-foreground">{"-"}</TableCell>
                         <TableCell>
-                          <Badge variant={getStatusBadgeVariant(user.status)}>
-                            {user.status ?? "Unknown"}
+                          <Badge variant={getStatusBadgeVariant(getUserStatus(user.isActive))}>
+                            {getUserStatus(user.isActive)}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                              className="h-8 w-8 text-destructive hover:bg-destructive/10"
                               onClick={() => {
                                 setUserToDelete(user.id);
                                 setDeleteDialogOpen(true);
@@ -196,35 +197,13 @@ export default function UserList() {
               </Table>
 
               {filteredUsers.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3">
                   <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
                     <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredUsers.length)}</span> of{" "}
                     <span className="font-medium text-foreground">{filteredUsers.length}</span> users
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      Previous
-                    </Button>
-                    <span className="text-sm text-muted-foreground px-2">
-                      Page {currentPage} of {totalPages || 1}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                      disabled={currentPage === totalPages || totalPages === 0}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
+                  <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
                 </div>
               )}
             </>
@@ -253,6 +232,34 @@ export default function UserList() {
       </Dialog>
     </div>
   );
+}
+
+function getRoleLabel(role: number): string {
+  switch (role) {
+    case 0:
+      return "Super Admin";
+    case 1:
+      return "Admin";
+    case 2:
+      return "User";
+    case 3:
+      return "Moderator";
+    default:
+      return "Unknown";
+  }
+}
+
+function getUserStatus(isActive: number): UserStatus {
+  switch (isActive) {
+    case 1:
+      return "Active";
+    case 2:
+      return "Inactive";
+    case 3:
+      return "Suspended";
+    default:
+      return "Inactive";
+  }
 }
 
 function getStatusBadgeVariant(status?: UserStatus): "default" | "success" | "warning" | "destructive" | "secondary" {

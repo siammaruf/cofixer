@@ -34,7 +34,8 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Search, Edit, ChevronLeft, ChevronRight, Globe, CheckCircle, AlertCircle } from "lucide-react";
+import { Search, Edit, Globe, CheckCircle, AlertCircle } from "lucide-react";
+import { TablePagination } from "~/components/ui/table-pagination";
 import type { SeoSettings } from "~/types/cms";
 
 const seoEditSchema = z.object({
@@ -123,10 +124,10 @@ export default function SeoDashboard() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold text-foreground tracking-tight">SEO Settings</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Manage meta tags and Open Graph settings for each page</p>
+        <h1 className="text-3xl font-bold text-black tracking-tight">SEO Settings</h1>
+        <p className="text-black/70 mt-0.5 text-sm">Manage meta tags and Open Graph settings for each page</p>
       </div>
 
       <Card className="border-border/50">
@@ -145,7 +146,7 @@ export default function SeoDashboard() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search pages..."
-                className="pl-10"
+                className="pl-[34px]"
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               />
@@ -203,7 +204,7 @@ export default function SeoDashboard() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => handleEdit(seo)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(seo)}>
                             <Edit className="h-4 w-4" />
                           </Button>
                         </TableCell>
@@ -220,21 +221,13 @@ export default function SeoDashboard() {
               </Table>
 
               {filteredSeo.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-border/50">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3">
                   <p className="text-sm text-muted-foreground">
                     Showing <span className="font-medium text-foreground">{indexOfFirstItem + 1}</span> to{" "}
                     <span className="font-medium text-foreground">{Math.min(indexOfLastItem, filteredSeo.length)}</span> of{" "}
                     <span className="font-medium text-foreground">{filteredSeo.length}</span> pages
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-                      <ChevronLeft className="h-4 w-4 mr-1" />Previous
-                    </Button>
-                    <span className="text-sm text-muted-foreground px-2">Page {currentPage} of {totalPages || 1}</span>
-                    <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0}>
-                      Next<ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
+                  <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
                 </div>
               )}
             </>
@@ -264,7 +257,7 @@ export default function SeoDashboard() {
           )}
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               {error && !saveSuccess && (
                 <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4">
                   <p className="text-sm text-destructive">{error}</p>
@@ -272,7 +265,7 @@ export default function SeoDashboard() {
               )}
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Meta Tags</h3>
+                <h3 className="text-sm font-semibold text-black uppercase tracking-wide">Meta Tags</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <FormField control={form.control} name="title" render={({ field }) => (
                     <FormItem>
@@ -300,7 +293,7 @@ export default function SeoDashboard() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Open Graph</h3>
+                <h3 className="text-sm font-semibold text-black uppercase tracking-wide">Open Graph</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <FormField control={form.control} name="ogTitle" render={({ field }) => (
                     <FormItem>

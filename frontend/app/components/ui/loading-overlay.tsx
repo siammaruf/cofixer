@@ -11,6 +11,7 @@ const loadingOverlayVariants = cva(
         default: "bg-background/80 backdrop-blur-sm",
         transparent: "bg-transparent",
         solid: "bg-background",
+        dark: "bg-[#060606]/90 backdrop-blur-sm",
       },
       size: {
         default: "",
@@ -84,7 +85,14 @@ function LoadingOverlay({
             </div>
           </div>
           {message && (
-            <p className="text-sm text-muted-foreground">{message}</p>
+            <p
+              className={cn(
+                "text-sm",
+                variant === "dark" ? "text-white/90" : "text-muted-foreground"
+              )}
+            >
+              {message}
+            </p>
           )}
         </div>
       </div>

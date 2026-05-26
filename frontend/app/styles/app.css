@@ -66,15 +66,45 @@
   --border: #E5E7EB;
   --input: #E5E7EB;
   --ring: #C2410C;
-  --sidebar: #0F172A;
-  --sidebar-foreground: #F8FAFC;
-  --sidebar-muted: #A1A1AA;
-  --sidebar-border: #1E293B;
-  --sidebar-accent: #1E293B;
+  --sidebar: #060606;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-muted: #FFFFFF;
+  --sidebar-border: #333333;
+  --sidebar-accent: #1A1A1A;
   --sidebar-active: #C2410C;
   --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08);
   --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-elevated: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.dashboard-layout {
+  --foreground: #000000;
+  --card-foreground: #000000;
+  --muted-foreground: rgba(0, 0, 0, 0.65);
+}
+
+.dashboard-layout table tbody,
+.dashboard-layout table td,
+.dashboard-layout table tfoot,
+.dashboard-layout table th,
+.dashboard-layout table thead,
+.dashboard-layout table tr {
+  border-bottom: 1px solid #ebebeb;
+}
+
+.dashboard-layout table tbody tr:last-child,
+.dashboard-layout table tbody tr:last-child td,
+.dashboard-layout table tbody tr:last-child th,
+.dashboard-layout table tfoot tr:last-child,
+.dashboard-layout table tfoot tr:last-child td,
+.dashboard-layout table tfoot tr:last-child th {
+  border-bottom: none;
+}
+
+.dashboard-layout table > tbody:last-of-type,
+.dashboard-layout table > tfoot:last-of-type,
+.dashboard-layout table > thead:last-of-type {
+  border-bottom: none;
 }
 
 @layer base {
@@ -119,6 +149,18 @@
 }
 
 @layer components {
+  .rounded-pill {
+    border-radius: 100px;
+  }
+
+  .btn-gradient-primary {
+    background: linear-gradient(to right, #A93E17 0%, #15399A 50%, #A93E17 100%);
+    background-size: 200% auto;
+  }
+  .btn-gradient-primary:hover {
+    background-position: right center;
+  }
+
   .glass-card {
     @apply bg-card/80 backdrop-blur-xl rounded-2xl border border-border/50;
     box-shadow: var(--shadow-glass);
@@ -130,23 +172,33 @@
   }
 
   .modern-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold transition-all duration-[400ms] ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] capitalize;
+    border-radius: 100px;
   }
 
   .modern-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold transition-all duration-[400ms] ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] capitalize text-white shadow-lg shadow-[#A93E17]/25 hover:shadow-xl hover:shadow-[#A93E17]/30;
+    border-radius: 100px;
+    background: linear-gradient(to right, #A93E17 0%, #15399A 50%, #A93E17 100%);
+    background-size: 200% auto;
+  }
+  .modern-btn-primary:hover {
+    background-position: right center;
   }
 
   .modern-btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] bg-card text-foreground border border-border shadow-sm hover:bg-muted hover:border-border/80 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold transition-all duration-[400ms] ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] capitalize bg-[#15399A] text-white shadow-lg shadow-[#15399A]/25 hover:bg-[#15399A]/90 hover:shadow-xl hover:shadow-[#15399A]/30;
+    border-radius: 100px;
   }
 
   .modern-btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] text-muted-foreground hover:bg-muted/60 hover:text-foreground;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold transition-all duration-[400ms] ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] capitalize text-muted-foreground hover:text-[#A93E17] hover:bg-[#A93E17]/10;
+    border-radius: 100px;
   }
 
   .modern-btn-destructive {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] bg-destructive text-destructive-foreground shadow-lg shadow-destructive/25 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/30 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold transition-all duration-[400ms] ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] capitalize bg-destructive text-destructive-foreground shadow-lg shadow-destructive/25 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/30;
+    border-radius: 100px;
   }
 
   .modern-table {
@@ -166,11 +218,7 @@
   }
 
   .modern-table tbody tr {
-    @apply border-b border-border/50 transition-colors duration-150 hover:bg-muted/30;
-  }
-
-  .modern-table tbody tr:last-child {
-    @apply border-b-0;
+    @apply border-b border-border transition-colors duration-150 hover:bg-muted/30;
   }
 
   .modern-table tbody td {

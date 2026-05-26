@@ -58,7 +58,7 @@ export default function CreateUser() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center gap-2">
         <Link to="/admin/users">
           <Button variant="ghost" size="sm" className="gap-1">
@@ -76,12 +76,12 @@ export default function CreateUser() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-foreground">User Information</CardTitle>
+          <CardTitle className="text-black">User Information</CardTitle>
         </CardHeader>
         <CardContent>
           <LoadingOverlay isLoading={loading} message="Creating user...">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                 {error && (
                   <div className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
                     {error}
@@ -198,7 +198,7 @@ export default function CreateUser() {
 
                 <div className="flex justify-end space-x-4">
                   <Link to="/admin/users">
-                    <Button type="button" variant="outline" className="rounded-lg border-border text-foreground hover:bg-muted">
+                    <Button type="button" variant="outline">
                       Cancel
                     </Button>
                   </Link>

@@ -92,7 +92,7 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center gap-2">
         <Link to="/admin/projects">
           <Button variant="ghost" size="sm" className="gap-1">
@@ -101,7 +101,7 @@ export default function CreateProject() {
           </Button>
         </Link>
         <div>
-          <h2 className="text-xl font-bold text-foreground">Add New Project</h2>
+          <h2 className="text-xl font-bold text-black">Add New Project</h2>
           <p className="text-muted-foreground">
             Create a new project for your portfolio
           </p>
@@ -110,12 +110,12 @@ export default function CreateProject() {
 
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Project Information</CardTitle>
+          <CardTitle className="text-black">Project Information</CardTitle>
         </CardHeader>
         <CardContent>
           <LoadingOverlay isLoading={loading} message="Creating project...">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                 {error && (
                   <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
                     {error}
@@ -132,7 +132,7 @@ export default function CreateProject() {
                         <FormControl>
                           <Input
                             placeholder="Enter project title"
-                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                            className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -150,7 +150,7 @@ export default function CreateProject() {
                         <FormControl>
                           <Input
                             placeholder="project-slug"
-                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                            className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -170,7 +170,7 @@ export default function CreateProject() {
                         <Textarea
                           placeholder="Describe the project..."
                           rows={4}
-                          className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                          className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                           {...field}
                         />
                       </FormControl>
@@ -189,7 +189,7 @@ export default function CreateProject() {
                         <FormControl>
                           <Input
                             placeholder="https://example.com/image.jpg"
-                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                            className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -207,7 +207,7 @@ export default function CreateProject() {
                         <FormControl>
                           <Input
                             placeholder="https://example.com"
-                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                            className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                             {...field}
                           />
                         </FormControl>
@@ -226,7 +226,7 @@ export default function CreateProject() {
                       <FormControl>
                         <Input
                           placeholder="https://github.com/username/repo"
-                          className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                          className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                           {...field}
                         />
                       </FormControl>
@@ -248,7 +248,7 @@ export default function CreateProject() {
                             value={techInput}
                             onChange={(e) => setTechInput(e.target.value)}
                             onKeyDown={handleTechKeyDown}
-                            className="rounded-lg border-border bg-background text-foreground placeholder:text-muted-foreground"
+                            className="rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
                           />
                           <Button
                             type="button"
@@ -269,13 +269,15 @@ export default function CreateProject() {
                                 className="flex items-center gap-1"
                               >
                                 {tech}
-                                <button
+                                <Button
                                   type="button"
+                                  variant="ghost"
+                                  size="icon"
                                   onClick={() => removeTech(tech)}
-                                  className="ml-1 hover:text-destructive"
+                                  className="ml-1 h-5 w-5 hover:text-destructive"
                                 >
                                   <X className="h-3 w-3" />
-                                </button>
+                                </Button>
                               </Badge>
                             ))}
                           </div>
@@ -309,7 +311,7 @@ export default function CreateProject() {
 
                 <div className="flex justify-end space-x-4">
                   <Link to="/admin/projects">
-                    <Button type="button" variant="outline" className="rounded-lg border-border text-foreground hover:bg-muted">
+                    <Button type="button" variant="outline">
                       Cancel
                     </Button>
                   </Link>

@@ -1,13 +1,20 @@
 export type UserStatus = 'Active' | 'Inactive' | 'Suspended'
 
 export interface User {
-  id: number
-  name: string
+  id: string
   email: string
-  phone?: string
-  position?: string
-  status?: UserStatus
-  startDate?: string
+  fullName?: string | null
+  firstName?: string
+  lastName?: string
+  role: number
+  isActive: number
+  emailVerified: boolean
+  isVerified: boolean
+  image?: string | null
+  rememberMe?: boolean
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string | null
 }
 
 export interface UserState {
@@ -23,5 +30,5 @@ export interface CreateUserRequest {
   phone?: string
   position: string
   status?: UserStatus
-  startDate: string
+  startDate?: string
 }
