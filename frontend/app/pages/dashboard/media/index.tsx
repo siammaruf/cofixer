@@ -163,7 +163,7 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-black">
             <div className="p-1.5 rounded-lg bg-primary/10"><Upload className="h-4 w-4 text-primary" /></div>
             Upload Media
           </DialogTitle>
@@ -203,9 +203,9 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
           </div>
           {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose} disabled={uploading}>Cancel</Button>
-          <Button onClick={handleUpload} disabled={!selectedFile || uploading}>{uploading ? 'Uploading...' : 'Upload'}</Button>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={handleClose} disabled={uploading} className="h-8 text-sm">Cancel</Button>
+          <Button onClick={handleUpload} disabled={!selectedFile || uploading} className="h-8 text-sm">{uploading ? 'Uploading...' : 'Upload'}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -234,7 +234,7 @@ function DeleteDialog({ item, open, onOpenChange, onConfirm }: DeleteDialogProps
           <div className="mx-auto size-12 rounded-xl bg-destructive/10 flex items-center justify-center mb-2">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
-          <DialogTitle className="text-center">Delete Media</DialogTitle>
+          <DialogTitle className="text-center text-black">Delete Media</DialogTitle>
           <DialogDescription className="text-center">
             Are you sure you want to delete <span className="font-semibold text-foreground">{item?.filename}</span>? This action cannot be undone.
           </DialogDescription>

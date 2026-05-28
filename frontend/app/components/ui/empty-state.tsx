@@ -65,7 +65,7 @@ function EmptyState({
       {(title || description) && (
         <div className="space-y-1">
           {title && (
-            <h3 className="font-semibold text-foreground">{title}</h3>
+            <h3 className="font-semibold text-black">{title}</h3>
           )}
           {description && (
             <p className="text-sm text-muted-foreground">{description}</p>
