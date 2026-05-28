@@ -289,10 +289,10 @@ export default function MediaDashboard() {
         </div>
         <Tabs value={filter} onValueChange={(v: string) => setFilter(v as MediaFilter)}>
           <TabsList>
-            <TabsTrigger value="all" className="data-[state=active]:rounded-[20px] data-[state=active]:uppercase data-[state=active]:text-[14px]">All</TabsTrigger>
-            <TabsTrigger value="image" className="data-[state=active]:rounded-[20px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Images</TabsTrigger>
-            <TabsTrigger value="document" className="data-[state=active]:rounded-[20px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Documents</TabsTrigger>
-            <TabsTrigger value="video" className="data-[state=active]:rounded-[20px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Videos</TabsTrigger>
+            <TabsTrigger value="all" className="data-[state=active]:rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">All</TabsTrigger>
+            <TabsTrigger value="image" className="data-[state=active]:rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Images</TabsTrigger>
+            <TabsTrigger value="document" className="data-[state=active]:rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Documents</TabsTrigger>
+            <TabsTrigger value="video" className="data-[state=active]:rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Videos</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
