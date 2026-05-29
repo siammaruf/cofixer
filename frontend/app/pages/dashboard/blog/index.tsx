@@ -34,6 +34,7 @@ import {
   Edit,
   Eye,
   EyeOff,
+  FolderOpen,
 } from "lucide-react";
 import { TablePagination } from "~/components/ui/table-pagination";
 
@@ -54,7 +55,8 @@ export default function BlogList() {
     (post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (post.category ?? "").toLowerCase().includes(searchTerm.toLowerCase())
+      (post.category ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (post.categories ?? []).some((c) => c.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
@@ -86,15 +88,23 @@ export default function BlogList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Blog Posts</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage your blog posts and content</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Blog Posts</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage your blog posts and content</p>
         </div>
-        <Link to="/admin/blog/create">
-          <Button className="gap-2 shadow-lg shadow-primary/25">
-            <Plus className="h-4 w-4" />
-            New Post
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link to="/admin/blog/categories">
+            <Button variant="outline" className="gap-2">
+              <FolderOpen className="h-4 w-4" />
+              Categories
+            </Button>
+          </Link>
+          <Link to="/admin/blog/create">
+            <Button className="gap-2 shadow-lg shadow-primary/25">
+              <Plus className="h-4 w-4" />
+              New Post
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Card className="border-border/50">
@@ -170,7 +180,11 @@ export default function BlogList() {
                             {post.slug}
                           </code>
                         </TableCell>
-                        <TableCell className="text-muted-foreground">{post.category ?? "-"}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {post.categories && post.categories.length > 0
+                            ? post.categories.map((c) => c.name).join(", ")
+                            : post.category ?? "-"}
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Badge variant={post.isPublished ? "success" : "secondary"}>
@@ -192,9 +206,11 @@ export default function BlogList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <Edit className="h-4 w-4" />
-                            </Button>
+                            <Link to={`/admin/blog/edit/${post.id}`}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </Link>
                             <Button
                               variant="ghost"
                               size="icon"

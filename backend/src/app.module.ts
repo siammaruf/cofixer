@@ -23,6 +23,7 @@ import { OtpModule } from '@modules/otp/otp.module';
 import { ServicesModule } from './modules/services';
 import { ProjectsModule } from './modules/projects';
 import { BlogModule } from './modules/blog';
+import { BlogCategoryModule } from './modules/blog-category/blog-category.module';
 import { TeamModule } from './modules/team';
 import { TestimonialsModule } from './modules/testimonials';
 import { FaqsModule } from './modules/faqs';
@@ -96,6 +97,7 @@ import { CacheModule } from '@infrastructure/cache';
         OtpModule,
         ServicesModule,
         ProjectsModule,
+        BlogCategoryModule,
         BlogModule,
         TeamModule,
         TestimonialsModule,

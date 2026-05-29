@@ -126,8 +126,8 @@ export default function SeoDashboard() {
   return (
     <div className="space-y-5 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold text-black tracking-tight">SEO Settings</h1>
-        <p className="text-black/70 mt-0.5 text-sm">Manage meta tags and Open Graph settings for each page</p>
+        <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">SEO Settings</h1>
+        <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage meta tags and Open Graph settings for each page</p>
       </div>
 
       <Card className="border-border/50">

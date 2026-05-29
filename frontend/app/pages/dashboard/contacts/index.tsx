@@ -118,8 +118,8 @@ export default function ContactsDashboard() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Contact Inbox</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage and respond to contact form submissions</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Contact Inbox</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage and respond to contact form submissions</p>
         </div>
       </div>
 

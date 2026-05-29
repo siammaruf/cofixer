@@ -62,8 +62,8 @@ export default function FaqList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">FAQs</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage frequently asked questions and answers</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">FAQs</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage frequently asked questions and answers</p>
         </div>
         <Link to="/admin/faqs/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">

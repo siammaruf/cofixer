@@ -4,6 +4,19 @@ import { cn } from "~/lib/utils"
 
 const Tabs = TabsPrimitive.Root
 
+if (typeof document !== "undefined") {
+  const styleId = "tabs-global-fix"
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style")
+    style.id = styleId
+    style.textContent = `
+      .tabs-list-h40 { height: 40px !important; }
+      .tabs-trigger-active-r20[data-state="active"] { border-radius: 20px !important; }
+    `
+    document.head.appendChild(style)
+  }
+}
+
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
@@ -11,7 +24,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-full bg-muted/60 p-1 text-muted-foreground backdrop-blur-sm border border-border/50",
+      "inline-flex tabs-list-h40 items-center justify-center rounded-full bg-muted/60 p-1 text-muted-foreground backdrop-blur-sm border border-border/50",
       className
     )}
     {...props}
@@ -26,7 +39,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap px-4 py-1.5 text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=inactive]:rounded-full data-[state=active]:rounded-full data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:font-semibold",
+      "inline-flex items-center justify-center whitespace-nowrap px-4 py-1.5 text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=inactive]:rounded-full tabs-trigger-active-r20 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:font-semibold",
       className
     )}
     {...props}

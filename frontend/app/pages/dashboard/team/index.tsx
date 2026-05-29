@@ -110,8 +110,8 @@ export default function TeamList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Team Members</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage your team members and their profiles</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Team Members</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage your team members and their profiles</p>
         </div>
         <Link to="/admin/team/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">

@@ -78,8 +78,8 @@ export default function ServicesList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Services</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage your business services and offerings</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Services</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage your business services and offerings</p>
         </div>
         <Link to="/admin/services/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">
