@@ -16,18 +16,12 @@ interface NavItem {
   href: string;
 }
 
-interface NavSubmenu {
+interface NavSection {
   title: string;
-  icon: React.ElementType;
-  href: string;
-  children: { title: string; href: string }[];
+  items: NavItem[];
 }
 
-type NavEntry = NavItem | NavSubmenu;
-
-const isSubmenu = (entry: NavEntry): entry is NavSubmenu => "children" in entry;
-
-const navSections: { title: string; items: NavEntry[] }[] = [
+const navSections: NavSection[] = [
   {
     title: "Overview",
     items: [
@@ -39,16 +33,8 @@ const navSections: { title: string; items: NavEntry[] }[] = [
     items: [
       { title: "Services", icon: Briefcase, href: "/admin/services" },
       { title: "Projects", icon: FolderGit2, href: "/admin/projects" },
-      {
-        title: "Blogs",
-        icon: BookOpen,
-        href: "/admin/blog",
-        children: [
-          { title: "All Blogs", href: "/admin/blog" },
-          { title: "Create Blog", href: "/admin/blog/create" },
-          { title: "Categories", href: "/admin/blog/categories" },
-        ],
-      },
+      { title: "Blog Posts", icon: BookOpen, href: "/admin/blog" },
+      { title: "Categories", icon: FolderOpen, href: "/admin/blog/categories" },
       { title: "Team", icon: Users2, href: "/admin/team" },
       { title: "Testimonials", icon: MessageSquare, href: "/admin/testimonials" },
       { title: "FAQs", icon: HelpCircle, href: "/admin/faqs" },
@@ -75,9 +61,6 @@ export default function Sidebar() {
     "Content": false,
     "Management": false,
   });
-  const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({
-    "Blogs": true,
-  });
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -91,22 +74,11 @@ export default function Sidebar() {
     }));
   };
 
-  const toggleSubmenu = (title: string) => {
-    setExpandedSubmenus((prev) => ({
-      ...prev,
-      [title]: !prev[title],
-    }));
-  };
-
   const isActive = (href: string) => {
     if (href === "/admin") {
       return location.pathname === "/admin";
     }
     return location.pathname.startsWith(href);
-  };
-
-  const isSubmenuActive = (submenu: NavSubmenu) => {
-    return submenu.children.some((child) => isActive(child.href));
   };
 
   const getInitials = (name?: string) => {
@@ -122,7 +94,7 @@ export default function Sidebar() {
   const userName = user?.fullName || user?.email || "User";
 
   return (
-    <aside className="w-72 bg-sidebar h-screen flex flex-col border-r border-sidebar-border/50 overflow-y-auto">
+    <aside className="w-72 bg-sidebar min-h-screen flex flex-col border-r border-sidebar-border/50">
       <div className="py-[20px] px-[30px] border-b border-sidebar-border/50">
         <Link to="/admin" className="flex items-center gap-3 group">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="140" height="36" className="shrink-0">
@@ -157,68 +129,9 @@ export default function Sidebar() {
             </button>
             <div className={cn(
               "space-y-0.5 overflow-hidden transition-all duration-300 ease-in-out",
-              collapsedSections[section.title] ? "max-h-0 opacity-0" : "max-h-[800px] opacity-100"
+              collapsedSections[section.title] ? "max-h-0 opacity-0" : "max-h-[600px] opacity-100"
             )}>
               {section.items.map((item) => {
-                if (isSubmenu(item)) {
-                  const Icon = item.icon;
-                  const submenuActive = isSubmenuActive(item);
-                  const isExpanded = expandedSubmenus[item.title] ?? submenuActive;
-                  return (
-                    <div key={item.href}>
-                      <button
-                        onClick={() => toggleSubmenu(item.title)}
-                        className={cn(
-                          "flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative",
-                          submenuActive
-                            ? "bg-sidebar-active text-white shadow-lg shadow-primary/20"
-                            : "text-white hover:bg-white/10 hover:text-white"
-                        )}
-                      >
-                        <div className="flex items-center gap-3">
-                          {submenuActive && (
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-full" />
-                          )}
-                          <Icon className={cn(
-                            "w-4.5 h-4.5 transition-colors",
-                            submenuActive ? "text-white" : "text-white group-hover:text-white"
-                          )} />
-                          <span>{item.title}</span>
-                        </div>
-                        <ChevronRight className={cn(
-                          "w-3.5 h-3.5 transition-transform duration-200",
-                          isExpanded ? "rotate-90" : "rotate-0"
-                        )} />
-                      </button>
-                      <div className={cn(
-                        "border-l border-sidebar-border/40 space-y-0.5 overflow-hidden transition-all duration-200",
-                        isExpanded ? "max-h-[300px] opacity-100 py-1 pl-[30px]" : "max-h-0 opacity-0"
-                      )}>
-                        {item.children.map((child) => {
-                          const childActive = isActive(child.href);
-                          return (
-                            <Link
-                              key={child.href}
-                              to={child.href}
-                              className={cn(
-                                "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200",
-                                childActive
-                                  ? "bg-white/10 text-white font-medium"
-                                  : "text-white hover:text-white hover:bg-white/5"
-                              )}
-                            >
-                              {childActive && (
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                              )}
-                              <span>{child.title}</span>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                }
-
                 const Icon = item.icon;
                 const active = isActive(item.href);
                 return (

@@ -17,6 +17,7 @@ interface SeoPanelProps {
 export default function SeoPanel({ form }: SeoPanelProps) {
   const metaTitle = form.watch("metaTitle") || "";
   const metaDescription = form.watch("metaDescription") || "";
+  const ogImage = form.watch("ogImage") || "";
 
   return (
     <div className="space-y-4">
@@ -74,6 +75,20 @@ export default function SeoPanel({ form }: SeoPanelProps) {
 
       <FormField
         control={form.control}
+        name="canonicalUrl"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Canonical URL</FormLabel>
+            <FormControl>
+              <Input placeholder="https://example.com/blog/post-slug" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
         name="ogImage"
         render={({ field }) => (
           <FormItem>
@@ -85,6 +100,18 @@ export default function SeoPanel({ form }: SeoPanelProps) {
           </FormItem>
         )}
       />
+      {ogImage && (
+        <div className="rounded-xl border border-border overflow-hidden aspect-video bg-muted/30">
+          <img
+            src={ogImage}
+            alt="Open Graph preview"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { cmsAdminService } from "~/services";
+import { Maximize2, Minimize2 } from "lucide-react";
+import { Button } from "~/components/ui/button";
 
 interface FroalaEditorProps {
   value: string;
@@ -12,7 +14,9 @@ let ReactQuillComponent: React.ComponentType<any> | null = null;
 export default function FroalaEditor({ value, onChange, placeholder }: FroalaEditorProps) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const quillRef = useRef<any>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -33,6 +37,29 @@ export default function FroalaEditor({ value, onChange, placeholder }: FroalaEdi
       setLoaded(true);
     }
     return () => { mounted = false; };
+  }, []);
+
+  // Escape key to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    if (isFullscreen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFullscreen]);
+
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen((prev) => !prev);
   }, []);
 
   const imageHandler = useCallback(() => {
@@ -66,7 +93,7 @@ export default function FroalaEditor({ value, onChange, placeholder }: FroalaEdi
     };
   }, []);
 
-  const modules = {
+  const modules = useMemo(() => ({
     toolbar: {
       container: [
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -87,19 +114,19 @@ export default function FroalaEditor({ value, onChange, placeholder }: FroalaEdi
     clipboard: {
       matchVisual: false,
     },
-  };
+  }), [imageHandler]);
 
-  const formats = [
+  const formats = useMemo(() => [
     "header",
     "bold", "italic", "underline", "strike",
     "color", "background",
     "align",
-    "list", "bullet",
+    "list",
     "indent",
     "script",
     "blockquote", "code-block",
     "link", "image", "video",
-  ];
+  ], []);
 
   const handleChange = (content: string) => {
     onChange(content);
@@ -126,17 +153,37 @@ export default function FroalaEditor({ value, onChange, placeholder }: FroalaEdi
   }
 
   return (
-    <div className="quill-editor-wrapper">
-      <ReactQuillComponent
-        ref={quillRef}
-        theme="snow"
-        value={value}
-        onChange={handleChange}
-        modules={modules}
-        formats={formats}
-        placeholder={placeholder || "Write your content here..."}
-        className="bg-card rounded-xl border border-input"
-      />
+    <div
+      ref={wrapperRef}
+      className={`blog-editor ${isFullscreen ? "is-fullscreen" : ""}`}
+    >
+      <div className="relative">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="editor-fullscreen-btn h-8 w-8 rounded-lg"
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <Maximize2 className="w-4 h-4 text-muted-foreground" />
+          )}
+        </Button>
+        <ReactQuillComponent
+          ref={quillRef}
+          theme="snow"
+          value={value}
+          onChange={handleChange}
+          modules={modules}
+          formats={formats}
+          placeholder={placeholder || "Write your content here..."}
+          className="bg-card rounded-xl border border-input"
+        />
+      </div>
     </div>
   );
 }

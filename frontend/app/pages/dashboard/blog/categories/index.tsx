@@ -78,8 +78,8 @@ export default function BlogCategoryList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Categories</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage blog categories</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Categories</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage blog categories</p>
         </div>
         <Link to="/admin/blog/categories/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">

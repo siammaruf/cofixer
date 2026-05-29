@@ -74,7 +74,7 @@ export default function TagsPanel({ tags, onChange }: TagsPanelProps) {
           onBlur={() => addTag(input)}
         />
       </div>
-      <p className="text-xs text-muted-foreground">Press Enter or comma to add a tag</p>
+      <p className="text-xs text-muted-foreground mb-0">Press Enter or comma to add a tag</p>
     </div>
   );
 }

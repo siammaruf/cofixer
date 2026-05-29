@@ -30,8 +30,8 @@ export class BlogPost extends BaseEntity {
     })
     @JoinTable({
         name: 'blog_posts_categories',
-        joinColumn: { name: 'blogPostId', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+        joinColumn: { name: 'blog_post_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
     })
     categories?: BlogCategory[];
 

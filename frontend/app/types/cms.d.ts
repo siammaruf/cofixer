@@ -62,6 +62,7 @@ export interface BlogPost {
   metaTitle?: string
   metaDescription?: string
   ogImage?: string
+  canonicalUrl?: string
   createdAt: string
   updatedAt: string
 }

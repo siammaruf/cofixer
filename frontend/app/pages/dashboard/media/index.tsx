@@ -274,7 +274,7 @@ export default function MediaDashboard() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Media Library</h1>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Media Library</h1>
           <p className="text-sm text-black/70 mt-0.5">Manage your images, documents, and videos</p>
         </div>
         <Button onClick={() => setUploadOpen(true)} className="gap-2 shadow-lg shadow-primary/25">
@@ -289,10 +289,10 @@ export default function MediaDashboard() {
         </div>
         <Tabs value={filter} onValueChange={(v: string) => setFilter(v as MediaFilter)}>
           <TabsList>
-            <TabsTrigger value="all" className="data-[state=active]:!rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">All</TabsTrigger>
-            <TabsTrigger value="image" className="data-[state=active]:!rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Images</TabsTrigger>
-            <TabsTrigger value="document" className="data-[state=active]:!rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Documents</TabsTrigger>
-            <TabsTrigger value="video" className="data-[state=active]:!rounded-[30px] data-[state=active]:uppercase data-[state=active]:text-[14px]">Videos</TabsTrigger>
+            <TabsTrigger value="all" className="data-[state=active]:uppercase data-[state=active]:text-[14px]">All</TabsTrigger>
+            <TabsTrigger value="image" className="data-[state=active]:uppercase data-[state=active]:text-[14px]">Images</TabsTrigger>
+            <TabsTrigger value="document" className="data-[state=active]:uppercase data-[state=active]:text-[14px]">Documents</TabsTrigger>
+            <TabsTrigger value="video" className="data-[state=active]:uppercase data-[state=active]:text-[14px]">Videos</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>

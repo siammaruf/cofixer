@@ -72,8 +72,8 @@ export default function UserList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Users</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage system users and their permissions</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Users</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage system users and their permissions</p>
         </div>
         <Link to="/admin/users/create">
           <Button className="gap-2 shadow-lg shadow-primary/25">

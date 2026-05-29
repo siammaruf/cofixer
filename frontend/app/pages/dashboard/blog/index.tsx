@@ -88,8 +88,8 @@ export default function BlogList() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Blog Posts</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Manage your blog posts and content</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Blog Posts</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage your blog posts and content</p>
         </div>
         <div className="flex items-center gap-2">
           <Link to="/admin/blog/categories">

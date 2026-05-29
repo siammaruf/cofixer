@@ -8,6 +8,7 @@ import {
   createBlogCategory,
   clearError,
 } from "~/redux/features/cmsSlice";
+import { fetchUsers } from "~/redux/features/userSlice";
 import { cmsAdminService } from "~/services";
 import BlogForm, { type BlogFormValues } from "~/components/blog/BlogForm";
 import type { BlogPost } from "~/types/cms";
@@ -17,6 +18,7 @@ export default function EditBlogPost() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { blogPosts, categories, loading, error } = useAppSelector((state) => state.cms);
+  const { users } = useAppSelector((state) => state.user);
   const [post, setPost] = useState<BlogPost | null>(null);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -26,6 +28,7 @@ export default function EditBlogPost() {
     if (categories.length === 0) {
       dispatch(fetchBlogCategories());
     }
+    dispatch(fetchUsers());
   }, [dispatch, categories.length]);
 
   useEffect(() => {
@@ -71,6 +74,7 @@ export default function EditBlogPost() {
           publishedAt: values.publishedAt || undefined,
           metaTitle: values.metaTitle || undefined,
           metaDescription: values.metaDescription || undefined,
+          canonicalUrl: values.canonicalUrl || undefined,
           ogImage: values.ogImage || undefined,
         },
       })
@@ -99,6 +103,7 @@ export default function EditBlogPost() {
           publishedAt: values.publishedAt || undefined,
           metaTitle: values.metaTitle || undefined,
           metaDescription: values.metaDescription || undefined,
+          canonicalUrl: values.canonicalUrl || undefined,
           ogImage: values.ogImage || undefined,
         },
       })
@@ -152,6 +157,7 @@ export default function EditBlogPost() {
       mode="edit"
       initialData={post}
       categories={categories}
+      users={users}
       onSubmit={handleSubmit}
       onSaveDraft={handleSaveDraft}
       onCreateCategory={handleCreateCategory}

@@ -8,7 +8,7 @@ import {
   FormDescription,
 } from "~/components/ui/form";
 import { Badge } from "~/components/ui/badge";
-import { Eye, EyeOff, Calendar, Save, Globe } from "lucide-react";
+import { Eye, EyeOff, Save, Globe, Loader2 } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import type { BlogFormValues } from "./BlogForm";
 
@@ -46,10 +46,10 @@ export default function PublishPanel({
         control={form.control}
         name="isPublished"
         render={({ field }) => (
-          <FormItem className="flex items-center justify-between rounded-lg border border-border p-3">
+          <FormItem className="flex items-center justify-between rounded-xl border border-border p-3">
             <div className="space-y-0.5">
               <FormLabel className="text-sm">Publish</FormLabel>
-              <FormDescription className="text-xs">
+              <FormDescription className="text-xs mb-0">
                 {field.value ? "Visible to public" : "Saved as draft"}
               </FormDescription>
             </div>
@@ -57,6 +57,7 @@ export default function PublishPanel({
               <Switch
                 checked={field.value}
                 onCheckedChange={field.onChange}
+                aria-label="Toggle publish status"
               />
             </FormControl>
           </FormItem>
@@ -69,13 +70,12 @@ export default function PublishPanel({
         render={({ field }) => (
           <FormItem>
             <FormLabel className="text-sm flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5" />
               Publish Date
             </FormLabel>
             <FormControl>
               <input
                 type="datetime-local"
-                className="w-full h-9 rounded-md border border-input bg-card px-3 py-1 text-sm text-foreground shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full h-10 rounded-xl border border-input bg-card px-3 py-2 text-sm text-foreground shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
                 value={
                   field.value
                     ? new Date(field.value).toISOString().slice(0, 16)
@@ -91,47 +91,50 @@ export default function PublishPanel({
         )}
       />
 
-      <div className="space-y-2 pt-2">
+      <div className="flex items-center gap-3 pt-2">
         <Button
           type="submit"
-          className="w-full gap-2"
+          className="flex-1 gap-2 h-10"
           disabled={isSubmitting}
         >
-          <Globe className="w-4 h-4" />
-          {isPublished
-            ? isSubmitting
+          {isSubmitting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Globe className="w-4 h-4" />
+          )}
+          {isSubmitting
+            ? isPublished
               ? "Publishing..."
-              : mode === "edit"
-              ? "Update"
-              : "Publish"
-            : isSubmitting
-            ? "Saving..."
+              : "Saving..."
             : mode === "edit"
-            ? "Update Draft"
-            : "Save Draft"}
+            ? "Update"
+            : isPublished
+            ? "Publish"
+            : "Save"}
         </Button>
         <Button
           type="button"
           variant="outline"
-          className="w-full gap-2"
+          className="flex-1 gap-2 h-10"
           onClick={onSaveDraft}
           disabled={isSubmitting}
         >
           <Save className="w-4 h-4" />
           Save as Draft
         </Button>
-        {onPreview && (
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full gap-2"
-            onClick={onPreview}
-          >
-            <Eye className="w-4 h-4" />
-            Preview
-          </Button>
-        )}
       </div>
+
+      {onPreview && (
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full gap-2 h-10"
+          onClick={onPreview}
+        >
+          <Eye className="w-4 h-4" />
+          Preview
+        </Button>
+      )}
     </div>
   );
 }

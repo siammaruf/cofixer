@@ -7,18 +7,21 @@ import {
   createBlogCategory,
   clearError,
 } from "~/redux/features/cmsSlice";
+import { fetchUsers } from "~/redux/features/userSlice";
 import BlogForm, { type BlogFormValues } from "~/components/blog/BlogForm";
 
 export default function CreateBlogPost() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, error, categories } = useAppSelector((state) => state.cms);
+  const { users } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(clearError());
     if (categories.length === 0) {
       dispatch(fetchBlogCategories());
     }
+    dispatch(fetchUsers());
     return () => {
       dispatch(clearError());
     };
@@ -39,6 +42,7 @@ export default function CreateBlogPost() {
         publishedAt: values.publishedAt || undefined,
         metaTitle: values.metaTitle || undefined,
         metaDescription: values.metaDescription || undefined,
+        canonicalUrl: values.canonicalUrl || undefined,
         ogImage: values.ogImage || undefined,
       })
     );
@@ -63,6 +67,7 @@ export default function CreateBlogPost() {
         publishedAt: values.publishedAt || undefined,
         metaTitle: values.metaTitle || undefined,
         metaDescription: values.metaDescription || undefined,
+        canonicalUrl: values.canonicalUrl || undefined,
         ogImage: values.ogImage || undefined,
       })
     );
@@ -89,6 +94,7 @@ export default function CreateBlogPost() {
     <BlogForm
       mode="create"
       categories={categories}
+      users={users}
       onSubmit={handleSubmit}
       onSaveDraft={handleSaveDraft}
       onCreateCategory={handleCreateCategory}

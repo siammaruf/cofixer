@@ -64,8 +64,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
         <Meta />
         <Links />
+        <style dangerouslySetInnerHTML={{ __html: '.tabs-list-h40{height:40px!important}.tabs-trigger-active-r20[data-state="active"]{border-radius:20px!important}' }} />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Preloader />
 
         <Providers>

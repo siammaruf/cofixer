@@ -125,8 +125,8 @@ export default function Profile() {
   return (
     <div className="space-y-5 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold text-black tracking-tight">Profile Settings</h1>
-        <p className="text-black/70 mt-0.5 text-sm">Manage your account information and security settings</p>
+        <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Profile Settings</h1>
+        <p className="text-black/70 mt-0.5 text-sm !mb-0">Manage your account information and security settings</p>
       </div>
 
       {successMessage && (

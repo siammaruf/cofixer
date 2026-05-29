@@ -83,8 +83,8 @@ export default function DashboardOverview() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-black tracking-tight">Dashboard</h1>
-          <p className="text-black/70 mt-0.5 text-sm">Welcome back! Here's what's happening with your CMS.</p>
+          <h1 className="text-3xl font-bold text-black tracking-tight !mb-0">Dashboard</h1>
+          <p className="text-black/70 mt-0.5 text-sm !mb-0">Welcome back! Here's what's happening with your CMS.</p>
         </div>
         <Badge variant="success" className="flex items-center gap-1.5 px-3 py-1.5">
           <Sparkles className="w-3.5 h-3.5" />
