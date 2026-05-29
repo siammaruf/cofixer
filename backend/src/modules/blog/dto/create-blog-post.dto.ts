@@ -4,6 +4,7 @@ import {
     IsBoolean,
     IsArray,
     IsDate,
+    IsUUID,
     MaxLength,
     MinLength,
 } from 'class-validator';
@@ -61,13 +62,23 @@ export class CreateBlogPostDto {
 
     @ApiPropertyOptional({
         example: 'AI Strategy',
-        description: 'Blog post category',
+        description: 'Legacy blog post category string',
         maxLength: 100,
     })
     @IsOptional()
     @IsString()
     @MaxLength(100)
     category?: string;
+
+    @ApiPropertyOptional({
+        example: ['uuid-1', 'uuid-2'],
+        description: 'Category IDs to associate with this post',
+        type: [String],
+    })
+    @IsOptional()
+    @IsArray()
+    @IsUUID('4', { each: true })
+    categoryIds?: string[];
 
     @ApiPropertyOptional({
         example: ['AI', 'Business', 'Technology'],
@@ -106,4 +117,30 @@ export class CreateBlogPostDto {
     @IsOptional()
     @IsBoolean()
     isPublished?: boolean;
+
+    @ApiPropertyOptional({
+        example: 'The Future of AI in Business - Cofixer',
+        description: 'SEO meta title',
+        maxLength: 255,
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(255)
+    metaTitle?: string;
+
+    @ApiPropertyOptional({
+        example: 'Discover how AI is transforming modern business operations.',
+        description: 'SEO meta description',
+    })
+    @IsOptional()
+    @IsString()
+    metaDescription?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/images/blog/ai-business-og.jpg',
+        description: 'Open Graph image URL',
+    })
+    @IsOptional()
+    @IsString()
+    ogImage?: string;
 }

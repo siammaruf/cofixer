@@ -4,6 +4,7 @@ import type {
   Service,
   Project,
   BlogPost,
+  BlogCategory,
   TeamMember,
   Testimonial,
   Faq,
@@ -30,6 +31,7 @@ const initialState: CmsState = {
   stats: null,
   navigation: null,
   media: [],
+  categories: [],
   loading: false,
   error: null,
 }
@@ -211,6 +213,19 @@ export const createBlogPost = createAsyncThunk(
   }
 )
 
+export const updateBlogPost = createAsyncThunk(
+  'cms/updateBlogPost',
+  async ({ id, data }: { id: string; data: Partial<BlogPost> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateBlogPost(id, data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
 export const deleteBlogPost = createAsyncThunk(
   'cms/deleteBlogPost',
   async (id: string, { rejectWithValue }) => {
@@ -230,6 +245,60 @@ export const toggleBlogPublish = createAsyncThunk(
     try {
       const res = await cmsAdminService.toggleBlogPublish(id)
       return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+// ─── Blog Categories ───
+
+export const fetchBlogCategories = createAsyncThunk(
+  'cms/fetchBlogCategories',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.getAllBlogCategories()
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const createBlogCategory = createAsyncThunk(
+  'cms/createBlogCategory',
+  async (data: Partial<BlogCategory>, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.createBlogCategory(data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const updateBlogCategory = createAsyncThunk(
+  'cms/updateBlogCategory',
+  async ({ id, data }: { id: string; data: Partial<BlogCategory> }, { rejectWithValue }) => {
+    try {
+      const res = await cmsAdminService.updateBlogCategory(id, data)
+      return res.data
+    } catch (error) {
+      const apiError = error as ApiError
+      return rejectWithValue(apiError.message)
+    }
+  }
+)
+
+export const deleteBlogCategory = createAsyncThunk(
+  'cms/deleteBlogCategory',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await cmsAdminService.deleteBlogCategory(id)
+      return id
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
@@ -687,6 +756,12 @@ const cmsSlice = createSlice({
       .addCase(createBlogPost.fulfilled, (state, action) => {
         state.blogPosts.push(action.payload)
       })
+      .addCase(updateBlogPost.fulfilled, (state, action) => {
+        const index = state.blogPosts.findIndex((p) => p.id === action.payload.id)
+        if (index !== -1) {
+          state.blogPosts[index] = action.payload
+        }
+      })
       .addCase(deleteBlogPost.fulfilled, (state, action) => {
         state.blogPosts = state.blogPosts.filter((p) => p.id !== action.payload)
       })
@@ -888,6 +963,32 @@ const cmsSlice = createSlice({
       })
       .addCase(deleteMedia.fulfilled, (state, action) => {
         state.media = state.media.filter((m) => m.id !== action.payload)
+      })
+
+      // Blog Categories
+      .addCase(fetchBlogCategories.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchBlogCategories.fulfilled, (state, action) => {
+        state.loading = false
+        state.categories = action.payload
+      })
+      .addCase(fetchBlogCategories.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+      .addCase(createBlogCategory.fulfilled, (state, action) => {
+        state.categories.push(action.payload)
+      })
+      .addCase(updateBlogCategory.fulfilled, (state, action) => {
+        const index = state.categories.findIndex((c) => c.id === action.payload.id)
+        if (index !== -1) {
+          state.categories[index] = action.payload
+        }
+      })
+      .addCase(deleteBlogCategory.fulfilled, (state, action) => {
+        state.categories = state.categories.filter((c) => c.id !== action.payload)
       })
   },
 })

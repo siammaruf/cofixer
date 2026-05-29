@@ -13,9 +13,12 @@ export class BlogPostRepository extends BaseRepository<BlogPost> {
         super(repository);
     }
 
+    protected defaultRelations = { categories: true };
+
     async findBySlug(slug: string): Promise<BlogPost | null> {
         return this.repository.findOne({
             where: { slug, isPublished: true },
+            relations: { categories: true },
         });
     }
 
@@ -23,6 +26,7 @@ export class BlogPostRepository extends BaseRepository<BlogPost> {
         return this.repository.find({
             where: { isPublished: true },
             order: { publishedAt: 'DESC' },
+            relations: { categories: true },
         });
     }
 
@@ -30,6 +34,7 @@ export class BlogPostRepository extends BaseRepository<BlogPost> {
         return this.repository.find({
             where: { category, isPublished: true },
             order: { publishedAt: 'DESC' },
+            relations: { categories: true },
         });
     }
 }

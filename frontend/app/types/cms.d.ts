@@ -33,6 +33,18 @@ export interface Project {
   updatedAt: string
 }
 
+export interface BlogCategory {
+  id: string
+  name: string
+  slug: string
+  description?: string
+  seoTitle?: string
+  seoDescription?: string
+  postCount?: number
+  createdAt: string
+  updatedAt: string
+}
+
 export interface BlogPost {
   id: string
   title: string
@@ -41,10 +53,15 @@ export interface BlogPost {
   content?: string
   coverImage?: string
   category?: string
+  categories?: BlogCategory[]
+  categoryIds?: string[]
   tags: string[]
   authorName?: string
   publishedAt?: string
   isPublished: boolean
+  metaTitle?: string
+  metaDescription?: string
+  ogImage?: string
   createdAt: string
   updatedAt: string
 }
@@ -187,6 +204,7 @@ export interface CmsState {
   stats: Stats | null
   navigation: NavigationMenu | null
   media: MediaItem[]
+  categories: BlogCategory[]
   loading: boolean
   error: string | null
 }

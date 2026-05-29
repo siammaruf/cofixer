@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   LayoutDashboard, Users, UserCircle, LogOut, Settings,
   Briefcase, FolderGit2, BookOpen, Users2, MessageSquare,
-  HelpCircle, Mail, Globe, FileText, ChevronDown, ChevronRight, Image, LogIn
+  HelpCircle, Mail, Globe, FileText, ChevronDown, ChevronRight, Image, FolderOpen
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
 import { logout } from "~/redux/features/authSlice";
@@ -34,6 +34,7 @@ const navSections: NavSection[] = [
       { title: "Services", icon: Briefcase, href: "/admin/services" },
       { title: "Projects", icon: FolderGit2, href: "/admin/projects" },
       { title: "Blog Posts", icon: BookOpen, href: "/admin/blog" },
+      { title: "Categories", icon: FolderOpen, href: "/admin/blog/categories" },
       { title: "Team", icon: Users2, href: "/admin/team" },
       { title: "Testimonials", icon: MessageSquare, href: "/admin/testimonials" },
       { title: "FAQs", icon: HelpCircle, href: "/admin/faqs" },

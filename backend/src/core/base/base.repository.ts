@@ -81,6 +81,13 @@ export abstract class BaseRepository<T extends BaseEntity> {
     }
 
     /**
+     * Save entity (including relations)
+     */
+    async save(entity: DeepPartial<T>): Promise<T> {
+        return this.repository.save(entity as any);
+    }
+
+    /**
      * Count entities with optional conditions
      */
     async count(options?: FindManyOptions<T>): Promise<number> {

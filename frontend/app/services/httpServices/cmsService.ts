@@ -8,6 +8,7 @@ import type {
   Service,
   Project,
   BlogPost,
+  BlogCategory,
   TeamMember,
   Testimonial,
   Faq,
@@ -89,10 +90,18 @@ export const cmsAdminService = {
 
   // Blog
   getAllBlogPosts: () => get<PaginatedApiResponse<BlogPost>>(`${API_PREFIX}/admin/blog`),
+  getBlogPostById: (id: string) => get<ApiResponse<BlogPost>>(`${API_PREFIX}/admin/blog/${id}`),
   createBlogPost: (data: Partial<BlogPost>) => post<ApiResponse<BlogPost>>(`${API_PREFIX}/admin/blog`, data),
   updateBlogPost: (id: string, data: Partial<BlogPost>) => patch<ApiResponse<BlogPost>>(`${API_PREFIX}/admin/blog/${id}`, data),
   deleteBlogPost: (id: string) => del<ApiResponse<void>>(`${API_PREFIX}/admin/blog/${id}`),
   toggleBlogPublish: (id: string) => patch<ApiResponse<BlogPost>>(`${API_PREFIX}/admin/blog/${id}/publish`, {}),
+
+  // Blog Categories
+  getAllBlogCategories: () => get<ApiResponse<BlogCategory[]>>(`${API_PREFIX}/admin/blog/categories`),
+  getBlogCategory: (id: string) => get<ApiResponse<BlogCategory>>(`${API_PREFIX}/admin/blog/categories/${id}`),
+  createBlogCategory: (data: Partial<BlogCategory>) => post<ApiResponse<BlogCategory>>(`${API_PREFIX}/admin/blog/categories`, data),
+  updateBlogCategory: (id: string, data: Partial<BlogCategory>) => patch<ApiResponse<BlogCategory>>(`${API_PREFIX}/admin/blog/categories/${id}`, data),
+  deleteBlogCategory: (id: string) => del<ApiResponse<void>>(`${API_PREFIX}/admin/blog/categories/${id}`),
 
   // Team
   getAllTeamMembers: () => get<PaginatedApiResponse<TeamMember>>(`${API_PREFIX}/admin/team`),

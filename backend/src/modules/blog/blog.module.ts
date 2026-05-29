@@ -5,9 +5,10 @@ import { BlogPostAdminController } from './blog-post.admin.controller';
 import { BlogPostService } from './blog-post.service';
 import { BlogPostRepository } from './blog-post.repository';
 import { BlogPost } from './blog-post.entity';
+import { BlogCategoryModule } from '../blog-category/blog-category.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([BlogPost])],
+    imports: [TypeOrmModule.forFeature([BlogPost]), BlogCategoryModule],
     controllers: [BlogPostController, BlogPostAdminController],
     providers: [BlogPostService, BlogPostRepository],
     exports: [BlogPostService, BlogPostRepository],
