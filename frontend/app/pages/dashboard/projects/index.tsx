@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
 import {
   fetchProjects,
   deleteProject,
+  updateProject,
   toggleProjectFeatured,
 } from "~/redux/features/cmsSlice";
+import {
+  createProjectSchema,
+  type CreateProjectFormData,
+} from "~/utils/validations/project";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Switch } from "~/components/ui/switch";
 import { Badge } from "~/components/ui/badge";
 import {
   Table,
@@ -26,7 +35,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { FolderOpen, Plus, Search, Trash2, Edit, Star, ExternalLink, Github, FolderGit2 } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { FolderOpen, Plus, Search, Trash2, Edit, Star, ExternalLink, Github, FolderGit2, X } from "lucide-react";
 import { TablePagination } from "~/components/ui/table-pagination";
 
 export default function ProjectList() {
@@ -37,7 +55,27 @@ export default function ProjectList() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
   const itemsPerPage = 10;
+
+  const form = useForm<CreateProjectFormData>({
+    resolver: zodResolver(createProjectSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      description: "",
+      imageUrl: "",
+      liveUrl: "",
+      githubUrl: "",
+      techStack: [],
+      featured: false,
+    },
+  });
+
+  const isDirty = form.formState.isDirty;
+  const editLoading = form.formState.isSubmitting;
 
   useEffect(() => {
     dispatch(fetchProjects());
@@ -67,6 +105,56 @@ export default function ProjectList() {
     setTogglingId(id);
     await dispatch(toggleProjectFeatured(id));
     setTogglingId(null);
+  };
+
+  const openEditDialog = (project: typeof projects[0]) => {
+    setEditingProjectId(project.id);
+    form.reset({
+      title: project.title,
+      slug: project.slug,
+      description: project.description || "",
+      imageUrl: project.featuredImage || project.imageUrl || "",
+      liveUrl: project.liveUrl || "",
+      githubUrl: project.githubUrl || "",
+      techStack: project.techStack || [],
+      featured: project.featured || false,
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = (forced = false) => {
+    if (isDirty && !forced) {
+      setConfirmCloseOpen(true);
+      return;
+    }
+    setEditDialogOpen(false);
+    setEditingProjectId(null);
+    form.reset();
+  };
+
+  const onEditSubmit = async (data: CreateProjectFormData) => {
+    if (!editingProjectId) return;
+    const result = await dispatch(
+      updateProject({
+        id: editingProjectId,
+        data: {
+          title: data.title,
+          slug: data.slug,
+          description: data.description || undefined,
+          featuredImage: data.imageUrl || undefined,
+          imageUrl: data.imageUrl || undefined,
+          liveUrl: data.liveUrl || undefined,
+          githubUrl: data.githubUrl || undefined,
+          techStack: data.techStack,
+          featured: data.featured,
+        },
+      })
+    );
+    if (updateProject.fulfilled.match(result)) {
+      setEditDialogOpen(false);
+      setEditingProjectId(null);
+      form.reset();
+    }
   };
 
   return (
@@ -203,7 +291,7 @@ export default function ProjectList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditDialog(project)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
@@ -246,6 +334,118 @@ export default function ProjectList() {
         </CardContent>
       </Card>
 
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={(open) => { if (!open) handleEditClose(); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => { if (isDirty) e.preventDefault(); }}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-primary" />
+              Edit Project
+            </DialogTitle>
+            <DialogDescription>Update project details.</DialogDescription>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-5">
+              {error && (
+                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="title" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl><Input placeholder="Project title" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="slug" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl><Input placeholder="project-slug" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="description" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl><Textarea placeholder="Project description..." rows={4} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="imageUrl" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URL</FormLabel>
+                    <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="liveUrl" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Live URL</FormLabel>
+                    <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="githubUrl" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>GitHub URL</FormLabel>
+                  <FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="featured" render={({ field }) => (
+                <FormItem className="flex items-center justify-between rounded-lg border border-border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Featured</FormLabel>
+                    <FormDescription>Show on homepage</FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                </FormItem>
+              )} />
+
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" onClick={() => handleEditClose()} disabled={editLoading}>
+                  {isDirty ? "Cancel" : "Close"}
+                </Button>
+                <Button type="submit" disabled={editLoading || !isDirty}>
+                  {editLoading ? "Updating..." : "Update Project"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Close Dialog */}
+      <Dialog open={confirmCloseOpen} onOpenChange={setConfirmCloseOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-amber-500/10"><X className="h-4 w-4 text-amber-600" /></div>
+              Unsaved Changes
+            </DialogTitle>
+            <DialogDescription>You have unsaved changes. Are you sure you want to close without saving?</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmCloseOpen(false)}>Keep Editing</Button>
+            <Button variant="destructive" onClick={() => { setConfirmCloseOpen(false); handleEditClose(true); }}>Discard Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>

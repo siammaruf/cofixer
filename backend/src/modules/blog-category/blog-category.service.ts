@@ -6,7 +6,9 @@ import { DeepPartial } from 'typeorm';
 
 @Injectable()
 export class BlogCategoryService extends BaseService<BlogCategory> {
-    constructor(private readonly blogCategoryRepository: BlogCategoryRepository) {
+    constructor(
+        private readonly blogCategoryRepository: BlogCategoryRepository,
+    ) {
         super(blogCategoryRepository, 'BlogCategory');
     }
 
@@ -18,25 +20,41 @@ export class BlogCategoryService extends BaseService<BlogCategory> {
         return category;
     }
 
-    async findWithPostCount(): Promise<(Omit<BlogCategory, 'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload'> & { postCount: number })[]> {
+    async findWithPostCount(): Promise<
+        (Omit<
+            BlogCategory,
+            'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload'
+        > & { postCount: number })[]
+    > {
         return this.blogCategoryRepository.findWithPostCount();
     }
 
     async create(data: DeepPartial<BlogCategory>): Promise<BlogCategory> {
         if (data.slug) {
-            const existing = await this.blogCategoryRepository.findOne({ slug: data.slug });
+            const existing = await this.blogCategoryRepository.findOne({
+                slug: data.slug,
+            });
             if (existing) {
-                throw new ConflictException(`Category with slug '${data.slug}' already exists`);
+                throw new ConflictException(
+                    `Category with slug '${data.slug}' already exists`,
+                );
             }
         }
         return super.create(data);
     }
 
-    async update(id: string, data: DeepPartial<BlogCategory>): Promise<BlogCategory | null> {
+    async update(
+        id: string,
+        data: DeepPartial<BlogCategory>,
+    ): Promise<BlogCategory | null> {
         if (data.slug) {
-            const existing = await this.blogCategoryRepository.findOne({ slug: data.slug });
+            const existing = await this.blogCategoryRepository.findOne({
+                slug: data.slug,
+            });
             if (existing && existing.id !== id) {
-                throw new ConflictException(`Category with slug '${data.slug}' already exists`);
+                throw new ConflictException(
+                    `Category with slug '${data.slug}' already exists`,
+                );
             }
         }
         return super.update(id, data);

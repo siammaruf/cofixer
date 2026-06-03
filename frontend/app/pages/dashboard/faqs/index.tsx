@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
-import { fetchFaqs, deleteFaq } from "~/redux/features/cmsSlice";
+import { fetchFaqs, updateFaq, deleteFaq } from "~/redux/features/cmsSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { Badge } from "~/components/ui/badge";
 import {
   Table,
@@ -22,8 +26,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { HelpCircle, Plus, Search, Trash2, Edit } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { HelpCircle, Plus, Search, Trash2, Edit, Loader2, X } from "lucide-react";
 import { TablePagination } from "~/components/ui/table-pagination";
+
+const faqSchema = z.object({
+  question: z.string().min(1, "Question is required").max(500, "Question must be less than 500 characters"),
+  answer: z.string().min(1, "Answer is required").max(5000, "Answer must be less than 5000 characters"),
+  category: z.string().optional(),
+  order: z.number().int().min(0),
+  isActive: z.boolean(),
+});
+
+type FaqFormData = z.infer<typeof faqSchema>;
 
 export default function FaqList() {
   const dispatch = useAppDispatch();
@@ -32,7 +54,24 @@ export default function FaqList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [faqToDelete, setFaqToDelete] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
+  const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
   const itemsPerPage = 10;
+
+  const form = useForm<FaqFormData>({
+    resolver: zodResolver(faqSchema),
+    defaultValues: {
+      question: "",
+      answer: "",
+      category: "",
+      order: 0,
+      isActive: true,
+    },
+  });
+
+  const isDirty = form.formState.isDirty;
+  const editLoading = form.formState.isSubmitting;
 
   useEffect(() => {
     dispatch(fetchFaqs());
@@ -55,6 +94,38 @@ export default function FaqList() {
       await dispatch(deleteFaq(faqToDelete));
       setDeleteDialogOpen(false);
       setFaqToDelete(null);
+    }
+  };
+
+  const openEditDialog = (faq: typeof faqs[0]) => {
+    setEditingFaqId(faq.id);
+    form.reset({
+      question: faq.question,
+      answer: faq.answer,
+      category: faq.category || "",
+      order: faq.order || 0,
+      isActive: faq.isActive ?? true,
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = (forced = false) => {
+    if (isDirty && !forced) {
+      setConfirmCloseOpen(true);
+      return;
+    }
+    setEditDialogOpen(false);
+    setEditingFaqId(null);
+    form.reset();
+  };
+
+  const onEditSubmit = async (data: FaqFormData) => {
+    if (!editingFaqId) return;
+    const result = await dispatch(updateFaq({ id: editingFaqId, data }));
+    if (updateFaq.fulfilled.match(result)) {
+      setEditDialogOpen(false);
+      setEditingFaqId(null);
+      form.reset();
     }
   };
 
@@ -156,7 +227,7 @@ export default function FaqList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditDialog(faq)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
@@ -199,6 +270,98 @@ export default function FaqList() {
         </CardContent>
       </Card>
 
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={(open) => { if (!open) handleEditClose(); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => { if (isDirty) e.preventDefault(); }}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-black">
+              <Edit className="h-5 w-5 text-primary" />
+              Edit FAQ
+            </DialogTitle>
+            <DialogDescription>Update the frequently asked question and answer.</DialogDescription>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-5">
+              {error && (
+                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <FormField control={form.control} name="question" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Question</FormLabel>
+                  <FormControl><Input placeholder="Enter the FAQ question" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="answer" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black">Answer</FormLabel>
+                  <FormControl><Textarea placeholder="Enter the FAQ answer" rows={5} className="text-black" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <FormField control={form.control} name="category" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl><Input placeholder="e.g., Billing, General, Technical" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="order" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Order</FormLabel>
+                    <FormControl><Input type="number" min={0} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="isActive" render={({ field }) => (
+                <FormItem className="flex items-center gap-2 space-y-0">
+                  <FormControl>
+                    <input type="checkbox" checked={field.value} onChange={field.onChange} className="accent-primary h-4 w-4" />
+                  </FormControl>
+                  <FormLabel className="text-sm font-normal cursor-pointer">Active</FormLabel>
+                </FormItem>
+              )} />
+
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" onClick={() => handleEditClose()} disabled={editLoading}>
+                  {isDirty ? "Cancel" : "Close"}
+                </Button>
+                <Button type="submit" disabled={editLoading || !isDirty}>
+                  {editLoading ? "Updating..." : "Update FAQ"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Close Dialog (when dirty) */}
+      <Dialog open={confirmCloseOpen} onOpenChange={setConfirmCloseOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-amber-500/10"><X className="h-4 w-4 text-amber-600" /></div>
+              Unsaved Changes
+            </DialogTitle>
+            <DialogDescription>You have unsaved changes. Are you sure you want to close without saving?</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmCloseOpen(false)}>Keep Editing</Button>
+            <Button variant="destructive" onClick={() => { setConfirmCloseOpen(false); handleEditClose(true); }}>Discard Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>

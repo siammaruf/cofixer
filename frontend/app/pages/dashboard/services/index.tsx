@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
 import {
   fetchServices,
   deleteService,
+  updateService,
   toggleServiceFeatured,
 } from "~/redux/features/cmsSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Badge } from "~/components/ui/badge";
+import { Textarea } from "~/components/ui/textarea";
 import { Switch } from "~/components/ui/switch";
+import { Badge } from "~/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -27,9 +32,31 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { Wrench, Plus, Search, Trash2, Edit, Star, Briefcase } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Wrench, Plus, Search, Trash2, Edit, Star, Briefcase, X } from "lucide-react";
 import { TablePagination } from "~/components/ui/table-pagination";
 import type { Service } from "~/types/cms";
+
+const serviceSchema = z.object({
+  title: z.string().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
+  slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase alphanumeric with hyphens"),
+  description: z.string().optional(),
+  shortDescription: z.string().optional(),
+  icon: z.string().optional(),
+  order: z.number().int().min(0),
+  featured: z.boolean(),
+  isActive: z.boolean(),
+});
+
+type ServiceFormData = z.infer<typeof serviceSchema>;
 
 export default function ServicesList() {
   const dispatch = useAppDispatch();
@@ -39,7 +66,27 @@ export default function ServicesList() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
+  const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
   const itemsPerPage = 10;
+
+  const form = useForm<ServiceFormData>({
+    resolver: zodResolver(serviceSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      description: "",
+      shortDescription: "",
+      icon: "",
+      order: 0,
+      featured: false,
+      isActive: true,
+    },
+  });
+
+  const isDirty = form.formState.isDirty;
+  const editLoading = form.formState.isSubmitting;
 
   useEffect(() => {
     dispatch(fetchServices());
@@ -71,6 +118,43 @@ export default function ServicesList() {
       await dispatch(toggleServiceFeatured(service.id)).unwrap();
     } finally {
       setTogglingId(null);
+    }
+  };
+
+  const openEditDialog = (service: Service) => {
+    setEditingServiceId(service.id);
+    form.reset({
+      title: service.title,
+      slug: service.slug,
+      description: service.description || "",
+      shortDescription: service.shortDescription || "",
+      icon: service.icon || "",
+      order: service.order || 0,
+      featured: service.featured || false,
+      isActive: service.isActive ?? true,
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = (forced = false) => {
+    if (isDirty && !forced) {
+      setConfirmCloseOpen(true);
+      return;
+    }
+    setEditDialogOpen(false);
+    setEditingServiceId(null);
+    form.reset();
+  };
+
+  const onEditSubmit = async (data: ServiceFormData) => {
+    if (!editingServiceId) return;
+    try {
+      await dispatch(updateService({ id: editingServiceId, data })).unwrap();
+      setEditDialogOpen(false);
+      setEditingServiceId(null);
+      form.reset();
+    } catch {
+      // Error is already in Redux state
     }
   };
 
@@ -197,7 +281,7 @@ export default function ServicesList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditDialog(service)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
@@ -240,18 +324,140 @@ export default function ServicesList() {
         </CardContent>
       </Card>
 
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={(open) => { if (!open) handleEditClose(); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => { if (isDirty) e.preventDefault(); }}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-primary" />
+              Edit Service
+            </DialogTitle>
+            <DialogDescription>Update service details.</DialogDescription>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-5">
+              {error && (
+                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="title" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl><Input placeholder="Web Development" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="slug" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl><Input placeholder="web-development" {...field} /></FormControl>
+                    <FormDescription>URL-friendly identifier</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="shortDescription" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Short Description</FormLabel>
+                  <FormControl><Input placeholder="Brief summary of the service" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="description" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl><Textarea placeholder="Detailed description..." rows={4} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="icon" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Icon</FormLabel>
+                    <FormControl><Input placeholder="Emoji or icon class" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="order" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Order</FormLabel>
+                    <FormControl><Input type="number" min={0} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <div className="space-y-4">
+                <FormField control={form.control} name="featured" render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border border-border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Featured</FormLabel>
+                      <FormDescription>Show in featured section</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="isActive" render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border border-border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Active</FormLabel>
+                      <FormDescription>Make visible to users</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )} />
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" onClick={() => handleEditClose()} disabled={editLoading}>
+                  {isDirty ? "Cancel" : "Close"}
+                </Button>
+                <Button type="submit" disabled={editLoading || !isDirty}>
+                  {editLoading ? "Updating..." : "Update Service"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Close Dialog */}
+      <Dialog open={confirmCloseOpen} onOpenChange={setConfirmCloseOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-amber-500/10"><X className="h-4 w-4 text-amber-600" /></div>
+              Unsaved Changes
+            </DialogTitle>
+            <DialogDescription>You have unsaved changes. Are you sure you want to close without saving?</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmCloseOpen(false)}>Keep Editing</Button>
+            <Button variant="destructive" onClick={() => { setConfirmCloseOpen(false); handleEditClose(true); }}>Discard Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-destructive/10">
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </div>
+              <div className="p-1.5 rounded-lg bg-destructive/10"><Trash2 className="h-4 w-4 text-destructive" /></div>
               Delete Service
             </DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this service? This action cannot be undone.
-            </DialogDescription>
+            <DialogDescription>Are you sure you want to delete this service? This action cannot be undone.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>

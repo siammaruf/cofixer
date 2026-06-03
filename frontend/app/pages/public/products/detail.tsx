@@ -91,11 +91,11 @@ export default function ProductDetailPage() {
                 <div className="page-catagery-list wow fadeInUp">
                   <h3>What We Offer</h3>
                   <ul>
-                    <li><Link to="/services">AI Strategy & Consulting</Link></li>
-                    <li><Link to="/services">AI Integration & Deployment</Link></li>
+                    <li><Link to="/services">AI Workflow Automation</Link></li>
+                    <li><Link to="/services">Autonomous AI Agents</Link></li>
                     <li><Link to="/services">Custom AI Solutions</Link></li>
-                    <li><Link to="/services">Data-Driven Insights</Link></li>
-                    <li><Link to="/services">Intelligent Data Solutions</Link></li>
+                    <li><Link to="/services">Software Development</Link></li>
+                    <li><Link to="/services">Infrastructure Optimization</Link></li>
                   </ul>
                 </div>
                 {/* Page Category List End */}

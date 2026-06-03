@@ -20,7 +20,12 @@ export class BlogCategoryRepository extends BaseRepository<BlogCategory> {
         });
     }
 
-    async findWithPostCount(): Promise<(Omit<BlogCategory, 'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload'> & { postCount: number })[]> {
+    async findWithPostCount(): Promise<
+        (Omit<
+            BlogCategory,
+            'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload'
+        > & { postCount: number })[]
+    > {
         const categories = await this.repository.find({
             relations: { posts: true },
             order: { name: 'ASC' },

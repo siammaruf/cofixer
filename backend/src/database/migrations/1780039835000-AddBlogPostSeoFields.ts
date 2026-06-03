@@ -19,8 +19,14 @@ export class AddBlogPostSeoFields1780039835000 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "blog_posts" DROP COLUMN IF EXISTS "og_image"`);
-        await queryRunner.query(`ALTER TABLE "blog_posts" DROP COLUMN IF EXISTS "meta_description"`);
-        await queryRunner.query(`ALTER TABLE "blog_posts" DROP COLUMN IF EXISTS "meta_title"`);
+        await queryRunner.query(
+            `ALTER TABLE "blog_posts" DROP COLUMN IF EXISTS "og_image"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "blog_posts" DROP COLUMN IF EXISTS "meta_description"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "blog_posts" DROP COLUMN IF EXISTS "meta_title"`,
+        );
     }
 }

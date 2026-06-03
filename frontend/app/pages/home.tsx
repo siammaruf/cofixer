@@ -84,28 +84,28 @@ export default function Home() {
 
   // Default service items if none from CMS
   const defaultServices: any[] = [
-    { id: '1', title: 'AI Strategy & Consulting', shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.', image: '/images/service-item-1.png', slug: 'ai-strategy-consulting' },
-    { id: '2', title: 'AI Integration & Deployment', shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.', image: '/images/service-item-2.png', slug: 'ai-integration-deployment' },
-    { id: '3', title: 'Custom AI Solutions', shortDescription: 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.', image: '/images/service-item-3.png', slug: 'custom-ai-solutions' },
+    { id: '1', title: 'AI Workflow Automation', shortDescription: 'Automate repetitive business processes with intelligent AI systems that save time, reduce costs, and improve operational efficiency.', image: '/images/service-item-1.png', slug: 'ai-workflow-automation' },
+    { id: '2', title: 'Autonomous AI Agents', shortDescription: 'Deploy intelligent agents that handle complex tasks autonomously, streamlining operations and accelerating digital transformation.', image: '/images/service-item-2.png', slug: 'autonomous-ai-agents' },
+    { id: '3', title: 'Custom AI Solutions', shortDescription: 'Tailored AI systems designed to solve your unique business challenges with scalable, cost-effective implementation.', image: '/images/service-item-3.png', slug: 'custom-ai-solutions' },
   ]
 
   const displayServices: any[] = featuredServices.length > 0 ? featuredServices : defaultServices
 
   // Default project items if none from CMS
   const defaultProjects: any[] = [
-    { id: '1', title: 'Success Stories AI In Action', category: 'Data Analytics', featuredImage: '/images/project-1.jpg', slug: 'success-stories' },
-    { id: '2', title: 'Success Stories AI In Action', category: 'Data Analytics', featuredImage: '/images/project-2.jpg', slug: 'success-stories-2' },
-    { id: '3', title: 'Success Stories AI In Action', category: 'Data Analytics', featuredImage: '/images/project-3.jpg', slug: 'success-stories-3' },
-    { id: '4', title: 'Success Stories AI In Action', category: 'Data Analytics', featuredImage: '/images/project-4.jpg', slug: 'success-stories-4' },
+    { id: '1', title: 'Workflow Automation Platform', category: 'SaaS Product', featuredImage: '/images/project-1.jpg', slug: 'workflow-automation-platform' },
+    { id: '2', title: 'Intelligent Operations Dashboard', category: 'SaaS Product', featuredImage: '/images/project-2.jpg', slug: 'intelligent-operations-dashboard' },
+    { id: '3', title: 'Autonomous Agent Framework', category: 'AI Infrastructure', featuredImage: '/images/project-3.jpg', slug: 'autonomous-agent-framework' },
+    { id: '4', title: 'Business Process Optimizer', category: 'SaaS Product', featuredImage: '/images/project-4.jpg', slug: 'business-process-optimizer' },
   ]
 
   const displayProjects: any[] = featuredProjects.length > 0 ? featuredProjects : defaultProjects
 
   // Default testimonials if none from CMS
   const defaultTestimonials: any[] = [
-    { id: '1', clientName: 'Jenny W', clientRole: 'fintech startup', content: 'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.', image: '/images/author-1.jpg' },
-    { id: '2', clientName: 'jason m', clientRole: 'hardware Technician', content: 'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.', image: '/images/author-2.jpg' },
-    { id: '3', clientName: 'Lauren M', clientRole: 'hardware Technician', content: 'Working with this team we game-changer. The AI-enhanced they delivered helped  reduce bounce rates by 40% engagement like never before.', image: '/images/author-3.jpg' },
+    { id: '1', clientName: 'Jenny W', clientRole: 'Operations Director', content: 'CoFixer automated our core workflows with AI agents, cutting operational costs by 40% and freeing our team to focus on strategic growth.', image: '/images/author-1.jpg' },
+    { id: '2', clientName: 'Jason M', clientRole: 'CTO', content: 'Their SaaS product streamlined our entire software development lifecycle. We ship faster, with fewer bugs, and at a fraction of the previous infrastructure cost.', image: '/images/author-2.jpg' },
+    { id: '3', clientName: 'Lauren M', clientRole: 'VP of Engineering', content: 'The autonomous AI agents CoFixer built handle our routine data processing end-to-end. It is like having a 24/7 operations team that never sleeps.', image: '/images/author-3.jpg' },
   ]
 
   const displayTestimonials: any[] = featuredTestimonials.length > 0 ? featuredTestimonials : defaultTestimonials
@@ -121,11 +121,11 @@ export default function Home() {
 
   // Default FAQs if none from CMS
   const defaultFaqs: any[] = [
-    { id: '1', question: 'What services does your AI agency offer?', answer: 'Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.' },
-    { id: '2', question: 'Do I need a large amount of data to use AI?', answer: 'Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.' },
-    { id: '3', question: 'How long does it take to develop an AI solution?', answer: 'Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.' },
-    { id: '4', question: 'Is my data secure with you?', answer: 'Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.' },
-    { id: '5', question: 'Can you integrate AI into our existing systems?', answer: 'Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.' },
+    { id: '1', question: 'What does your AI company offer?', answer: 'We build AI-powered SaaS products that solve real business problems. We also offer custom AI services and consulting when you need tailored solutions.' },
+    { id: '2', question: 'Do I need a large amount of data to use AI?', answer: 'Not necessarily. Our SaaS products are designed to work with varying data volumes. For custom solutions, we help you collect, clean, and structure data effectively, even if you are starting small.' },
+    { id: '3', question: 'How long does it take to develop an AI solution?', answer: 'SaaS products are available immediately upon subscription. For custom AI and software development, timelines typically range from 4 to 12 weeks depending on complexity. We provide a clear roadmap during the discovery phase.' },
+    { id: '4', question: 'Is my data secure with you?', answer: 'Absolutely. Security and compliance are built into every product and service from day one. We use enterprise-grade encryption, secure infrastructure, and follow industry best practices for data protection.' },
+    { id: '5', question: 'Can you integrate AI into our existing systems?', answer: 'Yes. Our SaaS products and custom solutions are designed to integrate seamlessly with your existing tech stack, including CRMs, ERPs, databases, and third-party APIs through standard protocols.' },
   ]
 
   const displayFaqs: any[] = latestFaqs.length > 0 ? latestFaqs : defaultFaqs
@@ -267,8 +267,8 @@ export default function Home() {
               <div className="hero-content">
                 {/* Section Title Start */}
                 <div className="section-title">
-                  <h1 className="wow fadeInUp" data-cursor="-opaque">Transform your business with the <span>power of AI</span></h1>
-                  <p className="wow fadeInUp" data-wow-delay="0.2s">In a world where cyberattacks are becoming more sophisticated, your business deserves the best protection. Our expert team leverages cutting-edge technology.</p>
+                  <h1 className="wow fadeInUp" data-cursor="-opaque">Transform your business with <span>intelligent AI</span></h1>
+                  <p className="wow fadeInUp" data-wow-delay="0.2s">We build AI-powered SaaS products and autonomous agents that automate workflows, improve operational efficiency, and accelerate your digital transformation.</p>
                 </div>
                 {/* Section Title End */}
 
@@ -312,7 +312,7 @@ export default function Home() {
               {/* Section Title Start */}
               <div className="section-title section-title-center">
                 <h3 className="wow fadeInUp">About Us</h3>
-                <h2 className="text-effect wow fadeInUp" data-cursor="-opaque">Our team of data scientists, engineers, and designers work at the intersection technology and strategy turning complex challenges into simple, AI powered solutions.</h2>
+                <h2 className="text-effect wow fadeInUp" data-cursor="-opaque">Our team of AI Engineers, developers, and designers build intelligent SaaS products that turn complex challenges into simple, AI-powered solutions.</h2>
               </div>
               {/* Section Title End */}
             </div>
@@ -411,7 +411,7 @@ export default function Home() {
                 <div className="service-item wow fadeInUp" data-wow-delay={index > 0 ? `${(index * 0.2).toFixed(1)}s` : undefined}>
                   <div className="service-item-content">
                     <h3><Link to={`/services/${'slug' in service ? service.slug : service.id}`}>{service.title}</Link></h3>
-                    <p>{service.shortDescription || 'We assess your business, identify high impact AI opportunities, and guide you with a clear roadmap for implementation.'}</p>
+                    <p>{service.shortDescription || 'We build intelligent SaaS products and custom AI solutions that automate workflows, improve efficiency, and drive real business results.'}</p>
                   </div>
                   <div className="service-item-image">
                     <figure>
@@ -426,13 +426,13 @@ export default function Home() {
               {/* Service List Start */}
               <div className="service-list wow fadeInUp" data-wow-delay="0.6s">
                 <ul>
-                  <li>AI UI/UX Design</li>
-                  <li>Chatbot Design</li>
-                  <li>Design Automation</li>
-                  <li>Predictive UX</li>
-                  <li>Personalized Experiences</li>
-                  <li>Generative Branding</li>
-                  <li>Predictive UX</li>
+                   <li>Workflow Automation</li>
+                   <li>AI Agents</li>
+                   <li>SaaS Products</li>
+                   <li>Infrastructure Optimization</li>
+                   <li>Custom Software</li>
+                   <li>System Architecture</li>
+                   <li>Digital Solutions</li>
                 </ul>
               </div>
               {/* Service List End */}
@@ -452,7 +452,7 @@ export default function Home() {
                 {/* Section Title Start */}
                 <div className="section-title">
                   <h3 className="wow fadeInUp">how it work</h3>
-                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Our process for smarter <span>AI solutions</span></h2>
+                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Our process for building <span>AI products</span></h2>
                 </div>
                 {/* Section Title End */}
 
@@ -526,7 +526,7 @@ export default function Home() {
 
                 {/* Section Footer Text Start */}
                 <div className="section-footer-text wow fadeInUp" data-wow-delay="0.2s">
-                  <p>We help businesses design, build, and deploy intelligent solutions that drive real results. <Link to="/contact">Contact Now</Link></p>
+                   <p>We help businesses automate workflows, build intelligent SaaS products, and deploy autonomous agents that drive real results. <Link to="/contact">Contact Now</Link></p>
                 </div>
                 {/* Section Footer Text End */}
               </div>
@@ -545,7 +545,7 @@ export default function Home() {
               {/* Section Title Start */}
               <div className="section-title section-title-center">
                 <h3 className="wow fadeInUp">Our facts</h3>
-                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Why leading brands trust us to deliver smart <span>AI solutions</span></h2>
+                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Why businesses trust us to deliver smart <span>AI products</span></h2>
               </div>
               {/* Section Title End */}
             </div>
@@ -557,10 +557,10 @@ export default function Home() {
                 <div className="facts-item-title"><h3>Proven Technical Expertise</h3></div>
                 <div className="facts-item-counter">
                   <h2><span className="counter">{stats?.teamMembers ?? 15}</span>+</h2>
-                  <p>Years of AI-Driven Design</p>
+                  <p>Years of AI Product Development</p>
                 </div>
                 <div className="facts-item-content">
-                  <p>Our team brings deep experience in machine learning, data engineering, and full-stack development.</p>
+                  <p>Our team brings deep experience in AI engineering, product development, and full-stack software design.</p>
                 </div>
               </div>
             </div>
@@ -573,7 +573,7 @@ export default function Home() {
                   <p>Projects Successfully Delivered</p>
                 </div>
                 <div className="facts-item-content">
-                  <p>We don't believe in one size fits all. Every solution is tailored to your business needs and workflows.</p>
+                  <p>We build scalable products that adapt to your business needs, with custom solutions available for unique workflows.</p>
                 </div>
               </div>
             </div>
@@ -611,7 +611,7 @@ export default function Home() {
               {/* Section Title Start */}
               <div className="section-title section-title-center">
                 <h3 className="wow fadeInUp">Our project</h3>
-                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Real projects real impact real <span>intelligence</span></h2>
+                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Real products real impact real <span>intelligence</span></h2>
               </div>
               {/* Section Title End */}
             </div>
@@ -721,7 +721,7 @@ export default function Home() {
                   </figure>
                 </div>
                 <div className="real-impact-content">
-                  <p>Crafting intuitive, user-first interfaces by intelligence for smarter, faster, and more personalized digital artificial intelligence experiences.</p>
+                  <p>Building intelligent SaaS products and automation systems that make AI practical, accessible, and efficient for modern businesses.</p>
                 </div>
               </div>
             </div>
@@ -743,7 +743,7 @@ export default function Home() {
                   <div className="section-title">
                     <h3 className="wow fadeInUp">our facts</h3>
                     <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Ready to build smarter, faster, & more intelligently <span>with AI?</span></h2>
-                    <p className="wow fadeInUp" data-wow-delay="0.4s">Ready to innovate with AI model? Whether you have an idea, a challenge, or a full roadmap we'd love to help bring it to life.</p>
+                    <p className="wow fadeInUp" data-wow-delay="0.4s">Ready to automate your workflows with AI? Whether you need a SaaS product, custom agents, or infrastructure optimization, we'd love to help.</p>
                   </div>
                   {/* Section Title End */}
 
@@ -769,17 +769,17 @@ export default function Home() {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="what-we-box">
-                <h3 className="text-effect">We fuse AI and creativity to deliver intelligent, personalized, and future-ready design experiences that inspire.</h3>
+                <h3 className="text-effect">We build AI-powered SaaS products and autonomous agents that automate workflows, streamline operations, and accelerate digital transformation.</h3>
                 <div className="what-we-img wow fadeInUp" data-wow-delay="0.2s">
                   <img src="/images/what-we-do-img.png" alt="" />
                 </div>
                 <div className="what-we-img-list wow fadeInUp" data-wow-delay="0.4s">
                   <ul>
-                    <li>UI/UX Design</li>
-                    <li>Chatbot Design</li>
-                    <li>Predictive</li>
-                    <li>Design Automation</li>
-                    <li>Generative Branding</li>
+                    <li>Workflow Automation</li>
+                    <li>AI Agents</li>
+                    <li>SaaS Products</li>
+                    <li>Infrastructure Optimization</li>
+                    <li>Custom AI Development</li>
                   </ul>
                 </div>
               </div>
@@ -790,18 +790,18 @@ export default function Home() {
                 {/* Section Title Start */}
                 <div className="section-title">
                   <h3 className="wow fadeInUp">what we do</h3>
-                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Innovative AI services, real-world <span>results</span></h2>
-                  <p className="wow fadeInUp" data-wow-delay="0.4s">We craft cutting-edge AI solutions tailored to your business needs—driving smarter decisions, streamlined operations.</p>
+                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Innovative AI products, real-world <span>results</span></h2>
+                  <p className="wow fadeInUp" data-wow-delay="0.4s">We build intelligent SaaS products that solve real business problems—backed by custom AI services when you need them.</p>
                 </div>
                 {/* Section Title End */}
 
                 {/* What We Do Body Start */}
                 <div className="what-we-do-body wow fadeInUp" data-wow-delay="0.6s">
                   <ul>
-                    <li>Computer Vision</li>
-                    <li>AI Integration</li>
-                    <li>Ongoing Support</li>
-                    <li>AI Strategy</li>
+                    <li>Workflow Automation</li>
+                    <li>AI Agents</li>
+                    <li>SaaS Products</li>
+                    <li>Infrastructure Optimization</li>
                     <li>Custom AI Development</li>
                   </ul>
                 </div>
@@ -830,8 +830,8 @@ export default function Home() {
                   {/* Section Title Start */}
                   <div className="section-title">
                     <h3 className="wow fadeInUp">testimonials</h3>
-                    <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Powering innovation with data-driven <span>design</span></h2>
-                    <p className="wow fadeInUp" data-wow-delay="0.4s">Crafting intuitive, user-first interfaces by intelligence for smarter, faster, and more personalized digital artificial intelligence experiences.</p>
+                    <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Powering innovation with AI-driven <span>automation</span></h2>
+                    <p className="wow fadeInUp" data-wow-delay="0.4s">Building intelligent SaaS products and automation systems that make AI practical, accessible, and efficient for modern businesses.</p>
                   </div>
                   {/* Section Title End */}
 
@@ -944,7 +944,7 @@ export default function Home() {
               {/* Section Title Start */}
               <div className="section-title section-title-center">
                 <h3 className="wow fadeInUp">Latest blog</h3>
-                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Your source for cybersecurity <span>news and trends</span></h2>
+                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Your source for AI product and automation <span>insights</span></h2>
               </div>
               {/* Section Title End */}
             </div>
