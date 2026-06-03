@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
-import { fetchTeamMembers, deleteTeamMember } from "~/redux/features/cmsSlice";
+import { fetchTeamMembers, deleteTeamMember, updateTeamMember } from "~/redux/features/cmsSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { Badge } from "~/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
@@ -23,6 +27,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { EmptyState } from "~/components/ui/empty-state";
 import {
   Users,
@@ -33,9 +45,22 @@ import {
   Twitter,
   Linkedin,
   Github,
+  X,
 } from "lucide-react";
 import { TablePagination } from "~/components/ui/table-pagination";
 import type { TeamMember } from "~/types/cms";
+
+const teamMemberSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  role: z.string().min(1, "Role is required"),
+  bio: z.string().optional(),
+  image: z.string().url("Invalid URL").or(z.literal("")).optional(),
+  twitter: z.string().url("Invalid URL").or(z.literal("")).optional(),
+  linkedin: z.string().url("Invalid URL").or(z.literal("")).optional(),
+  github: z.string().url("Invalid URL").or(z.literal("")).optional(),
+});
+
+type TeamMemberFormData = z.infer<typeof teamMemberSchema>;
 
 export default function TeamList() {
   const dispatch = useAppDispatch();
@@ -44,7 +69,26 @@ export default function TeamList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
+  const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
   const itemsPerPage = 10;
+
+  const form = useForm<TeamMemberFormData>({
+    resolver: zodResolver(teamMemberSchema),
+    defaultValues: {
+      name: "",
+      role: "",
+      bio: "",
+      image: "",
+      twitter: "",
+      linkedin: "",
+      github: "",
+    },
+  });
+
+  const isDirty = form.formState.isDirty;
+  const editLoading = form.formState.isSubmitting;
 
   useEffect(() => {
     dispatch(fetchTeamMembers());
@@ -104,6 +148,42 @@ export default function TeamList() {
         )}
       </div>
     );
+  };
+
+  const openEditDialog = (member: TeamMember) => {
+    setEditingMemberId(member.id);
+    form.reset({
+      name: member.name,
+      role: member.role,
+      bio: member.bio || "",
+      image: member.image || "",
+      twitter: member.socialLinks?.twitter || "",
+      linkedin: member.socialLinks?.linkedin || "",
+      github: member.socialLinks?.github || "",
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = (forced = false) => {
+    if (isDirty && !forced) {
+      setConfirmCloseOpen(true);
+      return;
+    }
+    setEditDialogOpen(false);
+    setEditingMemberId(null);
+    form.reset();
+  };
+
+  const onEditSubmit = async (data: TeamMemberFormData) => {
+    if (!editingMemberId) return;
+    try {
+      await dispatch(updateTeamMember({ id: editingMemberId, data })).unwrap();
+      setEditDialogOpen(false);
+      setEditingMemberId(null);
+      form.reset();
+    } catch {
+      // Error is already in Redux state
+    }
   };
 
   return (
@@ -211,10 +291,8 @@ export default function TeamList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                              <Link to={`/admin/team/edit/${member.id}`}>
-                                <Edit className="h-4 w-4" />
-                              </Link>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditDialog(member)}>
+                              <Edit className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
@@ -256,6 +334,113 @@ export default function TeamList() {
         </CardContent>
       </Card>
 
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={(open) => { if (!open) handleEditClose(); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => { if (isDirty) e.preventDefault(); }}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-primary" />
+              Edit Team Member
+            </DialogTitle>
+            <DialogDescription>Update team member details.</DialogDescription>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-5">
+              {error && (
+                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="name" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl><Input placeholder="Full name" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="role" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <FormControl><Input placeholder="e.g., AI Engineer" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="image" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="bio" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bio</FormLabel>
+                  <FormControl><Textarea placeholder="Short bio..." rows={4} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <FormField control={form.control} name="twitter" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Twitter</FormLabel>
+                    <FormControl><Input placeholder="https://twitter.com/..." {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="linkedin" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LinkedIn</FormLabel>
+                    <FormControl><Input placeholder="https://linkedin.com/in/..." {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="github" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>GitHub</FormLabel>
+                    <FormControl><Input placeholder="https://github.com/..." {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" onClick={() => handleEditClose()} disabled={editLoading}>
+                  {isDirty ? "Cancel" : "Close"}
+                </Button>
+                <Button type="submit" disabled={editLoading || !isDirty}>
+                  {editLoading ? "Updating..." : "Update Member"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Close Dialog */}
+      <Dialog open={confirmCloseOpen} onOpenChange={setConfirmCloseOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-amber-500/10"><X className="h-4 w-4 text-amber-600" /></div>
+              Unsaved Changes
+            </DialogTitle>
+            <DialogDescription>You have unsaved changes. Are you sure you want to close without saving?</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmCloseOpen(false)}>Keep Editing</Button>
+            <Button variant="destructive" onClick={() => { setConfirmCloseOpen(false); handleEditClose(true); }}>Discard Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>

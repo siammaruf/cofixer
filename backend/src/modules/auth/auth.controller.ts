@@ -344,7 +344,10 @@ export class AuthController {
         responseDto: LoginResponsePayloadDto,
         requiresAuth: true,
         errors: [
-            { status: 401, description: 'Unauthorized - invalid or missing token' },
+            {
+                status: 401,
+                description: 'Unauthorized - invalid or missing token',
+            },
             { status: 404, description: 'User not found' },
         ],
     })
@@ -384,7 +387,10 @@ export class AuthController {
         responseDto: LoginResponsePayloadDto,
         requiresAuth: true,
         errors: [
-            { status: 401, description: 'Unauthorized - invalid or missing token' },
+            {
+                status: 401,
+                description: 'Unauthorized - invalid or missing token',
+            },
             { status: 404, description: 'User not found' },
         ],
     })

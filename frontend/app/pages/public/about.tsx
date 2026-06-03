@@ -78,7 +78,7 @@ export default function About() {
               {/* Section Title Start */}
               <div className="section-title section-title-center">
                 <h3 className="wow fadeInUp">About Us</h3>
-                <h2 className="text-effect wow fadeInUp" data-cursor="-opaque">Our team of data scientists, engineers, and designers work at the intersection technology and strategy turning complex challenges into simple, AI powered solutions.</h2>
+                <h2 className="text-effect wow fadeInUp" data-cursor="-opaque">Our team of AI Engineers, developers, and designers build intelligent SaaS products that turn complex challenges into simple, AI-powered solutions.</h2>
               </div>
               {/* Section Title End */}
             </div>
@@ -182,7 +182,7 @@ export default function About() {
                   </div>
                   <div className="approach-item-content">
                     <h3>Our Mission</h3>
-                    <p>Our mission is to harness the power of AI to solve real-world problems. From automating tasks to delivering data-driven insights.</p>
+                    <p>Our mission is to build intelligent SaaS products that make AI accessible to every business, while delivering custom solutions for unique challenges.</p>
                   </div>
                 </div>
                 {/* Approach Item End */}
@@ -194,7 +194,7 @@ export default function About() {
                   </div>
                   <div className="approach-item-content">
                     <h3>Our vision</h3>
-                    <p>Our vision is to harness the power of AI to solve real-world problems. From automating tasks to delivering data-driven insights.</p>
+                    <p>Our vision is a world where businesses of all sizes leverage AI effortlessly through intuitive, scalable software products.</p>
                   </div>
                 </div>
                 {/* Approach Item End */}
@@ -206,7 +206,7 @@ export default function About() {
                   </div>
                   <div className="approach-item-content">
                     <h3>Our goal</h3>
-                    <p>Our goal is to harness the power of AI to solve real-world problems. From automating tasks to delivering data-driven insights.</p>
+                    <p>Our goal is to lead the AI product space with innovative SaaS solutions that drive measurable impact, complemented by expert services.</p>
                   </div>
                 </div>
                 {/* Approach Item End */}
@@ -254,7 +254,7 @@ export default function About() {
               {/* Section Title Start */}
               <div className="section-title section-title-center">
                 <h3 className="wow fadeInUp">Our facts</h3>
-                <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Why leading brands trust us to deliver smart <span>AI solutions</span></h2>
+                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Why businesses trust us to deliver smart <span>AI products</span></h2>
               </div>
               {/* Section Title End */}
             </div>
@@ -269,10 +269,10 @@ export default function About() {
                 </div>
                 <div className="facts-item-counter">
                   <h2><span className="counter">15</span>+</h2>
-                  <p>Years of AI-Driven Design</p>
+                  <p>Years of AI Product Development</p>
                 </div>
                 <div className="facts-item-content">
-                  <p>Our team brings deep experience in machine learning, data engineering, and full-stack development.</p>
+                  <p>Our team brings deep experience in AI engineering, product development, and full-stack software design.</p>
                 </div>
               </div>
               {/* Facts Item End */}
@@ -289,7 +289,7 @@ export default function About() {
                   <p>Projects Successfully Delivered</p>
                 </div>
                 <div className="facts-item-content">
-                  <p>We don't believe in one size fits all. Every solution is tailored to your business needs and workflows.</p>
+                   <p>We build scalable products that adapt to your business needs, with custom solutions available for unique workflows.</p>
                 </div>
               </div>
               {/* Facts Item End */}
@@ -334,8 +334,8 @@ export default function About() {
                 {/* Section Title Start */}
                 <div className="section-title">
                   <h3 className="wow fadeInUp">all in one solution</h3>
-                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Delivering real-world impact <span>solution</span></h2>
-                  <p className="wow fadeInUp" data-wow-delay="0.4s">We envision a world where artificial intelligence transforms lives, industries, and possibilities. Our goal is to lead this evolution by creating intuitive, ethical.</p>
+                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Delivering real-world impact through <span>AI automation</span></h2>
+                  <p className="wow fadeInUp" data-wow-delay="0.4s">We build AI-powered SaaS products and autonomous agents that help businesses automate workflows, improve efficiency, and accelerate digital transformation.</p>
                 </div>
                 {/* Section Title End */}
               </div>
@@ -352,7 +352,7 @@ export default function About() {
                   </div>
                   <div className="solution-item-content">
                     <h3>Custom AI Development</h3>
-                    <p>We dive deep into your goals challenges to uncover high-impact AI opportunities.</p>
+                    <p>Tailored AI systems designed to solve your unique business challenges with scalable, cost-effective implementation.</p>
                   </div>
                 </div>
                 {/* Solution Item End */}
@@ -363,8 +363,8 @@ export default function About() {
                     <img src="/images/icon-solution-2.svg" alt="" />
                   </div>
                   <div className="solution-item-content">
-                    <h3>Custom AI Solutions</h3>
-                    <p>We dive deep into your goals challenges to uncover high-impact AI opportunities.</p>
+                    <h3>AI Workflow Automation</h3>
+                    <p>Intelligent automation systems that handle repetitive tasks end-to-end, saving time and reducing operational costs.</p>
                   </div>
                 </div>
                 {/* Solution Item End */}
@@ -375,8 +375,8 @@ export default function About() {
                     <img src="/images/icon-solution-3.svg" alt="" />
                   </div>
                   <div className="solution-item-content">
-                    <h3>Automated Intelligence</h3>
-                    <p>We dive deep into your goals challenges to uncover high-impact AI opportunities.</p>
+                    <h3>Autonomous AI Agents</h3>
+                    <p>Self-directed AI agents that manage complex workflows and decision-making processes with minimal human intervention.</p>
                   </div>
                 </div>
                 {/* Solution Item End */}
@@ -387,8 +387,8 @@ export default function About() {
                     <img src="/images/icon-solution-4.svg" alt="" />
                   </div>
                   <div className="solution-item-content">
-                    <h3>Scalable Infrastructure</h3>
-                    <p>We dive deep into your goals challenges to uncover high-impact AI opportunities.</p>
+                    <h3>AI Infrastructure Optimization</h3>
+                    <p>Cost-effective AI infrastructure that scales with your business without compromising performance or reliability.</p>
                   </div>
                 </div>
                 {/* Solution Item End */}
@@ -413,7 +413,7 @@ export default function About() {
                   <div className="section-title">
                     <h3 className="wow fadeInUp">our facts</h3>
                     <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Ready to build smarter, faster, & more intelligently <span>with AI?</span></h2>
-                    <p className="wow fadeInUp" data-wow-delay="0.4s">Ready to innovate with AI model? Whether you have an idea, a challenge, or a full roadmap we'd love to help bring it to life.</p>
+                    <p className="wow fadeInUp" data-wow-delay="0.4s">Ready to automate your workflows with AI? Whether you need a SaaS product, custom agents, or infrastructure optimization, we'd love to help.</p>
                   </div>
                   {/* Section Title End */}
 
@@ -497,17 +497,17 @@ export default function About() {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="what-we-box">
-                <h3 className="text-effect">We fuse AI and creativity to deliver intelligent, personalized, and future-ready design experiences that inspire.</h3>
+                <h3 className="text-effect">We build AI-powered SaaS products and autonomous agents that automate workflows, streamline operations, and accelerate digital transformation.</h3>
                 <div className="what-we-img wow fadeInUp" data-wow-delay="0.2s">
                   <img src="/images/what-we-do-img.png" alt="" />
                 </div>
                 <div className="what-we-img-list wow fadeInUp" data-wow-delay="0.4s">
                   <ul>
-                    <li>UI/UX Design</li>
-                    <li>Chatbot Design</li>
-                    <li>Predictive</li>
-                    <li>Design Automation</li>
-                    <li>Generative Branding</li>
+                    <li>Workflow Automation</li>
+                    <li>AI Agents</li>
+                    <li>SaaS Products</li>
+                    <li>Infrastructure Optimization</li>
+                    <li>Custom AI Development</li>
                   </ul>
                 </div>
               </div>
@@ -518,18 +518,18 @@ export default function About() {
                 {/* Section Title Start */}
                 <div className="section-title">
                   <h3 className="wow fadeInUp">what we do</h3>
-                  <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Innovative AI services, real-world <span>results</span></h2>
-                  <p className="wow fadeInUp" data-wow-delay="0.4s">We craft cutting-edge AI solutions tailored to your business needs—driving smarter decisions, streamlined operations.</p>
+                   <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Innovative AI products, real-world <span>results</span></h2>
+                   <p className="wow fadeInUp" data-wow-delay="0.4s">We build intelligent SaaS products that solve real business problems—backed by custom AI services when you need them.</p>
                 </div>
                 {/* Section Title End */}
 
                 {/* What We Do Body Start */}
                 <div className="what-we-do-body wow fadeInUp" data-wow-delay="0.6s">
                   <ul>
-                    <li>Computer Vision</li>
-                    <li>AI Integration</li>
-                    <li>Ongoing Support</li>
-                    <li>AI Strategy</li>
+                    <li>Workflow Automation</li>
+                    <li>AI Agents</li>
+                    <li>SaaS Products</li>
+                    <li>Infrastructure Optimization</li>
                     <li>Custom AI Development</li>
                   </ul>
                 </div>
@@ -558,8 +558,8 @@ export default function About() {
                   {/* Section Title Start */}
                   <div className="section-title">
                     <h3 className="wow fadeInUp">testimonials</h3>
-                    <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Powering innovation with data-driven <span>design</span></h2>
-                    <p className="wow fadeInUp" data-wow-delay="0.4s">Crafting intuitive, user-first interfaces by intelligence for smarter, faster, and more personalized digital artificial intelligence experiences.</p>
+                    <h2 className="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Powering innovation with AI-driven <span>automation</span></h2>
+                    <p className="wow fadeInUp" data-wow-delay="0.4s">Building intelligent SaaS products and automation systems that make AI practical, accessible, and efficient for modern businesses.</p>
                   </div>
                   {/* Section Title End */}
 
@@ -646,27 +646,27 @@ export default function About() {
                 <div className="accordion-item wow fadeInUp">
                   <h2 className="accordion-header" id="heading1">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                      1. What services does your AI agency offer?
+                       1. What does your AI company offer?
                     </button>
                   </h2>
                   <div id="collapse1" className="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordion">
-                    <div className="accordion-body">
-                      <p>Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.</p>
-                    </div>
-                  </div>
-                </div>
-                {/* FAQ Item End */}
-
-                {/* FAQ Item Start */}
-                <div className="accordion-item wow fadeInUp" data-wow-delay="0.2s">
-                  <h2 className="accordion-header" id="heading2">
-                    <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                      2. Do I need a large amount of data to use AI?
-                    </button>
-                  </h2>
-                  <div id="collapse2" className="accordion-collapse collapse show" aria-labelledby="heading2" data-bs-parent="#accordion">
-                    <div className="accordion-body">
-                      <p>Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.</p>
+                     <div className="accordion-body">
+                       <p>We build AI-powered SaaS products and autonomous agents as our primary focus. We also offer custom software development, workflow automation, system architecture, and scalable digital solutions as our secondary service offering.</p>
+                     </div>
+                   </div>
+                 </div>
+                 {/* FAQ Item End */}
+ 
+                 {/* FAQ Item Start */}
+                 <div className="accordion-item wow fadeInUp" data-wow-delay="0.2s">
+                   <h2 className="accordion-header" id="heading2">
+                     <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                       2. Do I need a large amount of data to use AI?
+                     </button>
+                   </h2>
+                   <div id="collapse2" className="accordion-collapse collapse show" aria-labelledby="heading2" data-bs-parent="#accordion">
+                     <div className="accordion-body">
+                       <p>Not necessarily. Our SaaS products are designed to work with varying data volumes. For custom solutions, we help you collect, clean, and structure data effectively, even if you are starting small.</p>
                     </div>
                   </div>
                 </div>
@@ -681,29 +681,44 @@ export default function About() {
                   </h2>
                   <div id="collapse3" className="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordion">
                     <div className="accordion-body">
-                      <p>Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.</p>
+                       <p>SaaS products are available immediately upon subscription. For custom AI and software development, timelines typically range from 4 to 12 weeks depending on complexity. We provide a clear roadmap during the discovery phase.</p>
+                     </div>
+                   </div>
+                 </div>
+                 {/* FAQ Item End */}
+ 
+                 {/* FAQ Item Start */}
+                 <div className="accordion-item wow fadeInUp" data-wow-delay="0.4s">
+                   <h2 className="accordion-header" id="heading3">
+                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                       3. How long does it take to develop an AI solution?
+                     </button>
+                   </h2>
+                   <div id="collapse3" className="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordion">
+                     <div className="accordion-body">
+                       <p>SaaS products are available immediately upon subscription. For custom AI and software development, timelines typically range from 4 to 12 weeks depending on complexity. We provide a clear roadmap during the discovery phase.</p>
                     </div>
                   </div>
                 </div>
-                {/* FAQ Item End */}
+                 {/* FAQ Item End */}
 
-                {/* FAQ Item Start */}
-                <div className="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                  <h2 className="accordion-header" id="heading4">
-                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                      4. Is my data secure with you?
-                    </button>
-                  </h2>
-                  <div id="collapse4" className="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordion">
-                    <div className="accordion-body">
-                      <p>Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.</p>
-                    </div>
-                  </div>
-                </div>
-                {/* FAQ Item End */}
+                 {/* FAQ Item Start */}
+                 <div className="accordion-item wow fadeInUp" data-wow-delay="0.6s">
+                   <h2 className="accordion-header" id="heading4">
+                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                       4. Is my data secure with you?
+                     </button>
+                   </h2>
+                   <div id="collapse4" className="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordion">
+                     <div className="accordion-body">
+                       <p>Absolutely. Security and compliance are built into every product and service from day one. We use enterprise-grade encryption, secure infrastructure, and follow industry best practices for data protection.</p>
+                     </div>
+                   </div>
+                 </div>
+                 {/* FAQ Item End */}
 
-                {/* FAQ Item Start */}
-                <div className="accordion-item wow fadeInUp" data-wow-delay="0.8s">
+                 {/* FAQ Item Start */}
+                 <div className="accordion-item wow fadeInUp" data-wow-delay="0.8s">
                   <h2 className="accordion-header" id="heading5">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
                       5. Can you integrate AI into our existing systems?
@@ -711,13 +726,13 @@ export default function About() {
                   </h2>
                   <div id="collapse5" className="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#accordion">
                     <div className="accordion-body">
-                      <p>Project timelines vary depending on complexity but typically range from 4 to 12 weeks. We provide a clear roadmap during the discovery phase.</p>
-                    </div>
-                  </div>
-                </div>
-                {/* FAQ Item End */}
-              </div>
-              {/* FAQ Accordion End */}
+                       <p>Yes. Our SaaS products and custom solutions are designed to integrate seamlessly with your existing tech stack, including CRMs, ERPs, databases, and third-party APIs through standard protocols.</p>
+                     </div>
+                   </div>
+                 </div>
+                 {/* FAQ Item End */}
+               </div>
+               {/* FAQ Accordion End */}
             </div>
           </div>
         </div>

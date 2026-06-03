@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
 import {
   fetchTestimonials,
   deleteTestimonial,
+  updateTestimonial,
   toggleTestimonialFeatured,
 } from "~/redux/features/cmsSlice";
+import {
+  createTestimonialSchema,
+  type CreateTestimonialFormData,
+} from "~/utils/validations/testimonial";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Switch } from "~/components/ui/switch";
 import { Badge } from "~/components/ui/badge";
 import {
   Table,
@@ -27,12 +36,22 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import {
   MessageSquare,
   Plus,
   Search,
   Trash2,
   Edit,
   Star,
+  X,
 } from "lucide-react";
 import { TablePagination } from "~/components/ui/table-pagination";
 
@@ -43,7 +62,27 @@ export default function TestimonialList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [testimonialToDelete, setTestimonialToDelete] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingTestimonialId, setEditingTestimonialId] = useState<string | null>(null);
+  const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
   const itemsPerPage = 10;
+
+  const form = useForm<CreateTestimonialFormData>({
+    resolver: zodResolver(createTestimonialSchema),
+    defaultValues: {
+      clientName: "",
+      clientRole: "",
+      company: "",
+      content: "",
+      rating: 5,
+      image: "",
+      featured: false,
+      isActive: true,
+    },
+  });
+
+  const isDirty = form.formState.isDirty;
+  const editLoading = form.formState.isSubmitting;
 
   useEffect(() => {
     dispatch(fetchTestimonials());
@@ -76,6 +115,41 @@ export default function TestimonialList() {
   const truncateContent = (content: string, maxLength: number) => {
     if (content.length <= maxLength) return content;
     return content.slice(0, maxLength) + "...";
+  };
+
+  const openEditDialog = (t: typeof testimonials[0]) => {
+    setEditingTestimonialId(t.id);
+    form.reset({
+      clientName: t.clientName,
+      clientRole: t.clientRole || "",
+      company: t.company || "",
+      content: t.content,
+      rating: t.rating || 5,
+      image: t.image || "",
+      featured: t.featured || false,
+      isActive: t.isActive ?? true,
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = (forced = false) => {
+    if (isDirty && !forced) {
+      setConfirmCloseOpen(true);
+      return;
+    }
+    setEditDialogOpen(false);
+    setEditingTestimonialId(null);
+    form.reset();
+  };
+
+  const onEditSubmit = async (data: CreateTestimonialFormData) => {
+    if (!editingTestimonialId) return;
+    const result = await dispatch(updateTestimonial({ id: editingTestimonialId, data }));
+    if (updateTestimonial.fulfilled.match(result)) {
+      setEditDialogOpen(false);
+      setEditingTestimonialId(null);
+      form.reset();
+    }
   };
 
   return (
@@ -203,7 +277,7 @@ export default function TestimonialList() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditDialog(t)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
@@ -246,6 +320,137 @@ export default function TestimonialList() {
         </CardContent>
       </Card>
 
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={(open) => { if (!open) handleEditClose(); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => { if (isDirty) e.preventDefault(); }}>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-primary" />
+              Edit Testimonial
+            </DialogTitle>
+            <DialogDescription>Update testimonial details.</DialogDescription>
+          </DialogHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onEditSubmit)} className="space-y-5">
+              {error && (
+                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="clientName" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Client Name</FormLabel>
+                    <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="clientRole" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <FormControl><Input placeholder="CEO" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+
+              <FormField control={form.control} name="company" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company</FormLabel>
+                  <FormControl><Input placeholder="Company name" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="content" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Content</FormLabel>
+                  <FormControl><Textarea placeholder="Testimonial content..." rows={5} {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="image" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="rating" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rating ({field.value}/5)</FormLabel>
+                  <FormControl>
+                    <Input type="range" min={1} max={5} {...field} />
+                  </FormControl>
+                  <div className="flex gap-1 mt-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className={`h-4 w-4 ${i < field.value ? "fill-primary text-primary" : "text-muted"}`} />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <div className="space-y-4">
+                <FormField control={form.control} name="featured" render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border border-border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Featured</FormLabel>
+                      <FormDescription>Show on homepage</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="isActive" render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border border-border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Active</FormLabel>
+                      <FormDescription>Make visible to users</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )} />
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="outline" onClick={() => handleEditClose()} disabled={editLoading}>
+                  {isDirty ? "Cancel" : "Close"}
+                </Button>
+                <Button type="submit" disabled={editLoading || !isDirty}>
+                  {editLoading ? "Updating..." : "Update Testimonial"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Close Dialog */}
+      <Dialog open={confirmCloseOpen} onOpenChange={setConfirmCloseOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-amber-500/10"><X className="h-4 w-4 text-amber-600" /></div>
+              Unsaved Changes
+            </DialogTitle>
+            <DialogDescription>You have unsaved changes. Are you sure you want to close without saving?</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmCloseOpen(false)}>Keep Editing</Button>
+            <Button variant="destructive" onClick={() => { setConfirmCloseOpen(false); handleEditClose(true); }}>Discard Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>

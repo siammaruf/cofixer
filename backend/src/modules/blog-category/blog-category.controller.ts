@@ -45,9 +45,24 @@ export class BlogCategoryController {
         isArray: true,
         requiresAuth: true,
     })
-    async findAll(): Promise<SuccessResponseDto<(Omit<BlogCategory, 'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload'> & { postCount: number })[]>> {
+    async findAll(): Promise<
+        SuccessResponseDto<
+            (Omit<
+                BlogCategory,
+                | 'hasId'
+                | 'save'
+                | 'remove'
+                | 'softRemove'
+                | 'recover'
+                | 'reload'
+            > & { postCount: number })[]
+        >
+    > {
         const categories = await this.blogCategoryService.findWithPostCount();
-        return new SuccessResponseDto(categories, 'Blog categories retrieved successfully');
+        return new SuccessResponseDto(
+            categories,
+            'Blog categories retrieved successfully',
+        );
     }
 
     @Get(':id')
@@ -61,8 +76,13 @@ export class BlogCategoryController {
     async findOne(
         @Param('id', ParseUUIDPipe) id: string,
     ): Promise<SuccessResponseDto<BlogCategory>> {
-        const category = await this.blogCategoryService.findByIdOrFail(id, { posts: true });
-        return new SuccessResponseDto(category, 'Blog category retrieved successfully');
+        const category = await this.blogCategoryService.findByIdOrFail(id, {
+            posts: true,
+        });
+        return new SuccessResponseDto(
+            category,
+            'Blog category retrieved successfully',
+        );
     }
 
     @Post()
@@ -78,7 +98,10 @@ export class BlogCategoryController {
         @Body() createDto: CreateBlogCategoryDto,
     ): Promise<CreatedResponseDto<BlogCategory>> {
         const category = await this.blogCategoryService.create(createDto);
-        return new CreatedResponseDto(category, 'Blog category created successfully');
+        return new CreatedResponseDto(
+            category,
+            'Blog category created successfully',
+        );
     }
 
     @Patch(':id')
@@ -95,7 +118,10 @@ export class BlogCategoryController {
         @Body() updateDto: UpdateBlogCategoryDto,
     ): Promise<UpdatedResponseDto<BlogCategory>> {
         const category = await this.blogCategoryService.update(id, updateDto);
-        return new UpdatedResponseDto(category!, 'Blog category updated successfully');
+        return new UpdatedResponseDto(
+            category!,
+            'Blog category updated successfully',
+        );
     }
 
     @Delete(':id')
