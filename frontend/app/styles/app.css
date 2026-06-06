@@ -436,3 +436,32 @@ a {
   right: 16px;
 }
 
+/* Black Text Editor Overrides */
+.black-text-editor .ql-editor {
+  color: black !important;
+}
+.black-text-editor .ql-toolbar.ql-snow .ql-picker-label {
+  color: black !important;
+}
+.black-text-editor .ql-toolbar.ql-snow .ql-stroke {
+  stroke: black !important;
+}
+.black-text-editor .ql-toolbar.ql-snow .ql-fill {
+  fill: black !important;
+}
+.black-text-editor .ql-toolbar.ql-snow button:hover .ql-stroke,
+.black-text-editor .ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke {
+  stroke: #2563eb !important;
+}
+.black-text-editor .ql-toolbar.ql-snow button:hover .ql-fill,
+.black-text-editor .ql-toolbar.ql-snow .ql-picker-label:hover .ql-fill {
+  fill: #2563eb !important;
+}
+.black-text-editor .ql-toolbar.ql-snow button:hover,
+.black-text-editor .ql-toolbar.ql-snow .ql-picker-label:hover {
+  color: #2563eb !important;
+}
+.black-text-editor .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+

@@ -29,10 +29,12 @@ export abstract class BaseRepository<T extends BaseEntity> {
      * Find all entities with optional conditions and relations
      */
     async findAll(options?: FindManyOptions<T>): Promise<T[]> {
-        return this.repository.find({
-            ...options,
-            relations: options?.relations || this.defaultRelations,
-        });
+        const findOptions: FindManyOptions<T> = { ...(options || {}) };
+        const relations = options?.relations || this.defaultRelations;
+        if (relations) {
+            findOptions.relations = relations;
+        }
+        return this.repository.find(findOptions);
     }
 
     /**

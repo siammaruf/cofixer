@@ -74,7 +74,7 @@ export const cmsService = {
 // Admin CMS APIs
 export const cmsAdminService = {
   // Services
-  getAllServices: () => get<PaginatedApiResponse<Service>>(`${API_PREFIX}/admin/services`),
+  getAllServices: () => get<PaginatedApiResponse<Service>>(`${API_PREFIX}/admin/services`, { params: { sortBy: 'createdAt', sortOrder: 'DESC' } }),
   createService: (data: Partial<Service>) => post<ApiResponse<Service>>(`${API_PREFIX}/admin/services`, data),
   updateService: (id: string, data: Partial<Service>) => patch<ApiResponse<Service>>(`${API_PREFIX}/admin/services/${id}`, data),
   deleteService: (id: string) => del<ApiResponse<void>>(`${API_PREFIX}/admin/services/${id}`),
@@ -82,7 +82,8 @@ export const cmsAdminService = {
   reorderServices: (ids: string[]) => post<ApiResponse<{ message: string }>>(`${API_PREFIX}/admin/services/reorder`, { ids }),
 
   // Projects
-  getAllProjects: () => get<PaginatedApiResponse<Project>>(`${API_PREFIX}/admin/projects`),
+  getAllProjects: () => get<PaginatedApiResponse<Project>>(`${API_PREFIX}/admin/projects`, { params: { sortBy: 'createdAt', sortOrder: 'DESC' } }),
+  getProjectById: (id: string) => get<ApiResponse<Project>>(`${API_PREFIX}/admin/projects/${id}`),
   createProject: (data: Partial<Project>) => post<ApiResponse<Project>>(`${API_PREFIX}/admin/projects`, data),
   updateProject: (id: string, data: Partial<Project>) => patch<ApiResponse<Project>>(`${API_PREFIX}/admin/projects/${id}`, data),
   deleteProject: (id: string) => del<ApiResponse<void>>(`${API_PREFIX}/admin/projects/${id}`),

@@ -29,6 +29,12 @@ export interface Project {
   techStack: string[]
   featured: boolean
   isActive: boolean
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
+  ogImage?: string
+  canonicalUrl?: string
+  robotsMeta?: string
   createdAt: string
   updatedAt: string
 }

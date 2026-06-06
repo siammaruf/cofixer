@@ -48,7 +48,7 @@ class EnvConfigService {
             password: this.getValue('POSTGRES_PASSWORD'),
             database: this.getValue('POSTGRES_DATABASE'),
 
-            synchronize: false,
+            synchronize: !this.isProduction(),
         };
     }
 
