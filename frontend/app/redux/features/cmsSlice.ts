@@ -730,14 +730,32 @@ const cmsSlice = createSlice({
           state.projects[index] = action.payload
         }
       })
+      .addCase(createProject.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
       .addCase(createProject.fulfilled, (state, action) => {
+        state.loading = false
         state.projects.push(action.payload)
       })
+      .addCase(createProject.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+      .addCase(updateProject.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
       .addCase(updateProject.fulfilled, (state, action) => {
+        state.loading = false
         const index = state.projects.findIndex((p) => p.id === action.payload.id)
         if (index !== -1) {
           state.projects[index] = action.payload
         }
+      })
+      .addCase(updateProject.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
       })
 
       // Blog Posts

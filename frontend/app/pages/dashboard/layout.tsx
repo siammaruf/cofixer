@@ -6,6 +6,7 @@ import { SuspenseLoader } from "~/components/ui/suspense-loader";
 import { Bell, Search, Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
+import { Toaster } from "sonner";
 
 export default function DashboardLayout() {
   const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
@@ -56,6 +57,7 @@ export default function DashboardLayout() {
             <Outlet />
           </ErrorBoundary>
         </main>
+        <Toaster position="top-right" richColors closeButton />
       </div>
     </div>
   );

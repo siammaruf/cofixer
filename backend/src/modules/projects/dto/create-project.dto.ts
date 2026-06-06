@@ -90,6 +90,40 @@ export class CreateProjectDto {
     featuredImage?: string;
 
     @ApiPropertyOptional({
+        example: 'https://cofixer.com/images/projects/ecomm-featured.jpg',
+        description: 'Project image URL',
+    })
+    @IsOptional()
+    @IsString()
+    imageUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com',
+        description: 'Live project URL',
+    })
+    @IsOptional()
+    @IsString()
+    liveUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://github.com/cofixer/project',
+        description: 'GitHub repository URL',
+    })
+    @IsOptional()
+    @IsString()
+    githubUrl?: string;
+
+    @ApiPropertyOptional({
+        example: ['React', 'Node.js', 'PostgreSQL'],
+        description: 'Technology stack used',
+        type: [String],
+    })
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    techStack?: string[];
+
+    @ApiPropertyOptional({
         example: false,
         description: 'Whether the project is featured on homepage',
         default: false,
@@ -106,4 +140,61 @@ export class CreateProjectDto {
     @IsOptional()
     @IsBoolean()
     isActive?: boolean;
+
+    @ApiPropertyOptional({
+        example: 'AI-Powered E-commerce Platform - Cofixer',
+        description: 'SEO meta title (overrides default title)',
+        maxLength: 255,
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(255)
+    metaTitle?: string;
+
+    @ApiPropertyOptional({
+        example: 'We built a fully AI-driven e-commerce platform with personalized recommendations for TechCorp Inc.',
+        description: 'SEO meta description',
+    })
+    @IsOptional()
+    @IsString()
+    metaDescription?: string;
+
+    @ApiPropertyOptional({
+        example: 'AI, e-commerce, React, Node.js, PostgreSQL',
+        description: 'SEO meta keywords (comma-separated)',
+    })
+    @IsOptional()
+    @IsString()
+    metaKeywords?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/images/projects/ecomm-og.jpg',
+        description: 'Open Graph image URL for social sharing',
+        maxLength: 255,
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(255)
+    ogImage?: string;
+
+    @ApiPropertyOptional({
+        example: 'https://cofixer.com/projects/ai-powered-ecommerce-platform',
+        description: 'Canonical URL for this project page',
+        maxLength: 500,
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(500)
+    canonicalUrl?: string;
+
+    @ApiPropertyOptional({
+        example: 'index, follow',
+        description: 'Robots meta directive (e.g., index/follow, noindex/nofollow)',
+        maxLength: 100,
+        default: 'index, follow',
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(100)
+    robotsMeta?: string;
 }

@@ -38,7 +38,15 @@ const navSections: { title: string; items: NavEntry[] }[] = [
     title: "Content",
     items: [
       { title: "Services", icon: Briefcase, href: "/admin/services" },
-      { title: "Projects", icon: FolderGit2, href: "/admin/projects" },
+      {
+        title: "Projects",
+        icon: FolderGit2,
+        href: "/admin/projects",
+        children: [
+          { title: "All Projects", href: "/admin/projects" },
+          { title: "Create Project", href: "/admin/projects/create" },
+        ],
+      },
       {
         title: "Blogs",
         icon: BookOpen,
@@ -77,6 +85,7 @@ export default function Sidebar() {
   });
   const [expandedSubmenus, setExpandedSubmenus] = useState<Record<string, boolean>>({
     "Blogs": true,
+    "Projects": true,
   });
 
   const handleLogout = async () => {

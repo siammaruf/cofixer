@@ -46,10 +46,12 @@ export abstract class BaseService<T extends BaseEntity> {
      * @param options - Find options
      */
     async findAll(options?: FindManyOptions<T>): Promise<T[]> {
-        return this.repository.findAll({
-            ...options,
-            relations: options?.relations || this.defaultRelations,
-        });
+        const findOptions: FindManyOptions<T> = { ...(options || {}) };
+        const relations = options?.relations || this.defaultRelations;
+        if (relations) {
+            findOptions.relations = relations;
+        }
+        return this.repository.findAll(findOptions);
     }
 
     /**

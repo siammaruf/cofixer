@@ -52,7 +52,15 @@ export class ProjectAdminController {
     async findAll(
         @Query() paginationDto: PaginationDto,
     ): Promise<PaginatedResponseDto<Project>> {
-        const projects = await this.projectService.findAll();
+        const order: any = {};
+        if (paginationDto.sortBy) {
+            order[paginationDto.sortBy] = paginationDto.sortOrder || 'DESC';
+            order.id = 'DESC';
+        } else {
+            order.createdAt = 'DESC';
+            order.id = 'DESC';
+        }
+        const projects = await this.projectService.findAll({ order });
         const page = paginationDto.page || 1;
         const limit = paginationDto.limit || 10;
         const skip = (page - 1) * limit;
