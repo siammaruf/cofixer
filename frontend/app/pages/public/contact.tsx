@@ -173,7 +173,7 @@ export default function ContactPage() {
 
                 {/* Google Map Iframe Start */}
                 <div className="google-map-iframe">
-                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96737.10562045308!2d-74.08535042841811!3d40.739265258395164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1703158537552!5m2!1sen!2sin" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                  <iframe src="https://maps.google.com/maps?q=42+Bloomfield+House,+Old+Montague+Street,+London+E1+5PA,+UK&output=embed&iwloc=near" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 {/* Google Map Iframe End */}
               </div>
@@ -183,7 +183,8 @@ export default function ContactPage() {
             <div className="col-lg-12">
               {/* Contact Info List Start */}
               <div className="contact-info-list">
-                {/* Contact Info Item Start */}
+                {/* Contact Info Item Start (Phone hidden) */}
+                {/*
                 <div className="contact-info-item wow fadeInUp">
                   <div className="icon-box">
                     <img src="/images/icon-phone.svg" alt="" />
@@ -194,6 +195,7 @@ export default function ContactPage() {
                     <p><a href="tel:+761852339">(+12) 761 852 339</a></p>
                   </div>
                 </div>
+                */}
                 {/* Contact Info Item End */}
 
                 {/* Contact Info Item Start */}
@@ -203,8 +205,7 @@ export default function ContactPage() {
                   </div>
                   <div className="contact-info-content">
                     <h3>email us</h3>
-                    <p><a href="mailto:info@domain.com">info@domainname.com</a></p>
-                    <p><a href="mailto:support@domain.com">support@domain.com</a></p>
+                    <p><a href="mailto:support@cofixer.com">support@cofixer.com</a></p>
                   </div>
                 </div>
                 {/* Contact Info Item End */}
@@ -229,8 +230,8 @@ export default function ContactPage() {
                   </div>
                   <div className="contact-info-content">
                     <h3>location</h3>
-                    <p>2715 Ash San Jose, USA</p>
-                    <p>2715 Ash San Jose, USA</p>
+                    <p>42 Bloomfield House, Old Montague Street, London E1 5PA, UK</p>
+                    <p>42 Bloomfield House, Old Montague Street, London E1 5PA, UK</p>
                   </div>
                 </div>
                 {/* Contact Info Item End */}
