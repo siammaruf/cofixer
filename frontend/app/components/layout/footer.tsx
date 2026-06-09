@@ -41,15 +41,14 @@ export default function Footer() {
               {/* Footer Links Start */}
               <div className="footer-links">
                 <h3>Get In Touch</h3>
-                <p><a href="tel:152885253">+(00) - 152 885 253</a></p>
-                <p><a href="mailto:info@domainname.com">info@domainname.com</a></p>
+                <p><a href="mailto:support@cofixer.com">support@cofixer.com</a></p>
               </div>
               {/* Footer Links End */}
 
               {/* Footer Links Start */}
               <div className="footer-links">
                 <h3>Our Location</h3>
-                <p>123 Lorem Street Suite 5B, Ips Park London, UK SW1A 1AA</p>
+                <p>42 Bloomfield House, Old Montague Street, London E1 5PA, UK</p>
               </div>
               {/* Footer Links End */}
             </div>
