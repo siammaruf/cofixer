@@ -173,7 +173,7 @@ export default function ContactPage() {
 
                 {/* Google Map Iframe Start */}
                 <div className="google-map-iframe">
-                  <iframe src="https://maps.google.com/maps?q=42+Bloomfield+House,+Old+Montague+Street,+London+E1+5PA,+UK&output=embed&iwloc=near" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4218.639185314929!2d-0.06927152241090209!3d51.51884060986629!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761ccbb83a9f43%3A0x54adffda09161bfb!2sBloomfield%20House%2C%20Old%20Montague%20St%2C%20London%20E1%205PA%2C%20UK!5e1!3m2!1sen!2sbd!4v1781005484348!5m2!1sen!2sbd" title="Cofixer Location" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 {/* Google Map Iframe End */}
               </div>
@@ -230,7 +230,6 @@ export default function ContactPage() {
                   </div>
                   <div className="contact-info-content">
                     <h3>location</h3>
-                    <p>42 Bloomfield House, Old Montague Street, London E1 5PA, UK</p>
                     <p>42 Bloomfield House, Old Montague Street, London E1 5PA, UK</p>
                   </div>
                 </div>
