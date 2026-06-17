@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { randomBytes } from 'crypto';
+import { Throttle } from '@nestjs/throttler';
 import { LoginResponsePayloadDto, ResponsePayloadDto } from 'src/shared/dtos';
 import { AuthService } from './auth.service';
 import {
@@ -44,6 +45,7 @@ export class AuthController {
     @Version(['1', VERSION_NEUTRAL])
     @Post('login')
     @Public()
+    @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 attempts per minute
     @UseInterceptors(SetToken)
     @ApiSwagger({
         resourceName: 'Login',
@@ -59,6 +61,10 @@ export class AuthController {
                 description: 'Unauthorized - incorrect email or password',
             },
             { status: 404, description: 'User not found' },
+            {
+                status: 429,
+                description: 'Too many login attempts - please try again later',
+            },
         ],
     })
     async login(
@@ -70,6 +76,7 @@ export class AuthController {
     @Version(['1', VERSION_NEUTRAL])
     @Post('admin-login')
     @Public()
+    @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 attempts per minute
     @UsePipes(ValidationPipe)
     @UseInterceptors(SetToken)
     @ApiSwagger({
@@ -87,6 +94,10 @@ export class AuthController {
             },
             { status: 403, description: 'Forbidden - not an admin user' },
             { status: 404, description: 'User not found' },
+            {
+                status: 429,
+                description: 'Too many login attempts - please try again later',
+            },
         ],
     })
     async adminLogin(
@@ -98,6 +109,7 @@ export class AuthController {
     @Version(['1', VERSION_NEUTRAL])
     @Post('social-login')
     @Public()
+    @Throttle({ default: { limit: 10, ttl: 60000 } })
     @UsePipes(ValidationPipe)
     @UseInterceptors(SetToken)
     @ApiSwagger({
@@ -180,6 +192,7 @@ export class AuthController {
 
     @Post('forgot-password')
     @Public()
+    @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 attempts per minute
     @UsePipes(ValidationPipe)
     @ApiSwagger({
         resourceName: 'Forgot Password',
@@ -204,6 +217,7 @@ export class AuthController {
 
     @Post('reset-password')
     @Public()
+    @Throttle({ default: { limit: 5, ttl: 60000 } })
     @UsePipes(ValidationPipe)
     @ApiSwagger({
         resourceName: 'Reset Password',
@@ -229,6 +243,7 @@ export class AuthController {
 
     @Post('verify-otp')
     @Public()
+    @Throttle({ default: { limit: 10, ttl: 60000 } })
     @UsePipes(ValidationPipe)
     @ApiSwagger({
         resourceName: 'Verify OTP',
@@ -257,6 +272,7 @@ export class AuthController {
 
     @Post('register')
     @Public()
+    @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 registrations per minute
     @UsePipes(ValidationPipe)
     @HttpCode(HttpStatus.CREATED)
     @ApiSwagger({
@@ -279,6 +295,7 @@ export class AuthController {
 
     @Post('verify-email')
     @Public()
+    @Throttle({ default: { limit: 10, ttl: 60000 } })
     @UsePipes(ValidationPipe)
     @UseInterceptors(SetToken)
     @ApiSwagger({
@@ -301,6 +318,7 @@ export class AuthController {
 
     @Post('refresh')
     @Public()
+    @Throttle({ default: { limit: 20, ttl: 60000 } })
     @UsePipes(ValidationPipe)
     @UseInterceptors(SetToken)
     @ApiSwagger({
@@ -360,6 +378,7 @@ export class AuthController {
     @Version(['1', VERSION_NEUTRAL])
     @Get('csrf-token')
     @Public()
+    @Throttle({ default: { limit: 30, ttl: 60000 } })
     @ApiSwagger({
         resourceName: 'CSRF Token',
         operation: 'custom',
@@ -403,6 +422,7 @@ export class AuthController {
     @Version(['1', VERSION_NEUTRAL])
     @Get('refresh-access-token')
     @Public()
+    @Throttle({ default: { limit: 20, ttl: 60000 } })
     @UsePipes(ValidationPipe)
     @UseInterceptors(SetToken)
     @ApiSwagger({

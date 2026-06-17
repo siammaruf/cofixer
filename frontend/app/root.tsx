@@ -57,11 +57,22 @@ function Preloader() {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zxx" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+
+        {/* Security Meta Tags */}
+        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';" />
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta httpEquiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+
+        {/* Prevent clickjacking via meta (backup to X-Frame-Options header) */}
+        <meta name="robots" content="index, follow" />
+
         <Meta />
         <Links />
         <style dangerouslySetInnerHTML={{ __html: '.tabs-list-h40{height:40px!important}.tabs-trigger-active-r20[data-state="active"]{border-radius:20px!important}' }} />

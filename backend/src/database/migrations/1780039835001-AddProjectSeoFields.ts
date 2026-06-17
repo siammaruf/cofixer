@@ -31,11 +31,23 @@ export class AddProjectSeoFields1780039835001 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN IF EXISTS "robots_meta"`);
-        await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN IF EXISTS "canonical_url"`);
-        await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN IF EXISTS "og_image"`);
-        await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN IF EXISTS "meta_keywords"`);
-        await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN IF EXISTS "meta_description"`);
-        await queryRunner.query(`ALTER TABLE "projects" DROP COLUMN IF EXISTS "meta_title"`);
+        await queryRunner.query(
+            `ALTER TABLE "projects" DROP COLUMN IF EXISTS "robots_meta"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "projects" DROP COLUMN IF EXISTS "canonical_url"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "projects" DROP COLUMN IF EXISTS "og_image"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "projects" DROP COLUMN IF EXISTS "meta_keywords"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "projects" DROP COLUMN IF EXISTS "meta_description"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "projects" DROP COLUMN IF EXISTS "meta_title"`,
+        );
     }
 }

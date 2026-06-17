@@ -1,39 +1,109 @@
 version: '3.8'
 
+# ============================================================
+# PRODUCTION DOCKER COMPOSE FOR DOKPLOY
+# ============================================================
+# IMPORTANT: In Dokploy, do NOT expose database/cache ports to host.
+# Services communicate via internal Docker network only.
+# Environment variables are injected via Dokploy UI, not .env files.
+# ============================================================
+
 services:
+  # PostgreSQL — internal only, no host port binding
   postgres:
     image: postgres:16-alpine
     container_name: cofixer-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cofixer
-    ports:
-      - "15432:5432"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE:-cofixer}
+    # NO ports exposed to host — internal Docker network only
+    # ports:
+    #   - "15432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    networks:
+      - cofixer-network
 
+  # Redis — protected with password, internal only
   redis:
     image: redis:7-alpine
     container_name: cofixer-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
+    command: >
+      sh -c '
+        echo "requirepass ${REDIS_PASSWORD}" > /usr/local/etc/redis/redis.conf &&
+        echo "maxmemory 256mb" >> /usr/local/etc/redis/redis.conf &&
+        echo "maxmemory-policy allkeys-lru" >> /usr/local/etc/redis/redis.conf &&
+        redis-server /usr/local/etc/redis/redis.conf
+      '
+    # NO ports exposed to host — internal Docker network only
+    # ports:
+    #   - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    networks:
+      - cofixer-network
+
+  # Backend API — Dokploy will route via Traefik labels
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cofixer-backend
+    restart: unless-stopped
+    environment:
+      MODE: PROD
+      PORT: 3000
+      # All other env vars injected via Dokploy UI
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cofixer-network
+    # Dokploy handles Traefik routing — no need to expose ports here
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.backend.rule=Host(`api.cofixer.com`)"
+    #   - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+
+  # Frontend — Dokploy will route via Traefik labels
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cofixer-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - backend
+    networks:
+      - cofixer-network
+    # Dokploy handles Traefik routing — no need to expose ports here
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
+    driver: local
+
+networks:
+  cofixer-network:
+    driver: bridge
