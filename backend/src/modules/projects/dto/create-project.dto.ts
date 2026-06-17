@@ -152,7 +152,8 @@ export class CreateProjectDto {
     metaTitle?: string;
 
     @ApiPropertyOptional({
-        example: 'We built a fully AI-driven e-commerce platform with personalized recommendations for TechCorp Inc.',
+        example:
+            'We built a fully AI-driven e-commerce platform with personalized recommendations for TechCorp Inc.',
         description: 'SEO meta description',
     })
     @IsOptional()
@@ -189,7 +190,8 @@ export class CreateProjectDto {
 
     @ApiPropertyOptional({
         example: 'index, follow',
-        description: 'Robots meta directive (e.g., index/follow, noindex/nofollow)',
+        description:
+            'Robots meta directive (e.g., index/follow, noindex/nofollow)',
         maxLength: 100,
         default: 'index, follow',
     })

@@ -3,3 +3,8 @@ build
 node_modules
 README.md
 package-lock.json
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store

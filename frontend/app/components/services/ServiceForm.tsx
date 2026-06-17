@@ -28,8 +28,8 @@ const serviceFormSchema = z.object({
   shortDescription: z.string().optional().or(z.literal("")),
   icon: z.string().optional().or(z.literal("")),
   order: z.number().int().min(0),
-  featured: z.boolean().default(false),
-  isActive: z.boolean().default(true),
+  featured: z.boolean(),
+  isActive: z.boolean(),
 });
 
 export type ServiceFormValues = z.infer<typeof serviceFormSchema>;

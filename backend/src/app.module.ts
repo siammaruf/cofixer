@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
 //DB
@@ -44,17 +44,21 @@ import { CacheModule } from '@infrastructure/cache';
             rootPath: join(__dirname, '..', 'src/shared/icons'),
             serveRoot: '/diagnosis-icons',
         }),
-        ServeStaticModule.forRoot({
-            rootPath: join(process.cwd(), 'src', 'test'),
-            serveRoot: '/test',
-        }),
         ConfigModule.forRoot({
             load: [jwtConfig],
             isGlobal: true,
         }),
         TypeOrmModule.forRoot(appDataSource.options),
+        // Global rate limiting: 100 req/min for general API
         ThrottlerModule.forRoot([
             {
+                name: 'default',
+                ttl: 60000,
+                limit: 100,
+            },
+            // Stricter limit for auth endpoints: 10 req/min
+            {
+                name: 'auth',
                 ttl: 60000,
                 limit: 10,
             },
@@ -118,6 +122,10 @@ import { CacheModule } from '@infrastructure/cache';
         {
             provide: APP_GUARD,
             useClass: JwtAuthGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: ThrottlerGuard,
         },
     ],
 })

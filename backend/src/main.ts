@@ -1,6 +1,8 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser = require('cookie-parser');
+import helmet from 'helmet';
+import { json, urlencoded } from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
 import { AppModule } from './app.module';
@@ -18,6 +20,44 @@ async function bootstrap() {
             instance: instance,
         }),
     });
+
+    // Trust proxy headers from Dokploy Traefik
+    app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
+    // Security Headers via Helmet
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    defaultSrc: ["'self'"],
+                    scriptSrc: ["'self'", "'unsafe-inline'"],
+                    styleSrc: [
+                        "'self'",
+                        "'unsafe-inline'",
+                        'https://fonts.googleapis.com',
+                    ],
+                    fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+                    imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
+                    connectSrc: ["'self'"],
+                    frameAncestors: ["'none'"],
+                    upgradeInsecureRequests: [],
+                },
+            },
+            crossOriginEmbedderPolicy: false, // Allow embedded content
+            hsts: {
+                maxAge: 31536000,
+                includeSubDomains: true,
+                preload: true,
+            },
+            xFrameOptions: { action: 'deny' },
+            xContentTypeOptions: true,
+            referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+        }),
+    );
+
+    // Body parser limits to prevent DoS / Large Payload attacks
+    app.use(json({ limit: '100kb' }));
+    app.use(urlencoded({ extended: true, limit: '100kb' }));
 
     app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
@@ -45,13 +85,21 @@ async function bootstrap() {
         defaultVersion: '1',
     });
 
+    // Hardened CORS — NEVER allow wildcard in any environment
+    const allowedOrigins = envConfigService.getOrigins();
     app.enableCors({
-        origin: envConfigService.isProduction()
-            ? envConfigService.getOrigins()
-            : (
-                  _origin: string | undefined,
-                  callback: (err: Error | null, allow?: boolean) => void,
-              ) => callback(null, true),
+        origin: (
+            origin: string | undefined,
+            callback: (err: Error | null, allow?: boolean) => void,
+        ) => {
+            // Allow requests with no origin (mobile apps, curl, server-to-server)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.includes(origin)) return callback(null, true);
+            callback(
+                new Error(`CORS policy: Origin ${origin} not allowed`),
+                false,
+            );
+        },
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
         allowedHeaders: [
