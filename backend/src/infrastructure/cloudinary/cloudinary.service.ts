@@ -116,7 +116,13 @@ export class CloudinaryService {
         mimeType: string,
         folder?: string,
     ): Promise<CloudinaryUploadResult> {
-        const options = this.buildUploadOptions(mimeType, folder);
+        const cfg = envConfigService.getCloudinaryConfig();
+        const options = {
+            ...this.buildUploadOptions(mimeType, folder),
+            cloud_name: cfg.cloudName,
+            api_key: cfg.apiKey,
+            api_secret: cfg.apiSecret,
+        };
 
         return new Promise((resolve, reject) => {
             cloudinary.uploader.upload(
@@ -146,7 +152,13 @@ export class CloudinaryService {
         mimeType: string,
         folder?: string,
     ): Promise<CloudinaryUploadResult> {
-        const options = this.buildUploadOptions(mimeType, folder);
+        const cfg = envConfigService.getCloudinaryConfig();
+        const options = {
+            ...this.buildUploadOptions(mimeType, folder),
+            cloud_name: cfg.cloudName,
+            api_key: cfg.apiKey,
+            api_secret: cfg.apiSecret,
+        };
 
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(

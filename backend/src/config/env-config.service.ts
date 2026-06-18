@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import * as path from 'path';
 
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 class EnvConfigService {
     constructor(private env: { [k: string]: string | undefined }) {}
