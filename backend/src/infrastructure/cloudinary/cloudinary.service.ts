@@ -15,23 +15,7 @@ export interface CloudinaryUploadResult {
 export class CloudinaryService {
     private readonly logger = new Logger(CloudinaryService.name);
     private readonly folder = envConfigService.getCloudinaryConfig().folder;
-
-    private readonly cloudinaryConfig = envConfigService.getCloudinaryConfig();
-
-    constructor() {
-        cloudinary.config({
-            cloud_name: this.cloudinaryConfig.cloudName,
-            api_key: this.cloudinaryConfig.apiKey,
-            api_secret: this.cloudinaryConfig.apiSecret,
-            secure: true,
-        });
-        const secret = this.cloudinaryConfig.apiSecret;
-        this.logger.log(
-            `Cloudinary configured: cloud_name=${this.cloudinaryConfig.cloudName}, ` +
-            `api_key=${this.cloudinaryConfig.apiKey ? 'SET' : 'MISSING'}, ` +
-            `api_secret=${secret ? `SET(len=${secret.length})` : 'MISSING'}`,
-        );
-    }
+    private readonly uploadPreset = envConfigService.getCloudinaryConfig().uploadPreset;
 
     private isImage(mimeType: string): boolean {
         return mimeType.startsWith('image/');
@@ -76,11 +60,12 @@ export class CloudinaryService {
         ];
     }
 
-    async uploadFile(
-        file: Express.Multer.File,
-        folder?: string,
-    ): Promise<CloudinaryUploadResult> {
-        return this.uploadBuffer(file.buffer, file.originalname, file.mimetype, folder);
+    private getDynamicFolder(baseFolder?: string): string {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const base = baseFolder || this.folder;
+        return `${base}/${year}/${month}`;
     }
 
     private buildUploadOptions(
@@ -96,7 +81,7 @@ export class CloudinaryService {
                 : undefined;
 
         return {
-            folder: folder || this.folder,
+            folder: this.getDynamicFolder(folder),
             resource_type: isVideo ? 'video' : 'auto',
             use_filename: true,
             unique_filename: true,
@@ -115,6 +100,10 @@ export class CloudinaryService {
         };
     }
 
+    /**
+     * Signed upload from a file path (recommended for server-side chunked assembly).
+     * Uses CLOUDINARY_API_KEY + CLOUDINARY_API_SECRET — no preset required.
+     */
     async uploadFromPath(
         filePath: string,
         mimeType: string,
@@ -140,6 +129,10 @@ export class CloudinaryService {
         });
     }
 
+    /**
+     * Signed upload from a Buffer (recommended for direct Multer file uploads).
+     * Uses CLOUDINARY_API_KEY + CLOUDINARY_API_SECRET — no preset required.
+     */
     async uploadBuffer(
         buffer: Buffer,
         originalName: string,
@@ -166,6 +159,17 @@ export class CloudinaryService {
         });
     }
 
+    async uploadFile(
+        file: Express.Multer.File,
+        folder?: string,
+    ): Promise<CloudinaryUploadResult> {
+        return this.uploadBuffer(file.buffer, file.originalname, file.mimetype, folder);
+    }
+
+    /**
+     * Unsigned upload from a Buffer — requires a Cloudinary upload preset
+     * created manually in the Cloudinary dashboard.
+     */
     async unsignedUploadBuffer(
         buffer: Buffer,
         uploadPreset: string,
