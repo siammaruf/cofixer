@@ -20,7 +20,7 @@ export class User extends BaseEntity {
     @Column({ name: 'last_name', nullable: true })
     lastName?: string;
 
-    @Column({ name: 'full_name', nullable: true })
+    @Column({ name: 'full_name', nullable: true, type: 'varchar' })
     fullName?: string | null;
 
     @Column({
