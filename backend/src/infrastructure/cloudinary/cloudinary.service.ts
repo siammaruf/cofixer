@@ -16,6 +16,16 @@ export class CloudinaryService {
     private readonly logger = new Logger(CloudinaryService.name);
     private readonly folder = envConfigService.getCloudinaryConfig().folder;
 
+    constructor() {
+        const config = envConfigService.getCloudinaryConfig();
+        cloudinary.config({
+            cloud_name: config.cloudName,
+            api_key: config.apiKey,
+            api_secret: config.apiSecret,
+            secure: true,
+        });
+    }
+
     private isImage(mimeType: string): boolean {
         return mimeType.startsWith('image/');
     }
@@ -80,8 +90,6 @@ export class CloudinaryService {
                 ? this.getVideoEager()
                 : undefined;
 
-        const config = envConfigService.getCloudinaryConfig();
-
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
@@ -90,10 +98,6 @@ export class CloudinaryService {
                     use_filename: true,
                     unique_filename: true,
                     eager,
-                    // Explicitly pass credentials to ensure signed upload
-                    api_key: config.apiKey,
-                    api_secret: config.apiSecret,
-                    cloud_name: config.cloudName,
                 },
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
