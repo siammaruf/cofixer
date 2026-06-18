@@ -30,6 +30,7 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
     private statusRedis: Redis;
     private readonly tempDir = path.resolve(process.cwd(), 'uploads', 'temp');
     private readonly redisPrefix: string;
+    private readonly useUnsignedUpload: boolean;
 
     constructor(
         private readonly cloudinaryService: CloudinaryService,
@@ -38,6 +39,13 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
     ) {
         this.redisPrefix =
             envConfigService.getValue('REDIS_PREFIX', false) || 'cofixer';
+        this.useUnsignedUpload =
+            !!envConfigService.getCloudinaryConfig().uploadPreset;
+        if (this.useUnsignedUpload) {
+            this.logger.log(
+                'Cloudinary upload preset detected — using unsigned upload mode',
+            );
+        }
     }
 
     onModuleInit() {
@@ -104,11 +112,17 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
             await this.setStatus(uploadId, { status: 'processing', progress: 40 });
 
             // Upload to Cloudinary directly from file path (efficient for large files)
-            const uploadResult = await this.cloudinaryService.uploadFromPath(
-                assembledFilePath,
-                mimeType,
-                folder,
-            );
+            const uploadResult = this.useUnsignedUpload
+                ? await this.cloudinaryService.unsignedUploadFromPath(
+                      assembledFilePath,
+                      mimeType,
+                      folder,
+                  )
+                : await this.cloudinaryService.uploadFromPath(
+                      assembledFilePath,
+                      mimeType,
+                      folder,
+                  );
             await this.setStatus(uploadId, { status: 'processing', progress: 80 });
 
             // Save to database
