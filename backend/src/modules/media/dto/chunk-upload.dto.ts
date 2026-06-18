@@ -35,8 +35,8 @@ export class ChunkCompleteDto {
     @Type(() => Number)
     size: number;
 
+    @IsOptional()
     @IsNumber()
-    @Min(1, { message: 'totalChunks must be at least 1' })
     @Type(() => Number)
-    totalChunks: number;
+    totalChunks?: number;
 }

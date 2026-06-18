@@ -12,6 +12,7 @@ import {
     Body,
     BadRequestException,
     Get,
+    Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
@@ -41,6 +42,7 @@ import { ChunkUploadDto, ChunkCompleteDto } from './dto/chunk-upload.dto';
 @UseGuards(RolesGuard)
 @UseInterceptors(CacheClearInterceptor)
 export class MediaAdminController {
+    private readonly logger = new Logger(MediaAdminController.name);
     private readonly tempDir = path.resolve(process.cwd(), 'uploads', 'temp');
 
     constructor(
@@ -49,6 +51,16 @@ export class MediaAdminController {
         private readonly queueService: QueueService,
         private readonly mediaUploadProcessor: MediaUploadProcessor,
     ) {}
+
+    private countChunksOnDisk(uploadId: string): number {
+        const uploadDir = path.join(this.tempDir, uploadId);
+        if (!fs.existsSync(uploadDir)) {
+            return 0;
+        }
+        return fs
+            .readdirSync(uploadDir)
+            .filter((f) => f.startsWith('chunk-')).length;
+    }
 
     @Post('upload')
     @CacheClear('media')
@@ -152,23 +164,37 @@ export class MediaAdminController {
     async completeChunkUpload(
         @Body() dto: ChunkCompleteDto,
     ): Promise<SuccessResponseDto<{ uploadId: string; status: string }>> {
+        // Debug: log what the server received
+        this.logger.debug(
+            `chunk/complete received: uploadId=${dto.uploadId}, size=${dto.size}, totalChunks=${dto.totalChunks}, mimeType=${dto.mimeType}`,
+        );
+
         if (!dto.uploadId) {
             throw new BadRequestException('uploadId is required');
         }
 
-        if (dto.size === 0) {
-            throw new BadRequestException('File size cannot be 0. Empty files are not allowed.');
-        }
-
-        if (dto.totalChunks < 1) {
-            throw new BadRequestException('totalChunks must be at least 1');
-        }
-
-        // Verify all chunks exist
+        // Verify upload session exists
         const uploadDir = path.join(this.tempDir, dto.uploadId);
         if (!fs.existsSync(uploadDir)) {
             throw new BadRequestException('Upload session not found');
         }
+
+        // Use server-side chunk count as source of truth
+        const actualChunks = this.countChunksOnDisk(dto.uploadId);
+        if (actualChunks === 0) {
+            throw new BadRequestException(
+                'No chunks found for this upload. Please upload chunks first.',
+            );
+        }
+
+        // Warn if client-reported count differs from actual
+        if (dto.totalChunks && dto.totalChunks !== actualChunks) {
+            this.logger.warn(
+                `Chunk count mismatch for ${dto.uploadId}: client reported ${dto.totalChunks}, actual on disk: ${actualChunks}. Using actual count.`,
+            );
+        }
+
+        const totalChunks = actualChunks;
 
         // Add to queue for processing
         await this.queueService.addMediaUploadJob({
@@ -176,7 +202,7 @@ export class MediaAdminController {
             originalName: dto.originalName,
             mimeType: dto.mimeType,
             size: dto.size,
-            totalChunks: dto.totalChunks,
+            totalChunks,
         });
 
         // Set initial status
