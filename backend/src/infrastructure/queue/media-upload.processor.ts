@@ -84,24 +84,26 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
     }
 
     private async processJob(job: Job<MediaUploadJobData>): Promise<Media> {
-        const { uploadId, originalName, mimeType, size, totalChunks } =
+        const { uploadId, originalName, mimeType, size, totalChunks, folder } =
             job.data;
+        const assembledFilePath = path.join(this.tempDir, `${uploadId}.tmp`);
 
         await this.setStatus(uploadId, { status: 'processing', progress: 10 });
 
         try {
-            // Assemble chunks
-            const assembledBuffer = await this.assembleChunks(
+            // Assemble chunks into a single temp file
+            await this.assembleChunksToFile(
                 uploadId,
                 totalChunks,
+                assembledFilePath,
             );
             await this.setStatus(uploadId, { status: 'processing', progress: 40 });
 
-            // Upload to Cloudinary with SEO optimizations
-            const uploadResult = await this.cloudinaryService.uploadBuffer(
-                assembledBuffer,
-                originalName,
+            // Upload to Cloudinary directly from file path (efficient for large files)
+            const uploadResult = await this.cloudinaryService.uploadFromPath(
+                assembledFilePath,
                 mimeType,
+                folder,
             );
             await this.setStatus(uploadId, { status: 'processing', progress: 80 });
 
@@ -124,8 +126,9 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                 result: savedMedia,
             });
 
-            // Clean up temp chunks
+            // Clean up temp chunks and assembled file
             await this.cleanupChunks(uploadId, totalChunks);
+            this.safeDeleteFile(assembledFilePath);
 
             this.logger.log(
                 `Media upload completed: ${savedMedia.id} (${originalName})`,
@@ -139,15 +142,17 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                 error: message,
             });
             await this.cleanupChunks(uploadId, totalChunks);
+            this.safeDeleteFile(assembledFilePath);
             throw error;
         }
     }
 
-    private async assembleChunks(
+    private async assembleChunksToFile(
         uploadId: string,
         totalChunks: number,
-    ): Promise<Buffer> {
-        const chunks: Buffer[] = [];
+        outputPath: string,
+    ): Promise<void> {
+        const writeStream = fs.createWriteStream(outputPath);
 
         for (let i = 0; i < totalChunks; i++) {
             const chunkPath = path.join(
@@ -156,13 +161,18 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                 `chunk-${i}`,
             );
             if (!fs.existsSync(chunkPath)) {
+                writeStream.destroy();
                 throw new Error(`Missing chunk ${i} for upload ${uploadId}`);
             }
             const chunk = fs.readFileSync(chunkPath);
-            chunks.push(chunk);
+            writeStream.write(chunk);
         }
 
-        return Buffer.concat(chunks);
+        return new Promise((resolve, reject) => {
+            writeStream.on('finish', resolve);
+            writeStream.on('error', reject);
+            writeStream.end();
+        });
     }
 
     private async cleanupChunks(
@@ -178,6 +188,16 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
             this.logger.warn(
                 `Failed to cleanup chunks for ${uploadId}: ${err.message}`,
             );
+        }
+    }
+
+    private safeDeleteFile(filePath: string): void {
+        try {
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        } catch (err) {
+            this.logger.warn(`Failed to delete file ${filePath}: ${err.message}`);
         }
     }
 
