@@ -83,12 +83,10 @@ export class CloudinaryService {
         return this.uploadBuffer(file.buffer, file.originalname, file.mimetype, folder);
     }
 
-    async uploadBuffer(
-        buffer: Buffer,
-        originalName: string,
+    private buildUploadOptions(
         mimeType: string,
         folder?: string,
-    ): Promise<CloudinaryUploadResult> {
+    ): Record<string, unknown> {
         const isImage = this.isImage(mimeType);
         const isVideo = this.isVideo(mimeType);
         const eager = isImage
@@ -97,18 +95,37 @@ export class CloudinaryService {
                 ? this.getVideoEager()
                 : undefined;
 
-        const base64Data = `data:${mimeType};base64,${buffer.toString('base64')}`;
+        return {
+            folder: folder || this.folder,
+            resource_type: isVideo ? 'video' : 'auto',
+            use_filename: true,
+            unique_filename: true,
+            eager,
+        };
+    }
+
+    private handleUploadResult(result: UploadApiResponse): CloudinaryUploadResult {
+        const eagerResults = result.eager || [];
+        return {
+            publicId: result.public_id,
+            url: result.secure_url,
+            thumbUrl: eagerResults[0]?.secure_url,
+            largeUrl: eagerResults[1]?.secure_url,
+            fullUrl: eagerResults[2]?.secure_url,
+        };
+    }
+
+    async uploadFromPath(
+        filePath: string,
+        mimeType: string,
+        folder?: string,
+    ): Promise<CloudinaryUploadResult> {
+        const options = this.buildUploadOptions(mimeType, folder);
 
         return new Promise((resolve, reject) => {
             cloudinary.uploader.upload(
-                base64Data,
-                {
-                    folder: folder || this.folder,
-                    resource_type: isVideo ? 'video' : 'auto',
-                    use_filename: true,
-                    unique_filename: true,
-                    eager,
-                },
+                filePath,
+                options,
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
                         this.logger.error(
@@ -117,18 +134,79 @@ export class CloudinaryService {
                         reject(new Error(error.message));
                         return;
                     }
-
-                    const eagerResults = result.eager || [];
-                    resolve({
-                        publicId: result.public_id,
-                        url: result.secure_url,
-                        thumbUrl: eagerResults[0]?.secure_url,
-                        largeUrl: eagerResults[1]?.secure_url,
-                        fullUrl: eagerResults[2]?.secure_url,
-                    });
+                    resolve(this.handleUploadResult(result));
                 },
             );
         });
+    }
+
+    async uploadBuffer(
+        buffer: Buffer,
+        originalName: string,
+        mimeType: string,
+        folder?: string,
+    ): Promise<CloudinaryUploadResult> {
+        const options = this.buildUploadOptions(mimeType, folder);
+
+        return new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                options,
+                (error: UploadApiErrorResponse, result: UploadApiResponse) => {
+                    if (error) {
+                        this.logger.error(
+                            `Cloudinary upload failed: ${error.message}`,
+                        );
+                        reject(new Error(error.message));
+                        return;
+                    }
+                    resolve(this.handleUploadResult(result));
+                },
+            );
+            stream.end(buffer);
+        });
+    }
+
+    async unsignedUploadBuffer(
+        buffer: Buffer,
+        uploadPreset: string,
+        mimeType: string,
+        folder?: string,
+    ): Promise<CloudinaryUploadResult> {
+        const options = {
+            ...this.buildUploadOptions(mimeType, folder),
+            upload_preset: uploadPreset,
+        };
+
+        return new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.unsigned_upload_stream(
+                uploadPreset,
+                options,
+                (error: UploadApiErrorResponse, result: UploadApiResponse) => {
+                    if (error) {
+                        this.logger.error(
+                            `Cloudinary unsigned upload failed: ${error.message}`,
+                        );
+                        reject(new Error(error.message));
+                        return;
+                    }
+                    resolve(this.handleUploadResult(result));
+                },
+            );
+            stream.end(buffer);
+        });
+    }
+
+    async unsignedUploadFile(
+        file: Express.Multer.File,
+        uploadPreset: string,
+        folder?: string,
+    ): Promise<CloudinaryUploadResult> {
+        return this.unsignedUploadBuffer(
+            file.buffer,
+            uploadPreset,
+            file.mimetype,
+            folder,
+        );
     }
 
     async deleteFile(publicId: string): Promise<void> {
