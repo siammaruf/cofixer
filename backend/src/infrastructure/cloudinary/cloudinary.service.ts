@@ -210,6 +210,7 @@ export class CloudinaryService {
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.unsigned_upload_stream(
                 uploadPreset,
+                options,
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
                         this.logger.error(
@@ -220,7 +221,6 @@ export class CloudinaryService {
                     }
                     resolve(this.handleUploadResult(result));
                 },
-                options,
             );
             stream.end(buffer);
         });
@@ -264,6 +264,7 @@ export class CloudinaryService {
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.unsigned_upload_stream(
                 uploadPreset,
+                options,
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
                         this.logger.error(
@@ -274,7 +275,6 @@ export class CloudinaryService {
                     }
                     resolve(this.handleUploadResult(result));
                 },
-                options,
             );
 
             const readStream = fs.createReadStream(filePath);
