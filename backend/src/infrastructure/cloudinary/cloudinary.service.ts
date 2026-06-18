@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
+import * as fs from 'fs';
 import { cloudinary } from '../../config/cloudinary.config';
 import { envConfigService } from '../../config/env-config.service';
 
@@ -186,15 +187,21 @@ export class CloudinaryService {
     }
 
     /**
-     * Unsigned upload from a Buffer — requires a Cloudinary upload preset
-     * created manually in the Cloudinary dashboard.
+     * Unsigned upload from a Buffer — uses CLOUDINARY_UPLOAD_PRESET from env by default.
      */
     async unsignedUploadBuffer(
         buffer: Buffer,
-        uploadPreset: string,
         mimeType: string,
         folder?: string,
+        uploadPreset: string = this.uploadPreset,
     ): Promise<CloudinaryUploadResult> {
+        if (!uploadPreset) {
+            throw new Error(
+                'Upload preset is required for unsigned upload. ' +
+                'Set CLOUDINARY_UPLOAD_PRESET in .env or pass it explicitly.',
+            );
+        }
+
         const options = {
             ...this.buildUploadOptions(mimeType, folder),
             upload_preset: uploadPreset,
@@ -221,15 +228,141 @@ export class CloudinaryService {
 
     async unsignedUploadFile(
         file: Express.Multer.File,
-        uploadPreset: string,
         folder?: string,
+        uploadPreset: string = this.uploadPreset,
     ): Promise<CloudinaryUploadResult> {
         return this.unsignedUploadBuffer(
             file.buffer,
-            uploadPreset,
             file.mimetype,
             folder,
+            uploadPreset,
         );
+    }
+
+    /**
+     * Unsigned upload from a file path — streams the file to Cloudinary.
+     * Uses CLOUDINARY_UPLOAD_PRESET from env by default.
+     */
+    async unsignedUploadFromPath(
+        filePath: string,
+        mimeType: string,
+        folder?: string,
+        uploadPreset: string = this.uploadPreset,
+    ): Promise<CloudinaryUploadResult> {
+        if (!uploadPreset) {
+            throw new Error(
+                'Upload preset is required for unsigned upload. ' +
+                'Set CLOUDINARY_UPLOAD_PRESET in .env or pass it explicitly.',
+            );
+        }
+
+        const options = {
+            ...this.buildUploadOptions(mimeType, folder),
+            upload_preset: uploadPreset,
+        };
+
+        return new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.unsigned_upload_stream(
+                uploadPreset,
+                options,
+                (error: UploadApiErrorResponse, result: UploadApiResponse) => {
+                    if (error) {
+                        this.logger.error(
+                            `Cloudinary unsigned upload failed: ${error.message}`,
+                        );
+                        reject(new Error(error.message));
+                        return;
+                    }
+                    resolve(this.handleUploadResult(result));
+                },
+            );
+
+            const readStream = fs.createReadStream(filePath);
+            readStream.on('error', (err) => reject(err));
+            readStream.pipe(stream);
+        });
+    }
+
+    /**
+     * Create or update an unsigned upload preset programmatically.
+     * Run this once during setup or in an admin/seeder script.
+     */
+    async createUploadPreset(
+        presetName: string,
+        options: {
+            folder?: string;
+            resourceType?: 'image' | 'video' | 'raw' | 'auto';
+            eager?: Array<Record<string, unknown>>;
+            eagerAsync?: boolean;
+            unsigned?: boolean;
+        } = {},
+    ): Promise<{ message: string; preset: unknown }> {
+        const {
+            folder = this.folder,
+            resourceType = 'auto',
+            eager,
+            eagerAsync = true,
+            unsigned = true,
+        } = options;
+
+        try {
+            const preset = await cloudinary.api.create_upload_preset({
+                name: presetName,
+                folder,
+                resource_type: resourceType,
+                unsigned,
+                ...(eager ? { eager } : {}),
+                ...(eager ? { eager_async: eagerAsync } : {}),
+                overwrite: true,
+            });
+
+            this.logger.log(`Upload preset created/updated: ${presetName}`);
+            return { message: 'Preset created successfully', preset };
+        } catch (error) {
+            this.logger.error(
+                `Failed to create upload preset ${presetName}: ${error.message}`,
+            );
+            throw error;
+        }
+    }
+
+    /**
+     * Create the default video preset with multiple format variants.
+     * Call this in a setup script or admin command.
+     */
+    async createDefaultVideoPreset(): Promise<{ message: string; preset: unknown }> {
+        return this.createUploadPreset('cofixer_video_preset', {
+            folder: `${this.folder}/videos`,
+            resourceType: 'video',
+            unsigned: true,
+            eager: [
+                {
+                    format: 'webm',
+                    video_codec: 'vp9',
+                    audio_codec: 'opus',
+                    quality: 'auto:good',
+                },
+                {
+                    format: 'mp4',
+                    video_codec: 'av1',
+                    audio_codec: 'aac',
+                    quality: 'auto:good',
+                },
+                {
+                    format: 'mp4',
+                    video_codec: 'h265',
+                    audio_codec: 'aac',
+                    quality: 'auto:good',
+                },
+                {
+                    format: 'mp4',
+                    video_codec: 'h264',
+                    audio_codec: 'aac',
+                    quality: 'auto:good',
+                },
+            ],
+            eagerAsync: true,
+        });
     }
 
     async deleteFile(publicId: string): Promise<void> {
