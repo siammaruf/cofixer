@@ -69,9 +69,13 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
 
         this.worker.on('failed', (job, err) => {
             this.logger.error(
-                `Job ${job?.id} failed: ${err.message}`,
+                `Job ${job?.id} failed permanently: ${err.message}`,
                 err.stack,
             );
+            // Clean up chunk files after all retries are exhausted
+            if (job?.data?.uploadId) {
+                this.cleanupAfterPermanentFailure(job.data.uploadId);
+            }
         });
 
         this.logger.log('Media upload worker initialized');
@@ -141,7 +145,9 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                 status: 'failed',
                 error: message,
             });
-            await this.cleanupChunks(uploadId, totalChunks);
+            // Only clean up assembled temp file; keep chunks for potential retries.
+            // BullMQ will retry based on job options. Chunks are cleaned up by
+            // a periodic temp-dir cleanup or after final failure.
             this.safeDeleteFile(assembledFilePath);
             throw error;
         }
@@ -198,6 +204,22 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
             }
         } catch (err) {
             this.logger.warn(`Failed to delete file ${filePath}: ${err.message}`);
+        }
+    }
+
+    private cleanupAfterPermanentFailure(uploadId: string): void {
+        try {
+            const uploadDir = path.join(this.tempDir, uploadId);
+            const assembledFilePath = path.join(this.tempDir, `${uploadId}.tmp`);
+            if (fs.existsSync(uploadDir)) {
+                fs.rmSync(uploadDir, { recursive: true, force: true });
+            }
+            this.safeDeleteFile(assembledFilePath);
+            this.logger.log(`Cleaned up temp files for failed upload ${uploadId}`);
+        } catch (err) {
+            this.logger.warn(
+                `Failed to clean up after permanent failure for ${uploadId}: ${err.message}`,
+            );
         }
     }
 
