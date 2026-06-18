@@ -5,7 +5,6 @@ import { BaseEntity } from '../../core/base/base.entity';
 @Unique(['route'])
 export class SeoSettings extends BaseEntity {
     @Column({ length: 255 })
-    @Index()
     route: string;
 
     @Column({ length: 100 })

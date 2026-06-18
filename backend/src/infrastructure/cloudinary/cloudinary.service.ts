@@ -20,38 +20,71 @@ export class CloudinaryService {
         return mimeType.startsWith('image/');
     }
 
+    private isVideo(mimeType: string): boolean {
+        return mimeType.startsWith('video/');
+    }
+
+    private getImageEager() {
+        // SEO-optimized WebP variants for images
+        return [
+            {
+                width: 150,
+                height: 150,
+                crop: 'fill',
+                quality: 'auto:good',
+                fetch_format: 'webp',
+            },
+            {
+                width: 1200,
+                crop: 'limit',
+                quality: 'auto:good',
+                fetch_format: 'webp',
+            },
+            {
+                quality: 'auto:good',
+                fetch_format: 'webp',
+            },
+        ];
+    }
+
+    private getVideoEager() {
+        // SEO-optimized WebM variant for videos (smaller size, modern format)
+        return [
+            {
+                format: 'webm',
+                video_codec: 'vp9',
+                quality: 'auto:good',
+                audio_codec: 'opus',
+            },
+        ];
+    }
+
     async uploadFile(
         file: Express.Multer.File,
         folder?: string,
     ): Promise<CloudinaryUploadResult> {
-        const isImage = this.isImage(file.mimetype);
+        return this.uploadBuffer(file.buffer, file.originalname, file.mimetype, folder);
+    }
+
+    async uploadBuffer(
+        buffer: Buffer,
+        originalName: string,
+        mimeType: string,
+        folder?: string,
+    ): Promise<CloudinaryUploadResult> {
+        const isImage = this.isImage(mimeType);
+        const isVideo = this.isVideo(mimeType);
         const eager = isImage
-            ? [
-                  {
-                      width: 150,
-                      height: 150,
-                      crop: 'fill',
-                      quality: 'auto:best',
-                      fetch_format: 'auto',
-                  },
-                  {
-                      width: 1200,
-                      crop: 'limit',
-                      quality: 'auto:best',
-                      fetch_format: 'auto',
-                  },
-                  {
-                      quality: 'auto:best',
-                      fetch_format: 'auto',
-                  },
-              ]
-            : undefined;
+            ? this.getImageEager()
+            : isVideo
+                ? this.getVideoEager()
+                : undefined;
 
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
                     folder: folder || this.folder,
-                    resource_type: 'auto',
+                    resource_type: isVideo ? 'video' : 'auto',
                     use_filename: true,
                     unique_filename: true,
                     eager,
@@ -75,7 +108,7 @@ export class CloudinaryService {
                     });
                 },
             );
-            uploadStream.end(file.buffer);
+            uploadStream.end(buffer);
         });
     }
 

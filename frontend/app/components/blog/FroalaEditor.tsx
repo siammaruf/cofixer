@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { cmsAdminService } from "~/services";
+import { uploadMediaChunked } from "~/lib/chunked-upload";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 
@@ -78,13 +79,11 @@ export default function FroalaEditor({ value, onChange, placeholder }: FroalaEdi
       }
 
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await cmsAdminService.uploadMedia(formData);
-        if (res.data?.url && quillRef.current) {
+        const result = await uploadMediaChunked(file);
+        if (result.url && quillRef.current) {
           const editor = quillRef.current.getEditor();
           const range = editor.getSelection(true);
-          editor.insertEmbed(range.index, "image", res.data.url);
+          editor.insertEmbed(range.index, "image", result.url);
           editor.setSelection(range.index + 1);
         }
       } catch {
