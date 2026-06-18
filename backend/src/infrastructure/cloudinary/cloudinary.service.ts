@@ -17,6 +17,16 @@ export class CloudinaryService {
     private readonly folder = envConfigService.getCloudinaryConfig().folder;
     private readonly uploadPreset = envConfigService.getCloudinaryConfig().uploadPreset;
 
+    constructor() {
+        const cfg = envConfigService.getCloudinaryConfig();
+        if (!cfg.apiSecret || cfg.apiSecret.length < 10) {
+            throw new Error(
+                `Cloudinary API Secret is missing or invalid (length=${cfg.apiSecret?.length || 0}). ` +
+                `Make sure CLOUDINARY_API_SECRET is set in backend/.env and the server was restarted.`
+            );
+        }
+    }
+
     private isImage(mimeType: string): boolean {
         return mimeType.startsWith('image/');
     }
