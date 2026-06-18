@@ -97,12 +97,12 @@ export class CloudinaryService {
                 ? this.getVideoEager()
                 : undefined;
 
+        const base64Data = `data:${mimeType};base64,${buffer.toString('base64')}`;
+
         return new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
+            cloudinary.uploader.upload(
+                base64Data,
                 {
-                    cloud_name: this.cloudinaryConfig.cloudName,
-                    api_key: this.cloudinaryConfig.apiKey,
-                    api_secret: this.cloudinaryConfig.apiSecret,
                     folder: folder || this.folder,
                     resource_type: isVideo ? 'video' : 'auto',
                     use_filename: true,
@@ -128,7 +128,6 @@ export class CloudinaryService {
                     });
                 },
             );
-            uploadStream.end(buffer);
         });
     }
 
