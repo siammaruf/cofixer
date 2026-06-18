@@ -24,6 +24,7 @@ export class CloudinaryService {
             api_secret: config.apiSecret,
             secure: true,
         });
+        this.logger.log(`Cloudinary configured: cloud_name=${config.cloudName}, api_key=${config.apiKey ? 'SET' : 'MISSING'}, api_secret=${config.apiSecret ? 'SET' : 'MISSING'}`);
     }
 
     private isImage(mimeType: string): boolean {
@@ -89,6 +90,10 @@ export class CloudinaryService {
             : isVideo
                 ? this.getVideoEager()
                 : undefined;
+
+        // Debug: check what cloudinary config looks like at upload time
+        const currentConfig = cloudinary.config();
+        this.logger.log(`Uploading to Cloudinary: cloud_name=${currentConfig.cloud_name}, api_key=${currentConfig.api_key ? 'SET' : 'MISSING'}, api_secret=${currentConfig.api_secret ? 'SET' : 'MISSING'}`);
 
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
