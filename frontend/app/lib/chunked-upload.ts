@@ -24,9 +24,17 @@ export async function uploadMediaChunked(
   file: File,
   options: ChunkedUploadOptions = {},
 ): Promise<ChunkedUploadResult> {
+  if (!file || file.size === 0) {
+    throw new Error('File is empty or invalid. Please select a valid file.')
+  }
+
   const { onProgress, onStatus } = options
   const uploadId = generateUploadId()
   const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
+
+  if (totalChunks < 1) {
+    throw new Error('File is too small or empty.')
+  }
 
   onStatus?.('uploading')
 

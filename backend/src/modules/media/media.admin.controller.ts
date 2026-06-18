@@ -156,6 +156,14 @@ export class MediaAdminController {
             throw new BadRequestException('uploadId is required');
         }
 
+        if (dto.size === 0) {
+            throw new BadRequestException('File size cannot be 0. Empty files are not allowed.');
+        }
+
+        if (dto.totalChunks < 1) {
+            throw new BadRequestException('totalChunks must be at least 1');
+        }
+
         // Verify all chunks exist
         const uploadDir = path.join(this.tempDir, dto.uploadId);
         if (!fs.existsSync(uploadDir)) {
