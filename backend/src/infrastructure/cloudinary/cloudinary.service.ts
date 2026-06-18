@@ -60,14 +60,6 @@ export class CloudinaryService {
         ];
     }
 
-    private getDynamicFolder(baseFolder?: string): string {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const base = baseFolder || this.folder;
-        return `${base}/${year}/${month}`;
-    }
-
     private buildUploadOptions(
         mimeType: string,
         folder?: string,
@@ -80,8 +72,13 @@ export class CloudinaryService {
                 ? this.getVideoEager()
                 : undefined;
 
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const baseFolder = folder || this.folder;
+
         return {
-            folder: this.getDynamicFolder(folder),
+            folder: `${baseFolder}/${year}/${month}`,
             resource_type: isVideo ? 'video' : 'auto',
             use_filename: true,
             unique_filename: true,
