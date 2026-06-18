@@ -130,6 +130,10 @@ export const cmsAdminService = {
 
   // Media
   uploadMedia: (formData: FormData) => post<ApiResponse<{ id: string; url: string }>>(`${API_PREFIX}/admin/media/upload`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  uploadChunk: (formData: FormData) => post<ApiResponse<{ received: number; total: number }>>(`${API_PREFIX}/admin/media/chunk`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  completeChunkUpload: (data: { uploadId: string; originalName: string; mimeType: string; size: number; totalChunks: number }) =>
+    post<ApiResponse<{ uploadId: string; status: string }>>(`${API_PREFIX}/admin/media/chunk/complete`, data),
+  getChunkStatus: (uploadId: string) => get<ApiResponse<{ status: string; progress?: number; result?: { id: string; url: string; filename: string; mimeType: string; size: number; createdAt: string }; error?: string }>>(`${API_PREFIX}/admin/media/chunk/${uploadId}/status`),
   deleteMedia: (id: string) => del<ApiResponse<void>>(`${API_PREFIX}/admin/media/${id}`),
 
   // SEO

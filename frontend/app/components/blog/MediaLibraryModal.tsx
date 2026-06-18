@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store/hooks";
-import { fetchMedia, uploadMedia } from "~/redux/features/cmsSlice";
+import { fetchMedia } from "~/redux/features/cmsSlice";
 import type { MediaItem } from "~/types/cms";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -16,6 +16,7 @@ import { EmptyState } from "~/components/ui/empty-state";
 import { SuspenseLoader } from "~/components/ui/suspense-loader";
 import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
+import { uploadMediaChunked } from "~/lib/chunked-upload";
 import {
   Upload,
   Search,
@@ -95,9 +96,7 @@ export default function MediaLibraryModal({
     setUploading(true);
     setUploadError(null);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const result = await dispatch(uploadMedia(formData)).unwrap();
+      const result = await uploadMediaChunked(file);
       if (result && result.url) {
         onSelect(result.url);
         onOpenChange(false);
@@ -108,7 +107,7 @@ export default function MediaLibraryModal({
       setUploading(false);
       if (e.target) e.target.value = "";
     }
-  }, [dispatch, onSelect, onOpenChange]);
+  }, [onSelect, onOpenChange]);
 
   const handleConfirm = () => {
     if (selectedItem) {

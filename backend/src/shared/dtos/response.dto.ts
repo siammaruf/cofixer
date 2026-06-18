@@ -106,7 +106,7 @@ export class LoginResponsePayloadDto {
     })
     user?: {
         id: string;
-        fullName: string;
+        fullName: string | null | undefined;
         email: string;
         role: RolesEnum;
         isActive: boolean;

@@ -63,6 +63,7 @@
         "axios": "^1.16.1",
         "basic-auth": "^2.0.1",
         "bcrypt": "^6.0.0",
+        "bullmq": "^5.79.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.4",
         "cloudinary": "^1.41.3",
@@ -93,6 +94,7 @@
         "strip-bom": "^5.0.0",
         "typeorm": "^0.3.29",
         "typeorm-naming-strategies": "^4.1.0",
+        "uuid": "^14.0.0",
         "winston": "^3.19.0"
     },
     "devDependencies": {
@@ -113,6 +115,7 @@
         "@types/node": "^25.8.0",
         "@types/nodemailer": "^7.0.11",
         "@types/supertest": "^6.0.3",
+        "@types/uuid": "^10.0.0",
         "@typescript-eslint/eslint-plugin": "^8.59.3",
         "@typescript-eslint/parser": "^8.59.3",
         "concurrently": "^9.2.1",

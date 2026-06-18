@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "~/components/ui/button";
 import { cmsAdminService } from "~/services";
+import { uploadMediaChunked } from "~/lib/chunked-upload";
 import { ImagePlus, X, Loader2, Library } from "lucide-react";
 import MediaLibraryModal from "./MediaLibraryModal";
 
@@ -34,11 +35,9 @@ export default function FeaturedImageUploader({ value, onChange }: FeaturedImage
       setError(null);
 
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await cmsAdminService.uploadMedia(formData);
-        if (res.data?.url) {
-          onChange(res.data.url);
+        const result = await uploadMediaChunked(file);
+        if (result.url) {
+          onChange(result.url);
         }
       } catch (err: any) {
         setError(err?.message || "Upload failed");

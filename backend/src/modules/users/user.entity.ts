@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, Index } from 'typeorm';
 import { BaseEntity } from 'src/core/base';
 import {
     ActiveStatusEnum,
@@ -21,13 +21,14 @@ export class User extends BaseEntity {
     lastName?: string;
 
     @Column({ name: 'full_name', nullable: true })
-    fullName: string;
+    fullName?: string | null;
 
     @Column({
         type: 'enum',
         enum: RolesEnum,
         default: RolesEnum.USER,
     })
+    @Index()
     role: RolesEnum;
 
     @Column({
@@ -35,6 +36,7 @@ export class User extends BaseEntity {
         enum: ActiveStatusEnum,
         default: ActiveStatusEnum.ACTIVE,
     })
+    @Index()
     isActive: ActiveStatusEnum;
 
     @Column({ name: 'email_verified', default: false })

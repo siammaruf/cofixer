@@ -26,8 +26,8 @@ export class ContactMessage extends BaseEntity {
     read: boolean;
 
     @Column({
-        type: 'enum',
-        enum: ['new', 'in_progress', 'resolved', 'spam'],
+        type: 'varchar',
+        length: 50,
         default: 'new',
     })
     @Index()

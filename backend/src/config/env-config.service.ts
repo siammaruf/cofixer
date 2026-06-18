@@ -87,6 +87,15 @@ class EnvConfigService {
             folder: this.getValue('CLOUDINARY_FOLDER', false) || 'cofixer',
         };
     }
+
+    public getRedisConfig() {
+        return {
+            host: this.getValue('REDIS_HOST', false) || 'localhost',
+            port: parseInt(this.getValue('REDIS_PORT', false) || '6379'),
+            password: this.getValue('REDIS_PASSWORD', false) || undefined,
+            db: parseInt(this.getValue('REDIS_DB', false) || '0'),
+        };
+    }
 }
 
 const envConfigService = new EnvConfigService(process.env).ensureValues([

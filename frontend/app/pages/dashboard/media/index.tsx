@@ -17,6 +17,7 @@ import { EmptyState } from '~/components/ui/empty-state'
 import { SuspenseLoader } from '~/components/ui/suspense-loader'
 import { Badge } from '~/components/ui/badge'
 import { cn } from '~/lib/utils'
+import { uploadMediaChunked } from '~/lib/chunked-upload'
 import {
   Upload,
   Search,
@@ -124,9 +125,11 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
   const dispatch = useAppDispatch()
   const [dragging, setDragging] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const abortRef = useRef(false)
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -145,19 +148,36 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
   const handleUpload = useCallback(async () => {
     if (!selectedFile) return
     setUploading(true)
+    setUploadProgress(0)
     setError(null)
+    abortRef.current = false
+
     try {
-      const formData = new FormData()
-      formData.append('file', selectedFile)
-      await dispatch(uploadMedia(formData)).unwrap()
+      await uploadMediaChunked(selectedFile, {
+        onProgress: (progress) => setUploadProgress(progress),
+        onStatus: (status) => {
+          if (status === 'completed') {
+            dispatch(fetchMedia())
+          }
+        },
+      })
       setSelectedFile(null)
       onOpenChange(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed')
-    } finally { setUploading(false) }
+    } finally {
+      setUploading(false)
+      setUploadProgress(0)
+    }
   }, [selectedFile, dispatch, onOpenChange])
 
-  const handleClose = useCallback(() => { setSelectedFile(null); setError(null); onOpenChange(false) }, [onOpenChange])
+  const handleClose = useCallback(() => {
+    abortRef.current = true
+    setSelectedFile(null)
+    setError(null)
+    setUploadProgress(0)
+    onOpenChange(false)
+  }, [onOpenChange])
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -201,6 +221,22 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
               </div>
             )}
           </div>
+
+          {uploading && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{uploadProgress < 50 ? 'Uploading chunks...' : uploadProgress < 100 ? 'Processing...' : 'Complete'}</span>
+                <span>{uploadProgress}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-300 ease-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
         </div>
         <DialogFooter className="gap-2">
