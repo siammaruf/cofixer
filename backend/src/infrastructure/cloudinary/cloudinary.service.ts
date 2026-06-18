@@ -16,15 +16,21 @@ export class CloudinaryService {
     private readonly logger = new Logger(CloudinaryService.name);
     private readonly folder = envConfigService.getCloudinaryConfig().folder;
 
+    private readonly cloudinaryConfig = envConfigService.getCloudinaryConfig();
+
     constructor() {
-        const config = envConfigService.getCloudinaryConfig();
         cloudinary.config({
-            cloud_name: config.cloudName,
-            api_key: config.apiKey,
-            api_secret: config.apiSecret,
+            cloud_name: this.cloudinaryConfig.cloudName,
+            api_key: this.cloudinaryConfig.apiKey,
+            api_secret: this.cloudinaryConfig.apiSecret,
             secure: true,
         });
-        this.logger.log(`Cloudinary configured: cloud_name=${config.cloudName}, api_key=${config.apiKey ? 'SET' : 'MISSING'}, api_secret=${config.apiSecret ? 'SET' : 'MISSING'}`);
+        const secret = this.cloudinaryConfig.apiSecret;
+        this.logger.log(
+            `Cloudinary configured: cloud_name=${this.cloudinaryConfig.cloudName}, ` +
+            `api_key=${this.cloudinaryConfig.apiKey ? 'SET' : 'MISSING'}, ` +
+            `api_secret=${secret ? `SET(len=${secret.length})` : 'MISSING'}`,
+        );
     }
 
     private isImage(mimeType: string): boolean {
@@ -91,13 +97,12 @@ export class CloudinaryService {
                 ? this.getVideoEager()
                 : undefined;
 
-        // Debug: check what cloudinary config looks like at upload time
-        const currentConfig = cloudinary.config();
-        this.logger.log(`Uploading to Cloudinary: cloud_name=${currentConfig.cloud_name}, api_key=${currentConfig.api_key ? 'SET' : 'MISSING'}, api_secret=${currentConfig.api_secret ? 'SET' : 'MISSING'}`);
-
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
+                    cloud_name: this.cloudinaryConfig.cloudName,
+                    api_key: this.cloudinaryConfig.apiKey,
+                    api_secret: this.cloudinaryConfig.apiSecret,
                     folder: folder || this.folder,
                     resource_type: isVideo ? 'video' : 'auto',
                     use_filename: true,
