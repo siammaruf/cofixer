@@ -80,6 +80,8 @@ export class CloudinaryService {
                 ? this.getVideoEager()
                 : undefined;
 
+        const config = envConfigService.getCloudinaryConfig();
+
         return new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
@@ -88,6 +90,10 @@ export class CloudinaryService {
                     use_filename: true,
                     unique_filename: true,
                     eager,
+                    // Explicitly pass credentials to ensure signed upload
+                    api_key: config.apiKey,
+                    api_secret: config.apiSecret,
+                    cloud_name: config.cloudName,
                 },
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
