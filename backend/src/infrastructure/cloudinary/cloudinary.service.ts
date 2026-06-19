@@ -16,14 +16,15 @@ export interface CloudinaryUploadResult {
 export class CloudinaryService {
     private readonly logger = new Logger(CloudinaryService.name);
     private readonly folder = envConfigService.getCloudinaryConfig().folder;
-    private readonly uploadPreset = envConfigService.getCloudinaryConfig().uploadPreset;
+    private readonly uploadPreset =
+        envConfigService.getCloudinaryConfig().uploadPreset;
 
     constructor() {
         const cfg = envConfigService.getCloudinaryConfig();
         if (!cfg.apiSecret || cfg.apiSecret.length < 10) {
             throw new Error(
                 `Cloudinary API Secret is missing or invalid (length=${cfg.apiSecret?.length || 0}). ` +
-                `Make sure CLOUDINARY_API_SECRET is set in backend/.env and the server was restarted.`
+                    `Make sure CLOUDINARY_API_SECRET is set in backend/.env and the server was restarted.`,
             );
         }
     }
@@ -80,8 +81,8 @@ export class CloudinaryService {
         const eager = isImage
             ? this.getImageEager()
             : isVideo
-                ? this.getVideoEager()
-                : undefined;
+              ? this.getVideoEager()
+              : undefined;
 
         const now = new Date();
         const year = now.getFullYear();
@@ -97,7 +98,9 @@ export class CloudinaryService {
         };
     }
 
-    private handleUploadResult(result: UploadApiResponse): CloudinaryUploadResult {
+    private handleUploadResult(
+        result: UploadApiResponse,
+    ): CloudinaryUploadResult {
         const eagerResults = result.eager || [];
         return {
             publicId: result.public_id,
@@ -183,7 +186,12 @@ export class CloudinaryService {
         file: Express.Multer.File,
         folder?: string,
     ): Promise<CloudinaryUploadResult> {
-        return this.uploadBuffer(file.buffer, file.originalname, file.mimetype, folder);
+        return this.uploadBuffer(
+            file.buffer,
+            file.originalname,
+            file.mimetype,
+            folder,
+        );
     }
 
     /**
@@ -198,7 +206,7 @@ export class CloudinaryService {
         if (!uploadPreset) {
             throw new Error(
                 'Upload preset is required for unsigned upload. ' +
-                'Set CLOUDINARY_UPLOAD_PRESET in .env or pass it explicitly.',
+                    'Set CLOUDINARY_UPLOAD_PRESET in .env or pass it explicitly.',
             );
         }
 
@@ -252,7 +260,7 @@ export class CloudinaryService {
         if (!uploadPreset) {
             throw new Error(
                 'Upload preset is required for unsigned upload. ' +
-                'Set CLOUDINARY_UPLOAD_PRESET in .env or pass it explicitly.',
+                    'Set CLOUDINARY_UPLOAD_PRESET in .env or pass it explicitly.',
             );
         }
 
@@ -330,7 +338,10 @@ export class CloudinaryService {
      * Create the default video preset with multiple format variants.
      * Call this in a setup script or admin command.
      */
-    async createDefaultVideoPreset(): Promise<{ message: string; preset: unknown }> {
+    async createDefaultVideoPreset(): Promise<{
+        message: string;
+        preset: unknown;
+    }> {
         return this.createUploadPreset('cofixer_video_preset', {
             folder: `${this.folder}/videos`,
             resourceType: 'video',

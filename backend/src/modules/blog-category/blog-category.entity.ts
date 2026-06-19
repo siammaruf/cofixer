@@ -18,6 +18,9 @@ export class BlogCategory extends BaseEntity {
     @Column({ type: 'text', nullable: true })
     seoDescription?: string;
 
-    @ManyToMany(() => require('../blog/blog-post.entity').BlogPost, (post: any) => post.categories)
+    @ManyToMany(
+        () => require('../blog/blog-post.entity').BlogPost,
+        (post: any) => post.categories,
+    )
     posts?: any[];
 }

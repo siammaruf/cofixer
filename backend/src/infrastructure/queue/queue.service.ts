@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import {
+    Injectable,
+    Logger,
+    OnModuleInit,
+    OnModuleDestroy,
+} from '@nestjs/common';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 import { envConfigService } from '../../config/env-config.service';
@@ -42,6 +47,7 @@ export class QueueService implements OnModuleInit, OnModuleDestroy {
 
     async addMediaUploadJob(data: MediaUploadJobData) {
         return this.mediaUploadQueue.add('process-upload', data, {
+            jobId: data.uploadId,
             attempts: 3,
             backoff: { type: 'exponential', delay: 5000 },
             removeOnComplete: { count: 100 },

@@ -52,14 +52,33 @@ export class MediaAdminController {
         private readonly mediaUploadProcessor: MediaUploadProcessor,
     ) {}
 
-    private countChunksOnDisk(uploadId: string): number {
+    private getChunkStatusOnDisk(uploadId: string): {
+        count: number;
+        indices: number[];
+        missing: number[];
+    } {
         const uploadDir = path.join(this.tempDir, uploadId);
         if (!fs.existsSync(uploadDir)) {
-            return 0;
+            return { count: 0, indices: [], missing: [] };
         }
-        return fs
+        const files = fs
             .readdirSync(uploadDir)
-            .filter((f) => f.startsWith('chunk-')).length;
+            .filter((f) => f.startsWith('chunk-'));
+        const indices = files
+            .map((f) => parseInt(f.replace('chunk-', ''), 10))
+            .filter((n) => !isNaN(n))
+            .sort((a, b) => a - b);
+        const count = indices.length;
+        const missing: number[] = [];
+        if (count > 0) {
+            const maxIndex = Math.max(...indices);
+            for (let i = 0; i <= maxIndex; i++) {
+                if (!indices.includes(i)) {
+                    missing.push(i);
+                }
+            }
+        }
+        return { count, indices, missing };
     }
 
     @Post('upload')
@@ -132,7 +151,9 @@ export class MediaAdminController {
             throw new BadRequestException('uploadId is required');
         }
         if (dto.chunkIndex === undefined || dto.totalChunks === undefined) {
-            throw new BadRequestException('chunkIndex and totalChunks are required');
+            throw new BadRequestException(
+                'chunkIndex and totalChunks are required',
+            );
         }
         if (!file) {
             throw new BadRequestException('Chunk file is required');
@@ -145,6 +166,12 @@ export class MediaAdminController {
 
         const chunkPath = path.join(uploadDir, `chunk-${dto.chunkIndex}`);
         fs.writeFileSync(chunkPath, file.buffer);
+
+        if (dto.chunkIndex === 0) {
+            this.logger.debug(
+                `Chunk 0 saved for upload ${dto.uploadId} (${file.buffer.length} bytes)`,
+            );
+        }
 
         return new SuccessResponseDto(
             { received: dto.chunkIndex + 1, total: dto.totalChunks },
@@ -179,22 +206,46 @@ export class MediaAdminController {
             throw new BadRequestException('Upload session not found');
         }
 
-        // Use server-side chunk count as source of truth
-        const actualChunks = this.countChunksOnDisk(dto.uploadId);
-        if (actualChunks === 0) {
+        // Use server-side chunk status as source of truth
+        const chunkStatus = this.getChunkStatusOnDisk(dto.uploadId);
+        if (chunkStatus.count === 0) {
             throw new BadRequestException(
                 'No chunks found for this upload. Please upload chunks first.',
             );
         }
 
-        // Warn if client-reported count differs from actual
-        if (dto.totalChunks && dto.totalChunks !== actualChunks) {
-            this.logger.warn(
-                `Chunk count mismatch for ${dto.uploadId}: client reported ${dto.totalChunks}, actual on disk: ${actualChunks}. Using actual count.`,
+        if (chunkStatus.missing.length > 0) {
+            this.logger.error(
+                `Missing chunks detected for ${dto.uploadId}: missing indices [${chunkStatus.missing.join(', ')}], found indices [${chunkStatus.indices.join(', ')}]`,
+            );
+            throw new BadRequestException(
+                `Missing chunks: [${chunkStatus.missing.join(', ')}]. Please re-upload the missing chunks.`,
             );
         }
 
-        const totalChunks = actualChunks;
+        // Warn if client-reported count differs from actual
+        if (dto.totalChunks && dto.totalChunks !== chunkStatus.count) {
+            this.logger.warn(
+                `Chunk count mismatch for ${dto.uploadId}: client reported ${dto.totalChunks}, actual on disk: ${chunkStatus.count}. Using actual count.`,
+            );
+        }
+
+        const totalChunks = chunkStatus.count;
+
+        // Prevent duplicate jobs for the same upload
+        const existingJob = await this.queueService
+            .getMediaUploadQueue()
+            .getJob(dto.uploadId);
+        if (existingJob) {
+            const jobState = await existingJob.getState();
+            this.logger.warn(
+                `Duplicate chunk/complete for ${dto.uploadId}: job already exists in state ${jobState}`,
+            );
+            return new SuccessResponseDto(
+                { uploadId: dto.uploadId, status: jobState },
+                'Upload already queued',
+            );
+        }
 
         // Add to queue for processing
         await this.queueService.addMediaUploadJob({

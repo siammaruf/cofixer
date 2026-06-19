@@ -86,7 +86,8 @@ class EnvConfigService {
             cloudName: this.getValue('CLOUDINARY_CLOUD_NAME'),
             apiKey: this.getValue('CLOUDINARY_API_KEY'),
             apiSecret: this.getValue('CLOUDINARY_API_SECRET'),
-            uploadPreset: this.getValue('CLOUDINARY_UPLOAD_PRESET', false) || '',
+            uploadPreset:
+                this.getValue('CLOUDINARY_UPLOAD_PRESET', false) || '',
             folder: this.getValue('CLOUDINARY_FOLDER', false) || 'cofixer',
         };
     }

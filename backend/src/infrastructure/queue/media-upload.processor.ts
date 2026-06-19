@@ -109,7 +109,10 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                 totalChunks,
                 assembledFilePath,
             );
-            await this.setStatus(uploadId, { status: 'processing', progress: 40 });
+            await this.setStatus(uploadId, {
+                status: 'processing',
+                progress: 40,
+            });
 
             // Upload to Cloudinary directly from file path (efficient for large files)
             const uploadResult = this.useUnsignedUpload
@@ -123,7 +126,10 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                       mimeType,
                       folder,
                   );
-            await this.setStatus(uploadId, { status: 'processing', progress: 80 });
+            await this.setStatus(uploadId, {
+                status: 'processing',
+                progress: 80,
+            });
 
             // Save to database
             const media = this.mediaRepository.create({
@@ -173,15 +179,23 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
         outputPath: string,
     ): Promise<void> {
         const writeStream = fs.createWriteStream(outputPath);
+        const uploadDir = path.join(this.tempDir, uploadId);
 
         for (let i = 0; i < totalChunks; i++) {
-            const chunkPath = path.join(
-                this.tempDir,
-                uploadId,
-                `chunk-${i}`,
-            );
+            const chunkPath = path.join(uploadDir, `chunk-${i}`);
             if (!fs.existsSync(chunkPath)) {
                 writeStream.destroy();
+                let dirContents: string[] = [];
+                try {
+                    if (fs.existsSync(uploadDir)) {
+                        dirContents = fs.readdirSync(uploadDir);
+                    }
+                } catch {
+                    // ignore
+                }
+                this.logger.error(
+                    `Missing chunk ${i} for upload ${uploadId}. Directory contents: [${dirContents.join(', ')}]`,
+                );
                 throw new Error(`Missing chunk ${i} for upload ${uploadId}`);
             }
             const chunk = fs.readFileSync(chunkPath);
@@ -217,19 +231,26 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
                 fs.unlinkSync(filePath);
             }
         } catch (err) {
-            this.logger.warn(`Failed to delete file ${filePath}: ${err.message}`);
+            this.logger.warn(
+                `Failed to delete file ${filePath}: ${err.message}`,
+            );
         }
     }
 
     private cleanupAfterPermanentFailure(uploadId: string): void {
         try {
             const uploadDir = path.join(this.tempDir, uploadId);
-            const assembledFilePath = path.join(this.tempDir, `${uploadId}.tmp`);
+            const assembledFilePath = path.join(
+                this.tempDir,
+                `${uploadId}.tmp`,
+            );
             if (fs.existsSync(uploadDir)) {
                 fs.rmSync(uploadDir, { recursive: true, force: true });
             }
             this.safeDeleteFile(assembledFilePath);
-            this.logger.log(`Cleaned up temp files for failed upload ${uploadId}`);
+            this.logger.log(
+                `Cleaned up temp files for failed upload ${uploadId}`,
+            );
         } catch (err) {
             this.logger.warn(
                 `Failed to clean up after permanent failure for ${uploadId}: ${err.message}`,
