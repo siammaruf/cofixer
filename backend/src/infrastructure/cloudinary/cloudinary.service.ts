@@ -120,13 +120,7 @@ export class CloudinaryService {
         mimeType: string,
         folder?: string,
     ): Promise<CloudinaryUploadResult> {
-        const cfg = envConfigService.getCloudinaryConfig();
-        const options = {
-            ...this.buildUploadOptions(mimeType, folder),
-            cloud_name: cfg.cloudName,
-            api_key: cfg.apiKey,
-            api_secret: cfg.apiSecret,
-        };
+        const options = this.buildUploadOptions(mimeType, folder);
 
         return new Promise((resolve, reject) => {
             cloudinary.uploader.upload(
@@ -156,13 +150,7 @@ export class CloudinaryService {
         mimeType: string,
         folder?: string,
     ): Promise<CloudinaryUploadResult> {
-        const cfg = envConfigService.getCloudinaryConfig();
-        const options = {
-            ...this.buildUploadOptions(mimeType, folder),
-            cloud_name: cfg.cloudName,
-            api_key: cfg.apiKey,
-            api_secret: cfg.apiSecret,
-        };
+        const options = this.buildUploadOptions(mimeType, folder);
 
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
@@ -218,6 +206,7 @@ export class CloudinaryService {
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.unsigned_upload_stream(
                 uploadPreset,
+                options,
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
                         this.logger.error(
@@ -228,7 +217,6 @@ export class CloudinaryService {
                     }
                     resolve(this.handleUploadResult(result));
                 },
-                options as any,
             );
             stream.end(buffer);
         });
@@ -272,6 +260,7 @@ export class CloudinaryService {
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.unsigned_upload_stream(
                 uploadPreset,
+                options,
                 (error: UploadApiErrorResponse, result: UploadApiResponse) => {
                     if (error) {
                         this.logger.error(
@@ -282,7 +271,6 @@ export class CloudinaryService {
                     }
                     resolve(this.handleUploadResult(result));
                 },
-                options as any,
             );
 
             const readStream = fs.createReadStream(filePath);
