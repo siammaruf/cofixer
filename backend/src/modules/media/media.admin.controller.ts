@@ -13,6 +13,7 @@ import {
     BadRequestException,
     Get,
     Logger,
+    Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
@@ -29,7 +30,9 @@ import {
     CreatedResponseDto,
     DeletedResponseDto,
     SuccessResponseDto,
+    PaginatedResponseDto,
 } from '../../shared/dtos/response.dto';
+import { PaginationDto } from '../../shared/dtos/pagination.dto';
 import { CloudinaryService } from '../../infrastructure/cloudinary';
 import { QueueService } from '../../infrastructure/queue/queue.service';
 import { MediaUploadProcessor } from '../../infrastructure/queue/media-upload.processor';
@@ -79,6 +82,41 @@ export class MediaAdminController {
             }
         }
         return { count, indices, missing };
+    }
+
+    @Get()
+    @Roles(RolesEnum.ADMIN, RolesEnum.MODERATOR)
+    @HttpCode(HttpStatus.OK)
+    @ApiSwagger({
+        resourceName: 'Media',
+        operation: 'getAll',
+        isArray: true,
+        requiresAuth: true,
+        withPagination: true,
+    })
+    async findAll(
+        @Query() paginationDto: PaginationDto,
+    ): Promise<PaginatedResponseDto<Media>> {
+        const order: any = {};
+        if (paginationDto.sortBy) {
+            order[paginationDto.sortBy] = paginationDto.sortOrder || 'DESC';
+            order.id = 'DESC';
+        } else {
+            order.createdAt = 'DESC';
+            order.id = 'DESC';
+        }
+        const media = await this.mediaService.findAll({ order });
+        const page = paginationDto.page || 1;
+        const limit = paginationDto.limit || 10;
+        const skip = (page - 1) * limit;
+        const paginated = media.slice(skip, skip + limit);
+        return new PaginatedResponseDto(
+            paginated,
+            page,
+            limit,
+            media.length,
+            'Media retrieved successfully',
+        );
     }
 
     @Post('upload')

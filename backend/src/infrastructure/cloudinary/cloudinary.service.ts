@@ -38,31 +38,38 @@ export class CloudinaryService {
     }
 
     private getImageEager() {
-        // SEO-optimized WebP variants for images
+        // SEO-optimized AVIF variants for images
         return [
             {
                 width: 150,
                 height: 150,
                 crop: 'fill',
                 quality: 'auto:good',
-                fetch_format: 'webp',
+                fetch_format: 'avif',
             },
             {
                 width: 1200,
                 crop: 'limit',
                 quality: 'auto:good',
-                fetch_format: 'webp',
+                fetch_format: 'avif',
             },
             {
                 quality: 'auto:good',
-                fetch_format: 'webp',
+                fetch_format: 'avif',
             },
         ];
     }
 
     private getVideoEager() {
-        // SEO-optimized WebM variant for videos (smaller size, modern format)
+        // 1. Thumbnail frame (JPG) for grid previews
+        // 2. SEO-optimized WebM variant for playback
         return [
+            {
+                width: 400,
+                height: 400,
+                crop: 'fill',
+                format: 'jpg',
+            },
             {
                 format: 'webm',
                 video_codec: 'vp9',
@@ -75,6 +82,7 @@ export class CloudinaryService {
     private buildUploadOptions(
         mimeType: string,
         folder?: string,
+        unsigned = false,
     ): Record<string, unknown> {
         const isImage = this.isImage(mimeType);
         const isVideo = this.isVideo(mimeType);
@@ -89,13 +97,21 @@ export class CloudinaryService {
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const baseFolder = folder || this.folder;
 
-        return {
+        const options: Record<string, unknown> = {
             folder: `${baseFolder}/${year}/${month}`,
             resource_type: isVideo ? 'video' : 'auto',
-            use_filename: true,
-            unique_filename: true,
-            eager,
         };
+
+        if (!unsigned) {
+            options.use_filename = true;
+            options.unique_filename = true;
+        }
+
+        if (eager) {
+            options.eager = eager;
+        }
+
+        return options;
     }
 
     private handleUploadResult(
@@ -199,7 +215,7 @@ export class CloudinaryService {
         }
 
         const options = {
-            ...this.buildUploadOptions(mimeType, folder),
+            ...this.buildUploadOptions(mimeType, folder, true),
             upload_preset: uploadPreset,
         };
 
@@ -253,7 +269,7 @@ export class CloudinaryService {
         }
 
         const options = {
-            ...this.buildUploadOptions(mimeType, folder),
+            ...this.buildUploadOptions(mimeType, folder, true),
             upload_preset: uploadPreset,
         };
 

@@ -17,6 +17,7 @@ import { SuspenseLoader } from "~/components/ui/suspense-loader";
 import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
 import { uploadMediaChunked } from "~/lib/chunked-upload";
+import MediaPreviewDialog from "~/components/media/MediaPreviewDialog";
 import {
   Upload,
   Search,
@@ -24,7 +25,6 @@ import {
   Video,
   File,
   X,
-  Check,
 } from "lucide-react";
 
 type MediaFilter = "all" | "image" | "document" | "video";
@@ -64,7 +64,7 @@ export default function MediaLibraryModal({
   const { media, loading } = useAppSelector((state) => state.cms);
   const [filter, setFilter] = useState<MediaFilter>("all");
   const [search, setSearch] = useState("");
-  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
+  const [previewItem, setPreviewItem] = useState<MediaItem | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useState<HTMLInputElement | null>(null);
@@ -72,7 +72,7 @@ export default function MediaLibraryModal({
   useEffect(() => {
     if (open) {
       dispatch(fetchMedia());
-      setSelectedItem(null);
+      setPreviewItem(null);
       setSearch("");
       setFilter("all");
     }
@@ -85,7 +85,8 @@ export default function MediaLibraryModal({
     }
     return items.filter((item) => {
       const matchesFilter = filter === "all" || getFileCategory(item.mimeType) === filter;
-      const matchesSearch = !search || item.filename.toLowerCase().includes(search.toLowerCase());
+      const displayName = (item.originalName || item.filename).toLowerCase();
+      const matchesSearch = !search || displayName.includes(search.toLowerCase());
       return matchesFilter && matchesSearch;
     });
   }, [media, filter, search, acceptTypes]);
@@ -109,12 +110,10 @@ export default function MediaLibraryModal({
     }
   }, [onSelect, onOpenChange]);
 
-  const handleConfirm = () => {
-    if (selectedItem) {
-      onSelect(selectedItem.url);
-      onOpenChange(false);
-    }
-  };
+  const handleSelectFromPreview = useCallback((item: MediaItem) => {
+    onSelect(item.url);
+    onOpenChange(false);
+  }, [onSelect, onOpenChange]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -190,25 +189,26 @@ export default function MediaLibraryModal({
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {filteredMedia.map((item) => {
-                const isSelected = selectedItem?.id === item.id;
                 const isImage = item.mimeType.startsWith("image/");
                 return (
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => setSelectedItem(item)}
-                    className={cn(
-                      "relative rounded-xl border overflow-hidden transition-all text-left",
-                      isSelected
-                        ? "border-primary ring-2 ring-primary/20 shadow-lg"
-                        : "border-border/50 hover:border-primary/30 hover:shadow-md"
-                    )}
+                    onClick={() => setPreviewItem(item)}
+                    className="relative rounded-xl border border-border/50 overflow-hidden transition-all text-left hover:border-primary/30 hover:shadow-md"
                   >
                     <div className="relative aspect-square bg-muted/50 flex items-center justify-center overflow-hidden">
                       {isImage ? (
                         <img
-                          src={item.url}
-                          alt={item.filename}
+                          src={item.fullUrl || item.url}
+                          alt={item.originalName || item.filename}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : item.thumbUrl ? (
+                        <img
+                          src={item.thumbUrl}
+                          alt={item.originalName || item.filename}
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />
@@ -224,13 +224,6 @@ export default function MediaLibraryModal({
                           </span>
                         </div>
                       )}
-                      {isSelected && (
-                        <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                          <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
-                            <Check className="w-4 h-4" />
-                          </div>
-                        </div>
-                      )}
                       <div className="absolute top-2 left-2">
                         <Badge variant="secondary" className="bg-foreground/60 text-white backdrop-blur-sm text-[10px] px-1.5 py-0.5 h-5 rounded-md">
                           {getFileCategory(item.mimeType)}
@@ -238,8 +231,8 @@ export default function MediaLibraryModal({
                       </div>
                     </div>
                     <div className="p-2.5 space-y-0.5">
-                      <p className="text-xs font-semibold text-foreground truncate" title={item.filename}>
-                        {item.filename}
+                      <p className="text-xs font-semibold text-foreground truncate" title={item.originalName || item.filename}>
+                        {item.originalName || item.filename}
                       </p>
                       <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                         <span>{formatFileSize(item.size)}</span>
@@ -257,14 +250,15 @@ export default function MediaLibraryModal({
           <Button variant="outline" onClick={handleClose} className="h-9 text-sm">
             Cancel
           </Button>
-          <Button
-            onClick={handleConfirm}
-            disabled={!selectedItem}
-            className="h-9 text-sm"
-          >
-            Select Image
-          </Button>
         </DialogFooter>
+
+        <MediaPreviewDialog
+          item={previewItem}
+          open={!!previewItem}
+          onOpenChange={(open) => { if (!open) setPreviewItem(null) }}
+          onSelect={handleSelectFromPreview}
+          selectLabel="Select File"
+        />
       </DialogContent>
     </Dialog>
   );

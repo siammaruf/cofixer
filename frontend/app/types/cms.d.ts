@@ -184,7 +184,11 @@ export interface Stats {
 export interface MediaItem {
   id: string
   url: string
+  thumbUrl?: string
+  largeUrl?: string
+  fullUrl?: string
   filename: string
+  originalName?: string
   mimeType: string
   size: number
   createdAt: string
