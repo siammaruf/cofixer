@@ -18,6 +18,7 @@ import type {
   NavigationMenu,
   Stats,
   ContactFormData,
+  MediaItem,
 } from '~/types/cms'
 
 const API_PREFIX = ''
@@ -129,6 +130,7 @@ export const cmsAdminService = {
   deleteContact: (id: string) => del<ApiResponse<void>>(`${API_PREFIX}/admin/contacts/${id}`),
 
   // Media
+  getAllMedia: () => get<PaginatedApiResponse<MediaItem>>(`${API_PREFIX}/admin/media`, { params: { sortBy: 'createdAt', sortOrder: 'DESC' } }),
   uploadMedia: (formData: FormData) => post<ApiResponse<{ id: string; url: string }>>(`${API_PREFIX}/admin/media/upload`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
   uploadChunk: (formData: FormData) => post<ApiResponse<{ received: number; total: number }>>(`${API_PREFIX}/admin/media/chunk`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
   completeChunkUpload: (data: { uploadId: string; originalName: string; mimeType: string; size: number; totalChunks: number }) =>

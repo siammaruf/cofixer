@@ -1,4 +1,4 @@
-import { Entity, Column, Index, ManyToMany } from 'typeorm';
+import { Entity, Column, ManyToMany } from 'typeorm';
 import { BaseEntity } from '../../core/base/base.entity';
 
 @Entity('blog_categories')

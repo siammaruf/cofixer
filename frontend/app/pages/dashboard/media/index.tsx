@@ -18,6 +18,7 @@ import { SuspenseLoader } from '~/components/ui/suspense-loader'
 import { Badge } from '~/components/ui/badge'
 import { cn } from '~/lib/utils'
 import { uploadMediaChunked } from '~/lib/chunked-upload'
+import MediaPreviewDialog from '~/components/media/MediaPreviewDialog'
 import {
   Upload,
   Search,
@@ -60,26 +61,26 @@ function formatDate(dateStr: string): string {
 
 interface MediaCardProps {
   item: MediaItem
+  onPreview: (item: MediaItem) => void
   onDelete: (item: MediaItem) => void
 }
 
-function MediaCard({ item, onDelete }: MediaCardProps) {
-  const [copied, setCopied] = useState(false)
+function MediaCard({ item, onPreview, onDelete }: MediaCardProps) {
   const Icon = getFileIcon(item.mimeType)
 
-  const handleCopyUrl = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(item.url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch { /* Clipboard not available */ }
-  }, [item.url])
-
   return (
-    <div className="group relative rounded-2xl border border-border/50 bg-card overflow-hidden transition-all hover:border-primary/30 hover:shadow-xl hover:-translate-y-1">
+    <div
+      className="group relative rounded-2xl border border-border/50 bg-card overflow-hidden transition-all hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 cursor-pointer"
+      onClick={() => onPreview(item)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onPreview(item) }}
+    >
       <div className="relative aspect-square bg-muted/50 flex items-center justify-center overflow-hidden">
         {item.mimeType.startsWith('image/') ? (
-          <img src={item.url} alt={item.filename} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" loading="lazy" />
+          <img src={item.fullUrl || item.url} alt={item.originalName || item.filename} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" loading="lazy" />
+        ) : item.thumbUrl ? (
+          <img src={item.thumbUrl} alt={item.originalName || item.filename} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" loading="lazy" />
         ) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <Icon className="size-12" />
@@ -92,26 +93,33 @@ function MediaCard({ item, onDelete }: MediaCardProps) {
           </Badge>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2">
-          <Button size="icon" variant="secondary" className="size-10 shadow-lg" onClick={handleCopyUrl} aria-label="Copy URL">
+          <Button
+            size="icon"
+            variant="secondary"
+            className="size-10 shadow-lg"
+            onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(item.url) }}
+            aria-label="Copy URL"
+          >
             <Copy className="size-4" />
           </Button>
-          <Button size="icon" variant="destructive" className="size-10 shadow-lg" onClick={() => onDelete(item)} aria-label="Delete media">
+          <Button
+            size="icon"
+            variant="destructive"
+            className="size-10 shadow-lg"
+            onClick={(e) => { e.stopPropagation(); onDelete(item) }}
+            aria-label="Delete media"
+          >
             <Trash2 className="size-4" />
           </Button>
         </div>
       </div>
-      <div className="p-3 space-y-1">
-        <p className="text-sm font-semibold text-foreground truncate" title={item.filename}>{item.filename}</p>
+      <div className="p-3 space-y-0">
+        <p className="text-sm font-semibold text-foreground truncate" title={item.originalName || item.filename}>{item.originalName || item.filename}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span className="font-medium">{formatFileSize(item.size)}</span>
           <span>{formatDate(item.createdAt)}</span>
         </div>
       </div>
-      {copied && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs px-3 py-1.5 rounded-lg shadow-lg animate-fade-in">
-          URL copied!
-        </div>
-      )}
     </div>
   )
 }
@@ -182,7 +190,7 @@ function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+        <DialogHeader className="space-y-1">
           <DialogTitle className="flex items-center gap-2 text-black">
             <div className="p-1.5 rounded-lg bg-primary/10"><Upload className="h-4 w-4 text-primary" /></div>
             Upload Media
@@ -290,11 +298,13 @@ export default function MediaDashboard() {
   const [filter, setFilter] = useState<MediaFilter>('all')
   const [search, setSearch] = useState('')
   const [uploadOpen, setUploadOpen] = useState(false)
+  const [previewItem, setPreviewItem] = useState<MediaItem | null>(null)
   const [deleteItem, setDeleteItem] = useState<MediaItem | null>(null)
 
   useEffect(() => { dispatch(fetchMedia()) }, [dispatch])
 
-  const handleDelete = useCallback(async (item: MediaItem) => { setDeleteItem(item) }, [])
+  const handlePreview = useCallback((item: MediaItem) => { setPreviewItem(item) }, [])
+  const handleDelete = useCallback((item: MediaItem) => { setDeleteItem(item) }, [])
   const handleDeleteConfirm = useCallback(async () => {
     if (!deleteItem) return
     try { await dispatch(deleteMedia(deleteItem.id)).unwrap(); setDeleteItem(null) } catch { /* Error is in Redux state */ }
@@ -302,7 +312,8 @@ export default function MediaDashboard() {
 
   const filteredMedia = media.filter((item) => {
     const matchesFilter = filter === 'all' || getFileCategory(item.mimeType) === filter
-    const matchesSearch = !search || item.filename.toLowerCase().includes(search.toLowerCase())
+    const displayName = (item.originalName || item.filename).toLowerCase()
+    const matchesSearch = !search || displayName.includes(search.toLowerCase())
     return matchesFilter && matchesSearch
   })
 
@@ -349,12 +360,18 @@ export default function MediaDashboard() {
         />
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {filteredMedia.map((item) => (<MediaCard key={item.id} item={item} onDelete={handleDelete} />))}
+          {filteredMedia.map((item) => (<MediaCard key={item.id} item={item} onPreview={handlePreview} onDelete={handleDelete} />))}
         </div>
       )}
 
       <UploadDialog open={uploadOpen} onOpenChange={setUploadOpen} />
       <DeleteDialog item={deleteItem} open={!!deleteItem} onOpenChange={(open) => { if (!open) setDeleteItem(null) }} onConfirm={handleDeleteConfirm} />
+      <MediaPreviewDialog
+        item={previewItem}
+        open={!!previewItem}
+        onOpenChange={(open) => { if (!open) setPreviewItem(null) }}
+        onDelete={handleDelete}
+      />
     </div>
   )
 }

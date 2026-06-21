@@ -76,12 +76,17 @@ export class MediaUploadProcessor implements OnModuleInit, OnModuleDestroy {
         );
 
         this.worker.on('failed', (job, err) => {
+            const attemptsMade = job?.attemptsMade ?? 1;
+            const maxAttempts = job?.opts?.attempts ?? 1;
+            const isFinalAttempt = attemptsMade >= maxAttempts;
+
             this.logger.error(
-                `Job ${job?.id} failed permanently: ${err.message}`,
+                `Job ${job?.id} failed (attempt ${attemptsMade}/${maxAttempts}): ${err.message}`,
                 err.stack,
             );
-            // Clean up chunk files after all retries are exhausted
-            if (job?.data?.uploadId) {
+
+            // Only clean up chunk files after all retries are exhausted
+            if (isFinalAttempt && job?.data?.uploadId) {
                 this.cleanupAfterPermanentFailure(job.data.uploadId);
             }
         });

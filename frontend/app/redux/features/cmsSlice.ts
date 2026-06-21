@@ -612,11 +612,8 @@ export const fetchMedia = createAsyncThunk(
   'cms/fetchMedia',
   async (_, { rejectWithValue }) => {
     try {
-      // Backend list endpoint not yet available; returns empty array
-      // When backend implements GET /admin/media, replace with:
-      // const res = await cmsAdminService.getAllMedia()
-      // return res.data
-      return [] as MediaItem[]
+      const res = await cmsAdminService.getAllMedia()
+      return res.data
     } catch (error) {
       const apiError = error as ApiError
       return rejectWithValue(apiError.message)
